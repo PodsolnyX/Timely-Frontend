@@ -1,10 +1,13 @@
 import './App.css';
-import MainPage from "./components/main-page/main-page";
 import {Route, Routes} from "react-router-dom";
+import axios from 'axios';
+import MainPage from "./components/main-page/main-page";
 import SchedulePage from "./components/schedule-page/schedule-page";
 import NavBar from "./components/navigation/navigation";
 import LoginPage from "./components/login-page/login-page";
 import RegisterPage from "./components/register-page/register-page";
+
+axios.defaults.baseURL = 'https://food-delivery.kreosoft.ru/api';
 
 function App() {
   return (

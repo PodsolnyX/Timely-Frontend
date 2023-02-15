@@ -1,7 +1,11 @@
-import {Container, Nav, Navbar, Button} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import { Container, Nav, Navbar, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
+    const logout = () => {
+        localStorage.removeItem("jwt");
+        window.location.href = "/login";
+    }
     return (
         <Navbar bg="light" expand="sm">
             <Container fluid>
@@ -19,9 +23,15 @@ const NavBar = () => {
                             <Nav.Link href="/">Главная</Nav.Link>
                         </Link>
                     </Nav>
-                    <Link to={"/login"}>
-                        <Button variant="outline-primary">Войти</Button>
-                    </Link>
+                    {
+                        localStorage.getItem("jwt") ?
+                                <Button variant="outline-primary" onClick={logout}>Выйти</Button>
+                            :
+                            <Link to={"/login"}>
+                                <Button variant="outline-primary">Войти</Button>
+                            </Link>
+                    }
+
                 </Navbar.Collapse>
             </Container>
         </Navbar>
