@@ -2,7 +2,7 @@ import './login-page.css';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
@@ -11,6 +11,9 @@ const LoginPage = () => {
     const [passwordError, setPasswordError] = useState("");
     const [formError, setFormError] = useState("");
     const loginRef = useRef();
+    const navigate = useNavigate();
+
+
     useEffect(() => {
         const listener = (event) => {
             if (event.key == "Enter") {
@@ -62,7 +65,7 @@ const LoginPage = () => {
             loginRef.current.classList.add("disabled");
             const token = await getToken();
             localStorage.setItem("jwt", token);
-            window.location.href = "/shedule";
+            navigate("/shedule");
         }
         catch (err) {
             loginRef.current.classList.remove("disabled");

@@ -1,10 +1,11 @@
 import { Container, Nav, Navbar, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
+    const navigate = useNavigate();
     const logout = () => {
         localStorage.removeItem("jwt");
-        window.location.href = "/login";
+        navigate("/shedule");
     }
     return (
         <Navbar bg="light" expand="sm">
