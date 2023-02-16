@@ -5,53 +5,44 @@ import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [emailError, setEmailError] = useState("");
-    const [passwordError, setPasswordError] = useState("");
-    const [formError, setFormError] = useState("");
+    const [formState, setFormState] = useState({
+        email: "",
+        password: "",
+        emailError: "",
+        passwordError: "",
+        formError: ""
+    });
+
     const loginRef = useRef();
     const navigate = useNavigate();
 
-
-    useEffect(() => {
-        const listener = (event) => {
-            if (event.key == "Enter") {
-                loginRef.current.click();
-            }
-        }
-        document.addEventListener("keydown", listener);
-        return () => {
-            document.removeEventListener("keydown", listener);
-        };
-    }, [])
-
     const checkEmail = () => {
-        if (!email.match(/^\S+@\S+\.\S+$/)) {
-            setEmailError("Некорректный email");
+        if (!formState.email.match(/^\S+@\S+\.\S+$/)) {
+            setFormState(state => ({ ...state, emailError: "Некорректный email" }));
             return false;
         }
-        else setEmailError("");
+        else setFormState(state => ({ ...state, emailError: "" }));
         return true;
     }
 
     const checkPassword = () => {
+        const password = formState.password;
         if (password.length && !password.match(/^[а-яА-ЯёЁa-zA-Z0-9\-_!@#№$%^&?*+=(){}[\]<>~]+$/)) {
-            setPasswordError("Недопустимые символы");
+            setFormState(state => ({ ...state, passwordError: "Недопустимые символы" }));
             return false;
         }
         else if (password.length < 8 || password.length > 64) {
-            setPasswordError("Длина пароля от 8 до 64 символов");
+            setFormState(state => ({ ...state, passwordError: "Длина пароля от 8 до 64 символов" }));
             return false;
         }
-        else setPasswordError("");
+        else setFormState(state => ({ ...state, passwordError: "" }));
         return true;
     }
 
     const getToken = async () => {
         const request = await axios.post("/account/login", {
-            email,
-            password
+            email: formState.email,
+            password: formState.password
         });
         return request.data.token;
     };
@@ -70,10 +61,10 @@ const LoginPage = () => {
         catch (err) {
             loginRef.current.classList.remove("disabled");
             if (!err.response) {
-                setFormError("Ошибка соединения");
+                setFormState(state => ({ ...state, formError: "Ошибка соединения" }))
             }
             else {
-                setFormError("Неверные данные");
+                setFormState(state => ({ ...state, formError: "Неверные данные" }))
             }
         }
     }
@@ -84,25 +75,53 @@ const LoginPage = () => {
             <div className="card p-0 mx-auto my-4 reg w-75 bold">
                 <div className="card-body">
                     <div className="row">
-                        <div className="col-12">
-                            <label htmlFor="login">Почта</label>
-                            <input tabIndex="1" type="text" className="form-control my-2" id="login" placeholder="Введите почту" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={checkEmail} />
-                        </div>
-                        <p className="text-danger fw-bold">{emailError}</p>
+                        <form>
+                            <div className="col-12">
+                                <label htmlFor="email">Почта</label>
+                                <input
+                                    tabIndex="1"
+                                    type="email"
+                                    className={formState.emailError ? "form-control my-2 is-invalid" : "form-control my-2"}
+                                    id="email"
+                                    placeholder="Введите почту"
+                                    value={formState.email}
+                                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                                    onBlur={checkEmail} />
+                            </div>
+                            <p className="text-danger fw-bold">{formState.emailError}</p>
 
-                        <div className="col-12">
-                            <label htmlFor="password">Пароль</label>
-                            <input tabIndex="2" type="password" className="form-control my-2" id="password" placeholder="Введите пароль" value={password} onChange={(e) => setPassword(e.target.value)} onBlur={checkPassword} />
-                        </div>
-                        <p className="text-danger fw-bold">{passwordError}</p>
+                            <div className="col-12">
+                                <label htmlFor="password">Пароль</label>
+                                <input
+                                    tabIndex="2"
+                                    type="password"
+                                    className={formState.passwordError ? "form-control my-2 is-invalid" : "form-control my-2"}
+                                    id="password"
+                                    placeholder="Введите пароль"
+                                    value={formState.password}
+                                    onChange={(e) => setFormState({ ...formState, password: e.target.value })}
+                                    onBlur={checkPassword} />
+                            </div>
+                            <p className="text-danger fw-bold">{formState.passwordError}</p>
 
-                        <div className="col-12">
-                            <Button variant="primary" onClick={tryLogin} ref={loginRef} className="mx-2">Войти</Button>
-                            <Link to="/register">
-                                <Button variant="secondary">Зарегистрироваться</Button>
-                            </Link>
-                        </div>
-                        <p className="text-danger fw-bold">{formError}</p>
+                            <div className="col-12">
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        tryLogin();
+                                    }}
+                                    ref={loginRef}
+                                    className="mx-2">
+                                    Войти
+                                </Button>
+                                <Link to="/register">
+                                    <Button variant="secondary">Зарегистрироваться</Button>
+                                </Link>
+                            </div>
+                            <p className="text-danger fw-bold">{formState.formError}</p>
+                        </form>
                     </div>
                 </div>
             </div>
