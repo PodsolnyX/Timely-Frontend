@@ -1,24 +1,115 @@
-.td-red-lesson {
+.container {
+    background-color: #222426;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    color: white;
+}
+
+.td-lesson {
     display: flex;
     flex-direction: column;
     padding: 4px 5px 4px 5px;
 
-    background-color: rgba(207,19,34, 0.2);
     font-size: 12px;
     font-weight: bold;
-    color: #bb0101;
-    border: 1px solid #fc2424;
+    border: 1px solid black;
     border-radius: 2px;
+    box-shadow: 1px 1px 10px rgba(0,0,0,0.3);
 }
 
-.audience-num {
+.lesson-red {
+    background-color: rgba(232, 29, 9, 0.07);
+    color: #e04545;
+    border: 1px solid #fc2424;
+}
+
+.audience-num-red {
     font-weight: normal;
-    color: #bb0101;
+    color: #d03d3d;
     margin: 1px 0 1px 0;
 }
 
-.group-num {
-    color: #d00d0d;
+.group-num-red {
+    color: #d73a3a;
+}
+
+.lesson-blue {
+    background-color: rgba(29, 57, 196, 0.07);
+    color: #5f78f5;
+    border: 1px solid #1d39c4;
+}
+
+.audience-num-blue {
+    font-weight: normal;
+    color: #4a62da;
+    margin: 1px 0 1px 0;
+}
+
+.group-num-blue {
+    color: #5169dc;
+}
+
+.lesson-cian {
+    background-color: rgba(29, 132, 196, 0.07);
+    color: #3da2e0;
+    border: 1px solid #3da2e0;
+}
+
+.audience-num-cian {
+    font-weight: normal;
+    color: #3595d0;
+    margin: 1px 0 1px 0;
+}
+
+.group-num-cian {
+    color: #3793cc;
+}
+
+.lesson-green {
+    background-color: rgba(29, 196, 32, 0.07);
+    color: #7ede47;
+    border: 1px solid #7ede47;
+}
+
+.audience-num-green {
+    font-weight: normal;
+    color: #71d339;
+    margin: 1px 0 1px 0;
+}
+
+.group-num-green {
+    color: #68c533;
+}
+
+.lesson-orange {
+    background-color: rgba(196, 157, 29, 0.07);
+    color: #e0b547;
+    border: 1px solid #e0b547;
+}
+
+.audience-num-orange {
+    font-weight: normal;
+    color: #d7ab3b;
+    margin: 1px 0 1px 0;
+}
+
+.group-num-orange {
+    color: #daaf3f;
+}
+
+.lesson-purple {
+    background-color: rgba(115, 29, 196, 0.07);
+    color: #9e4df1;
+    border: 1px solid #9647e0;
+}
+
+.audience-num-purple {
+    font-weight: normal;
+    color: #8c3ed5;
+    margin: 1px 0 1px 0;
+}
+
+.group-num-purple {
+    color: #883dce;
 }
 
 
