@@ -1,6 +1,6 @@
 import './login-page.css';
 import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 
