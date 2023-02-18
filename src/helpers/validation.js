@@ -30,7 +30,7 @@ export const checkPasswordRepeat = (password, passwordRepeat) => {
 }
 
 export const checkEmail = (email) => {
-    if (!email.match(/^\S+@\S+\.\S+$/)) {
+    if (!email.match(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/)) {
         return [false, "Некорректный email"];
     }
     return [true];

@@ -4,7 +4,7 @@ import { useZustandStore } from '../../shared/useZustandStore';
 
 const NavBar = () => {
     const logout = useZustandStore((store) => store.logout);
-
+    const isAuth = useZustandStore((store) => store.isAuth);
     return (
         <Navbar bg="light" expand="sm">
             <Container fluid>
@@ -23,8 +23,8 @@ const NavBar = () => {
                         </Link>
                     </Nav>
                     {
-                        localStorage.getItem("jwt") ?
-                                <Button variant="outline-primary" onClick={logout}>Выйти</Button>
+                        isAuth ?
+                            <Button variant="outline-primary" onClick={logout}>Выйти</Button>
                             :
                             <Link to={"/login"}>
                                 <Button variant="outline-primary">Войти</Button>

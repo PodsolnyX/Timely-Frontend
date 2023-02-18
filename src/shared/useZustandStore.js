@@ -14,6 +14,11 @@ const initialState = {
 
 export const useZustandStore = create(set => ({
     ...initialState,
+    init: () => {
+        if (localStorage.getItem("jwt")) {
+            set({isAuth: true});
+        }
+    },
     login: async (email, password) => {
         set({isLoading: true});
         try {
@@ -22,6 +27,7 @@ export const useZustandStore = create(set => ({
                 password
             });
             localStorage.setItem("jwt", request.data.token);
+            set({isAuth: true});
         }
         finally {
             set({isLoading: false});
@@ -40,7 +46,7 @@ export const useZustandStore = create(set => ({
             })
         }
         finally {
-            window.location.reload();
+            set({isAuth: false});
         }
 
     },
@@ -54,6 +60,7 @@ export const useZustandStore = create(set => ({
                 password
             });
             localStorage.setItem("jwt", request.data.token);
+            set({isAuth: true});
         }
         finally {
             set({isLoading: false});
