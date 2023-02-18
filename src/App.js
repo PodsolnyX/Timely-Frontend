@@ -13,7 +13,6 @@ axios.defaults.baseURL = 'https://food-delivery.kreosoft.ru/api';
 function App() {
     const init = useZustandStore((store) => store.init);
     init();
-    console.log("провек");
     return (
         <div>
             <NavBar />
