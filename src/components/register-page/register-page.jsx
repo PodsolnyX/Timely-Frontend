@@ -1,13 +1,18 @@
-import { useState, useRef, useEffect } from 'react';
-import Button from "react-bootstrap/Button";
-import axios from 'axios';
 import './register-page.css';
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import FormLayout from '../FormLayout';
+import FormField from '../FormField';
+import FormPairField from '../FormPairField';
+import FormSelect from '../FormSelect';
+import SubmitButton from '../SubmitButton';
+import LinkButton from "../LinkButton";
+import { useZustandStore } from '../../shared/useZustandStore.js';
+import { validator, checkEmail, checkPassword, checkPasswordRepeat, checkFullName } from '../../helpers/validation';
 
 const RegisterPage = () => {
     const [formState, setFormState] = useState({
         fullName: "",
-        group: "none",
         email: "",
         password: "",
         passwordRepeat: "",
@@ -17,202 +22,93 @@ const RegisterPage = () => {
         passwordError: "",
         passwordRepeatError: ""
     });
-
-    const [groups, setGroups] = useState(["Загрузка"]); 
-
-
-    useEffect(() => {
-        const getGroups = async () => {
-            const a = await new Promise((resolve) => setTimeout(() => resolve(true), 5000));
-            return ["1", "2", "3", "4", "5"];
-            const request = await axios.get("/search/group");
-            return request.data.groups;
-        };
-
-        getGroups().then((value) => setGroups(value));
-    }, []);
+    const roleOptions = [{ value: "student", name: "Студент" }, { value: "teacher", name: "Преподаватель" }];
 
     const regRef = useRef();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (localStorage.getItem("jwt")) navigate("/schedule");
+    }, []);
+
+    const validateEmail = validator(checkEmail, formState, setFormState, "email");
+    const validatePassword = validator(checkPassword, formState, setFormState, "password");
+    const validatePasswordRepeat = validator(checkPasswordRepeat, formState, setFormState, "passwordRepeat", "password");
+    const validateFullName = validator(checkFullName, formState, setFormState, "fullName");
+
+    const register = useZustandStore((store) => store.register);
     const tryRegister = async () => {
-        const checks = [checkEmail(), checkFullName(), checkPassword(), checkPasswordRepeat()];
-        for (let i = 0; i < checks.length; ++i) {
-            if (!checks[i]) return;
+        const checks = [validateEmail(), validateFullName(), validatePassword(), validatePasswordRepeat()];
+        for (let check of checks) {
+            if (!check) return;
         }
+        regRef.current.classList.add("disabled");
         try {
-            regRef.current.classList.add("disabled");
-            const token = await getToken();
+            const token = await register(
+                formState.email,
+                formState.password,
+                formState.fullName,
+                formState.role
+            );
             localStorage.setItem("jwt", token);
             navigate("/shedule");
         }
         catch (err) {
             regRef.current.classList.remove("disabled");
-            setFormState(state => ({ ...state, formError: "Ошибка. Попробуйте позже" }))
+            if (!err.response || err.response.status != 409) {
+                setFormState(state => ({ ...state, formError: "Ошибка. Попробуйте позже" }));
+            }
+            else {
+                setFormState(state => ({ ...state, formError: "Такой пользователь уже есть!" }));
+            }
         }
     };
-
-    const checkEmail = () => {
-        if (!formState.email.match(/^\S+@\S+\.\S+$/)) {
-            setFormState(state => ({ ...state, emailError: "Некорректный email" }));
-            return false;
-        }
-        else setFormState(state => ({ ...state, emailError: "" }));
-        return true;
-    }
-
-    const checkFullName = () => {
-        const fullName = formState.fullName;
-        if (fullName.length && !fullName.match(/^[а-яА-ЯёЁa-zA-Z\-_ ]+$/)) {
-            setFormState(state => ({ ...state, fullNameError: "Недопустимые символы" }));
-            return false;
-        }
-        else if (fullName.length < 5 || fullName.length > 128) {
-            setFormState(state => ({ ...state, fullNameError: "Длина имени от 5 до 128 символов" }));
-            return false;
-        }
-        else setFormState(state => ({ ...state, fullNameError: "" }));
-        return true;
-    }
-
-    const checkPassword = () => {
-        const password = formState.password;
-        if (password.length && !password.match(/^[а-яА-ЯёЁa-zA-Z0-9\-_!@#№$%^&?*+=(){}[\]<>~]+$/)) {
-            setFormState(state => ({ ...state, passwordError: "Недопустимые символы" }));
-            return false;
-        }
-        else if (password.length < 8 || password.length > 64) {
-            setFormState(state => ({ ...state, passwordError: "Длина пароля от 8 до 64 символов" }));
-            return false;
-        }
-        else setFormState(state => ({ ...state, passwordError: "" }));
-        return true;
-    }
-
-    const checkPasswordRepeat = () => {
-        if (formState.passwordRepeat != formState.password) {
-            setFormState(state => ({ ...state, passwordRepeatError: "Пароли не совпадают" }));
-            return false;
-        }
-        else setFormState(state => ({ ...state, passwordRepeatError: "" }));
-        return true;
-    }
-
-    const getToken = async () => {
-        const request = await axios.post("/account/register", {
-            fullName: formState.fullName,
-            group: formState.group,
-            email: formState.email,
-            password: formState.password,
-            role: formState.role,
-        });
-        return request.data.token;
-    };
-
-   
 
     return (
-        <div className={"container"}>
-            <h1 className={"text-center"}>Регистрация</h1>
-            <div className="card p-0 mx-auto my-4 reg w-75 bold">
-                <div className="card-body">
-                    <div className="row">
-                        <form>
-                            <div className="col-12">
-                                <label htmlFor="email">Почта</label>
-                                <input
-                                    tabIndex="1"
-                                    type="email"
-                                    className={formState.emailError ? "form-control my-2 is-invalid" : "form-control my-2"}
-                                    id="email"
-                                    placeholder="Введите почту"
-                                    value={formState.email}
-                                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                                    onBlur={checkEmail} />
-                            </div>
-                            <p className="text-danger fw-bold">{formState.emailError}</p>
+        <FormLayout header="Регистрация">
+            <FormField
+                tabIndex="1"
+                formId="email"
+                formState={formState}
+                setFormState={setFormState}
+                validator={validateEmail}
+                label="Почта"
+                type="email"
+                placeholder="Введите почту"
+            />
+            <FormField
+                tabIndex="2"
+                formId="fullName"
+                formState={formState}
+                setFormState={setFormState}
+                validator={validateFullName}
+                label="ФИО"
+                type="text"
+                placeholder="Введите ФИО"
+            />
+            <FormSelect
+                tabIndex="3"
+                formId="role"
+                label="Роль"
+                defaultValue={formState.role}
+                onChange={(e) => setFormState({ ...formState, role: e.target.value })}
+                options={roleOptions}
+            />
+            <FormPairField
+                index="5"
+                formIds={["password", "passwordRepeat"]}
+                formState={formState}
+                setFormState={setFormState}
+                validators={[validatePassword, validatePasswordRepeat]}
+                labels={["Пароль", "Пароль ещё раз"]}
+                type="password"
+                placeholders={["Введите пароль", "Введите пароль ещё раз"]}
+            />
+            <SubmitButton action={tryRegister} ref={regRef} text="Зарегистрироваться" />
+            <LinkButton link="/login" text="Войти" />
 
-                            <div className="col-12">
-                                <label htmlFor="fullName">Имя</label>
-                                <input
-                                    tabIndex="2"
-                                    type="text"
-                                    className={formState.fullNameError ? "form-control my-2 is-invalid" : "form-control my-2"}
-                                    id="fullName"
-                                    placeholder="Введите имя"
-                                    value={formState.fullName}
-                                    onChange={(e) => setFormState({ ...formState, fullName: e.target.value })}
-                                    onBlur={checkFullName} />
-                            </div>
-                            <p className="text-danger fw-bold">{formState.fullNameError}</p>
-
-                            <div className="col-12">
-                                <label htmlFor="role">Роль</label>
-                                <select tabIndex="3" className="form-select form-select my-2" id="role" defaultValue={formState.role} onChange={(e) => setFormState({...formState, role: e.target.value})}>
-                                    <option value="student">Студент</option>
-                                    <option value="teacher">Преподаватель</option>
-                                </select>
-                            </div>
-
-                            <div className="col-12" hidden={ formState.role == "teacher" }>
-                                <label htmlFor="group">Группа</label>
-                                <select tabIndex="4" className="form-select form-select my-2" id="group" defaultValue={formState.group} onChange={(e) => setFormState({...formState, group: e.target.value})}>
-                                    <option value="none">Не указана</option>
-                                    {groups.map((group, i) => <option value={group} key={i}>{group}</option>)}
-                                </select>
-                            </div>
-
-                            <div className="col-12">
-                                <label htmlFor="password">Пароль</label>
-                                <input
-                                    tabIndex="5"
-                                    type="password"
-                                    className={formState.passwordError || formState.passwordRepeatError ? "form-control my-2 is-invalid" : "form-control my-2"}
-                                    id="password"
-                                    placeholder="Введите пароль"
-                                    value={formState.password}
-                                    onChange={(e) => setFormState({ ...formState, password: e.target.value })}
-                                    onBlur={checkPassword} />
-                            </div>
-                            <p className="text-danger fw-bold">{formState.passwordError}</p>
-
-                            <div className="col-12">
-                                <label htmlFor="passwordRepeat">Повторите пароль</label>
-                                <input
-                                    tabIndex="6"
-                                    type="password"
-                                    className={formState.passwordError || formState.passwordRepeatError ? "form-control my-2 is-invalid" : "form-control my-2"}
-                                    id="passwordRepeat"
-                                    placeholder="Повторите пароль"
-                                    value={formState.passwordRepeat}
-                                    onChange={(e) => setFormState({ ...formState, passwordRepeat: e.target.value })}
-                                    onBlur={checkPasswordRepeat} />
-                            </div>
-                            <p className="text-danger fw-bold">{formState.passwordRepeatError}</p>
-
-
-                            <div className="col-12">
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    onClick={(event) => {
-                                        event.preventDefault();
-                                        tryRegister();
-                                    }}
-                                    ref={regRef}
-                                    className="mx-2">
-                                    Зарегистрироваться
-                                </Button>
-                                <Link to="/register">
-                                    <Button variant="secondary">Войти</Button>
-                                </Link>
-                            </div>
-                            <p className="text-danger fw-bold">{formState.formError}</p>
-                        </form>
-                    </div>
-                </div>
-            </div >
-        </div >
+            <p className="text-danger fw-bold">{formState.formError}</p>
+        </FormLayout>
     );
 }
 

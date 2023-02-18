@@ -1,7 +1,8 @@
-export const validator = (f, state, setState, name) => {
+export const validator = (f, state, setState, ...names) => {
     return function () {
-        const check = f(state[name]);
-        const err = name + "Error";
+        const err = names[0] + "Error";
+        names = names.map(name => state[name]);
+        const check = f(...names);
         if (!check[0]) {
             setState(state => ({ ...state, [err]: check[1] }));
             return false;
@@ -21,9 +22,31 @@ export const checkPassword = (password) => {
     return [true];
 }
 
+export const checkPasswordRepeat = (password, passwordRepeat) => {
+    if (passwordRepeat != password) {
+        return [false, "Пароли не совпадают"];
+    }
+    return [true];
+}
+
 export const checkEmail = (email) => {
     if (!email.match(/^\S+@\S+\.\S+$/)) {
         return [false, "Некорректный email"];
     }
+    return [true];
+}
+
+export const checkFullName = (fullName) => {
+    if (fullName.length && !fullName.match(/^[а-яА-ЯёЁa-zA-Z\-_ ]+$/)) {
+        return [false, "Недопустимые символы"];
+    }
+    else if (fullName.length < 5 || fullName.length > 128) {
+        return [false, "Длина имени от 5 до 128 символов"];
+    }
+    return [true];
+}
+
+export const checkEmpty = (value) => {
+    if (!value) return [false, "Поле обязательно"];
     return [true];
 }

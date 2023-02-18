@@ -1,14 +1,20 @@
 import './login-page.css';
-import { useState, useRef } from 'react';
-import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import SubmitButton from '../SubmitButton';
+import LinkButton from '../LinkButton';
 import FormLayout from '../FormLayout';
 import FormField from '../FormField';
 import { validator, checkEmail, checkPassword } from '../../helpers/validation';
-import { useZustandStore } from '../../shared/useZustandStore';
+import { useZustandStore } from '../../shared/useZustandStore.js';
 
 const LoginPage = () => {
-    const storeLogin = useZustandStore((store) => store.login);
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (localStorage.getItem("jwt")) navigate("/schedule");
+    }, []);
+
+    const login = useZustandStore((store) => store.login);
     const [formState, setFormState] = useState({
         email: "",
         password: "",
@@ -18,15 +24,18 @@ const LoginPage = () => {
     });
 
     const loginRef = useRef();
-   
+
     const validateEmail = validator(checkEmail, formState, setFormState, "email");
     const validatePassword = validator(checkPassword, formState, setFormState, "password");
 
     const tryLogin = async () => {
         const checks = [validateEmail(), validatePassword()];
         if (!checks[0] || !checks[1]) return;
+
+        loginRef.current.classList.add("disabled");
         try {
-            await storeLogin(formState.email, formState.password);
+            await login(formState.email, formState.password);
+            navigate("/schedule");
         } 
         catch (err) {
             loginRef.current.classList.remove("disabled");
@@ -61,20 +70,8 @@ const LoginPage = () => {
                 type="password"
                 placeholder="Введите пароль"
             />
-            <Button
-                type="submit"
-                variant="primary"
-                onClick={(event) => {
-                    tryLogin();
-                    event.preventDefault();
-                }}
-                ref={loginRef}
-                className="mx-2">
-                Войти
-            </Button>
-            <Link to="/register">
-                <Button variant="secondary">Зарегистрироваться</Button>
-            </Link>
+            <SubmitButton action={tryLogin} ref={loginRef} text="Войти"/>
+            <LinkButton link="/register" text="Зарегистрироваться"/>
 
             <p className="text-danger fw-bold">{formState.formError}</p>
         </FormLayout>

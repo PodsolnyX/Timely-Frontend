@@ -1,5 +1,4 @@
 const FormField = ({ formState, setFormState, validator, formId, label, ...props}) => {
-    const checker = validator;
     return (
         <>
             <div className="col-12">
@@ -10,7 +9,7 @@ const FormField = ({ formState, setFormState, validator, formId, label, ...props
                     className={formState[formId + "Error"] ? "form-control my-2 is-invalid" : "form-control my-2"}
                     value={formState[formId]}
                     onChange={(e) => setFormState((state) => ({...state, [formId]: e.target.value}))}
-                    onBlur={(e) => validator()} />
+                    onBlur={validator} />
             </div>
             <p className="text-danger fw-bold">{formState[formId + "Error"]}</p>
         </>

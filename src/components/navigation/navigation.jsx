@@ -1,12 +1,10 @@
 import { Container, Nav, Navbar, Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useZustandStore } from '../../shared/useZustandStore';
 
 const NavBar = () => {
-    const navigate = useNavigate();
-    const logout = () => {
-        localStorage.removeItem("jwt");
-        navigate("/shedule");
-    }
+    const logout = useZustandStore((store) => store.logout);
+
     return (
         <Navbar bg="light" expand="sm">
             <Container fluid>
