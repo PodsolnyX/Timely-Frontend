@@ -1,5 +1,6 @@
-import { create } from "zustand";
+import {create} from "zustand";
 import axios from "axios";
+
 const initialState = {
     isAuth: false,
     isLoading: false,
@@ -10,9 +11,21 @@ const initialState = {
         group: 0,
         email: "",
     },
+
+    //Данные для модального окна редактирования пар
+    lessonEditModal: {
+        isShow: false,
+        currentLesson: {
+            curLessonNameId: null,
+            curGroupId: null,
+            curAudienceId: null,
+            curTeacherId: null,
+            curLessonTagId: null
+        }
+    }
 };
 
-export const useZustandStore = create(set => ({
+export const useZustandStore = create((set, get) => ({
     ...initialState,
     init: () => {
         if (localStorage.getItem("jwt")) {
@@ -28,8 +41,7 @@ export const useZustandStore = create(set => ({
             });
             localStorage.setItem("jwt", request.data.token);
             set({isAuth: true});
-        }
-        finally {
+        } finally {
             set({isLoading: false});
         }
         //
@@ -44,8 +56,7 @@ export const useZustandStore = create(set => ({
                     "Authorization": `Bearer ${jwt}`
                 }
             })
-        }
-        finally {
+        } finally {
             set({isAuth: false});
         }
 
@@ -61,24 +72,75 @@ export const useZustandStore = create(set => ({
             });
             localStorage.setItem("jwt", request.data.token);
             set({isAuth: true});
-        }
-        finally {
+        } finally {
             set({isLoading: false});
         }
     },
-    activate: async () => {},
-    getProfile: async () => {},
-    editProfile: async () => {},
-/*
-    // пока не трогать
-    //   confirmMail: () => {},
-    //   changeProfile: () => {},
+    //////////////Методы для модального окна редактирования пар//////////////////
+    lessonEditModalClose: () => {
+        set((state) => {
+            return {
+                ...state, lessonEditModal: {...state.lessonEditModal, isShow: false}
+            };
+        })
+    },
+    lessonEditModalOpen: (isLesson, selectLesson) => {
+        if (isLesson) {
+            const _selectLesson= {
+                    curLessonNameId: selectLesson.lessonName.value,
+                    curGroupId: selectLesson.group.value,
+                    curAudienceId: selectLesson.audience.value,
+                    curTeacherId: selectLesson.teacher.value,
+                    curLessonTagId: selectLesson.lessonTag.value
+            };
+            set((state) => {
+                return {
+                    ...state,
+                    lessonEditModal: {
+                        ...state.lessonEditModal,
+                        isShow: true,
+                        currentLesson: _selectLesson,
+                    }
+                };
+            })
+        }
+        else {
+            set((state) => {
+                return {
+                    ...state,
+                    lessonEditModal: {
+                        ...state.lessonEditModal,
+                        isShow: true,
+                        currentLesson: {
+                            curLessonNameId: null,
+                            curGroupId: null,
+                            curAudienceId: null,
+                            curTeacherId: null,
+                            curLessonTagId: null
+                        },
+                    }
+                };
+            })
+        }
 
-    // // админ
-    //   addPair: () => {},
-    //   deletePair: () => {},
-    //   changePair: () => {},
-    //   adminChangeEmail: () => {},
-    //   adminCreateTeacher
-    */
+    },
+    //////////////////////////////////////////////////////////////////////////////
+    activate: async () => {
+    },
+    getProfile: async () => {
+    },
+    editProfile: async () => {
+    },
+    /*
+        // пока не трогать
+        //   confirmMail: () => {},
+        //   changeProfile: () => {},
+
+        // // админ
+        //   addPair: () => {},
+        //   deletePair: () => {},
+        //   changePair: () => {},
+        //   adminChangeEmail: () => {},
+        //   adminCreateTeacher
+        */
 }));

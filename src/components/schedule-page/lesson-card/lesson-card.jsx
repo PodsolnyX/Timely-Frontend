@@ -1,12 +1,15 @@
 import './lesson-card.css'
 
 const LessonCard = (props) => {
-    if (props.type) {
+    console.log(props)
+    if (props.lessonData) {
         return (
-            <div className={ `td-lesson lesson-${props.type}` } onClick={() => props.handleShow(true, props.lesson, props.audienceNum, props.groupNum)}>
-                <span>{props.lesson}</span>
-                <span className={`audience-num audience-num-${props.type}`}>{props.audienceNum}</span>
-                <span className={`audience-num group-num-${props.type}`}>{props.groupNum}</span>
+            <div className={ `td-lesson lesson-${props.lessonData.lessonTag.title}` }
+                 onClick={() => props.handleShow(true, props.lessonData)}
+            >
+                <span>{props.lessonData.lessonName.title}</span>
+                <span className={`audience-num audience-num-${props.lessonData.lessonTag.title}`}>{props.lessonData.audience.title}</span>
+                <span className={`audience-num group-num-${props.lessonData.lessonTag.title}`}>{props.lessonData.group.title}</span>
             </div>
         )
     }

@@ -1,8 +1,11 @@
 import './schedule-table.css'
 import LessonCard from "../lesson-card/lesson-card";
 import React from "react";
+import {useZustandStore} from "../../../shared/useZustandStore";
 
 const ScheduleTable = (props) => {
+
+    const lessonEditModalOpen = useZustandStore((state) => state.lessonEditModalOpen);
 
     let tableRows = [];
     let tableColumn = [];
@@ -23,15 +26,12 @@ const ScheduleTable = (props) => {
         for (let k = 0; k < props.lessonsDays.length; k++) {
             lessonsTd.push(
                 <td className={props.lessons[index][k] ? null : "td-container"}
-                    onClick={props.lessons[index][k] ? null : props.handleShow}
+                    onClick={props.lessons[index][k] ? null : () => lessonEditModalOpen(false)}
                     style={{width: `${100 / (props.lessonsDays.length)}%`}}
                     key={k}
                 >
                     <LessonCard handleShow={props.handleShow}
-                                type={props.lessons[index][k]}
-                                lesson={"Хочу Домой"}
-                                audienceNum={"302 (2) Учебная аудитория"}
-                                groupNum={"9721033"}
+                                lessonData={props.lessons[index][k]}
                     />
                 </td>
             )
