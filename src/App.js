@@ -8,7 +8,7 @@ import RegisterPage from "./components/register-page/register-page";
 
 function App() {
   return (
-      <div>
+      <div className={""}>
           <NavBar/>
           <Routes>
               <Route path="/" element={<MainPage/>}/>

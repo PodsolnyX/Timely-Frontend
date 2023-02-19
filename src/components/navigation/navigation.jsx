@@ -3,10 +3,10 @@ import {Link} from "react-router-dom";
 
 const NavBar = () => {
     return (
-        <Navbar bg="light" expand="sm">
-            <Container fluid>
+        <Navbar variant="dark" expand="sm" style={{background: "#222426", boxShadow: "0 0 10px rgba(0,0,0,0.1)"}}>
+            <Container fluid style={{padding : "1px 5vw 1px 5vw"}}>
                 <Link to={"/"}>
-                    <Navbar.Brand href="/">Teamely</Navbar.Brand>
+                    <Navbar.Brand>Timely</Navbar.Brand>
                 </Link>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll">
@@ -15,9 +15,7 @@ const NavBar = () => {
                         style={{ maxHeight: '100px' }}
                         navbarScroll
                     >
-                        <Link to={"/"}>
-                            <Nav.Link href="/">Главная</Nav.Link>
-                        </Link>
+                        <Link to={"/"}> Главная </Link>
                     </Nav>
                     <Link to={"/login"}>
                         <Button variant="outline-primary">Войти</Button>
