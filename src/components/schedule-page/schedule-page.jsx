@@ -2,7 +2,7 @@ import './schedule-page.css';
 import {Button} from "react-bootstrap";
 import React, {useState} from "react";
 import LessonEditModal from "./lesson-edit-modal/lesson-edit-modal";
-import LessonCard from "./lesson-card/lesson-card";
+import ScheduleTable from "./schedule-table/schedule-table";
 
 const SchedulePage = () => {
 
@@ -25,6 +25,41 @@ const SchedulePage = () => {
         setShow(true);
     };
 
+    const universityData = {
+        groups : [
+            { value: '1', label: '972101' },
+            { value: '2', label: '972102' },
+            { value: '3', label: '972103' }
+        ],
+        audience : [
+            { value: '1', label: '302 (2) Учебная аудитория' },
+            { value: '2', label: '235 (2) Учебная аудитория' },
+            { value: '3', label: '212 (2) Учебная аудитория' },
+            { value: '4', label: '228 (2) Учебная аудитория' },
+            { value: '5', label: '204 (2) Учебная аудитория' }
+        ],
+        teachers : [
+            { value: '1', label: 'Хакимова Альфия Амировна' },
+            { value: '2', label: 'Змеев Денис Олегович' },
+            { value: '3', label: 'Змеев Олег Алексеевич' },
+            { value: '4', label: 'Шаврин Валерий Викторович' },
+            { value: '5', label: 'Зубов Данил Романович' },
+        ],
+        lessonsName : [
+            { value: '1', label: 'Машинное обучение' },
+            { value: '2', label: 'Математический анализ ' },
+            { value: '3', label: 'Тестирование' },
+            { value: '4', label: 'Web-программирование' },
+        ],
+        lessonsTypes : [
+            { value: '1', label: 'Лекция' },
+            { value: '2', label: 'Семинар' },
+            { value: '3', label: 'Практика' },
+            { value: '4', label: 'Лабораторная' },
+            { value: '5', label: 'Экзамен' }
+        ]
+    };
+
     const lessonsTime = ["8:45", "10:35", "12:25", "14:45", "16:35", "18:25", "20:15"];
     const lessonsDays = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"];
     const lessons = [
@@ -39,62 +74,16 @@ const SchedulePage = () => {
 
     /////////////////////////////////////////////////////////
 
-    let tableRows = [];
-    let tableColumn = [];
-
-    for (let i = 0; i < lessonsDays.length; i++) {
-        tableColumn.push(
-            <th scope="col" style={{color: "white", borderTop: 0, borderRight: 0}}>
-                <div className={"d-flex justify-content-between"}>
-                    <span>{lessonsDays[i]}</span>
-                    <span style={{fontSize: 14, fontWeight: "normal", color: "gray"}}>14 февр.</span>
-                </div>
-            </th>
-        );
-    }
-
-    let createTd = (index) => {
-        let lessonsTd = [];
-        for (let k = 0; k < lessonsDays.length; k++) {
-            lessonsTd.push(
-                <td className={lessons[index][k] ? null : "td-container"}
-                    onClick={lessons[index][k] ? null : handleShow}
-                    style={{width: `${100 / (lessonsDays.length)}%`}}
-                >
-                    <LessonCard handleShow={handleShow}
-                                type={lessons[index][k]}
-                                lesson={"Хочу Домой"}
-                                audienceNum={"302 (2) Учебная аудитория"}
-                                groupNum={"9721033"}
-                    />
-                </td>
-            )
-        }
-        return lessonsTd;
-    }
-
-    for (let i = 0; i < lessonsTime.length; i++) {
-        tableRows.push(
-            <tr>
-                <th scope="row" className={"text-center d-flex flex-column"}
-                    style={{color: "white", padding: 15, borderLeft: 0, borderRight: 0}}>
-                    <span>{lessonsTime[i]}</span>
-                    <span style={{fontSize: 13, fontWeight: "normal", color: "gray"}}>{`10:35`}</span>
-                </th>
-                {createTd(i)}
-            </tr>
-        )
-    }
-
-
     return (
-        <div className={"container"} style={{marginTop: 30, marginBottom: 30}}>
+        <div className={"container schedule-page-container"} style={{marginTop: 30, marginBottom: 30}}>
             <LessonEditModal
                 show={show}
                 handleClose={handleClose}
                 lesson={lesson}
                 audienceNum={audienceNum}
-                groupNum={groupNum}/>
+                groupNum={groupNum}
+                universityData={universityData}
+            />
             <div style={{padding: 20}}>
                 <h2>
                     Расписание группы 972102
@@ -104,19 +93,7 @@ const SchedulePage = () => {
                     <Button variant={"outline-secondary"}>Предыдущая неделя</Button>
                     <Button variant={"outline-secondary"} className={"ms-3"}>Следующая неделя</Button>
                 </div>
-                <div className={"table-responsive"} style={{marginTop: 30}}>
-                    <table className="table table-bordered border-secondary" style={{minWidth: 800}}>
-                        <thead style={{borderTop: "0 solid #222426"}}>
-                        <tr>
-                            <th scope="col" style={{width: 80, border: 0}}></th>
-                            {tableColumn}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {tableRows}
-                        </tbody>
-                    </table>
-                </div>
+                <ScheduleTable lessonsTime={lessonsTime} lessonsDays={lessonsDays} lessons={lessons} handleShow={handleShow}/>
             </div>
         </div>
     );
