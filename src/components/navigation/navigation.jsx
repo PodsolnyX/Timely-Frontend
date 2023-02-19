@@ -1,7 +1,10 @@
-import {Container, Nav, Navbar, Button} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import { Container, Nav, Navbar, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { useZustandStore } from '../../shared/useZustandStore';
 
 const NavBar = () => {
+    const logout = useZustandStore((store) => store.logout);
+    const isAuth = useZustandStore((store) => store.isAuth);
     return (
         <Navbar variant="dark" expand="sm" style={{background: "#222426", boxShadow: "0 0 10px rgba(0,0,0,0.1)"}}>
             <Container fluid style={{padding : "1px 5vw 1px 5vw"}}>
@@ -17,9 +20,15 @@ const NavBar = () => {
                     >
                         <Link to={"/"}> Главная </Link>
                     </Nav>
-                    <Link to={"/login"}>
-                        <Button variant="outline-primary">Войти</Button>
-                    </Link>
+                    {
+                        isAuth ?
+                            <Button variant="outline-primary" onClick={logout}>Выйти</Button>
+                            :
+                            <Link to={"/login"}>
+                                <Button variant="outline-primary">Войти</Button>
+                            </Link>
+                    }
+
                 </Navbar.Collapse>
             </Container>
         </Navbar>
