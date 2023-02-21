@@ -4,10 +4,10 @@ export const validator = (f, state, setState, ...names) => {
         names = names.map(name => state[name]);
         const check = f(...names);
         if (!check[0]) {
-            setState(state => ({ ...state, [err]: check[1] }));
+            setState(err, check[1]);
             return false;
         }
-        else setState(state => ({ ...state, [err]: "" }));
+        else setState(err, "");
         return true;
     }
 }

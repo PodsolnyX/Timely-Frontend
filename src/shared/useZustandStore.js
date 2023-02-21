@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 const initialState = {
-    isAuth: false,
+    isAuth: !!localStorage.getItem("jwt"),
     isLoading: false,
     error: "",
     user: {
@@ -14,15 +14,10 @@ const initialState = {
 
 export const useZustandStore = create(set => ({
     ...initialState,
-    init: () => {
-        if (localStorage.getItem("jwt")) {
-            set({isAuth: true});
-        }
-    },
     login: async (email, password) => {
         set({isLoading: true});
         try {
-            const request = await axios.post("/login", {
+            const request = await axios.post("/account/login", {
                 email,
                 password
             });

@@ -1,5 +1,5 @@
 import './register-page.css';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import FormLayout from '../FormLayout';
 import FormField from '../FormField';
@@ -8,28 +8,16 @@ import FormSelect from '../FormSelect';
 import SubmitButton from '../SubmitButton';
 import LinkButton from "../LinkButton";
 import { useZustandStore } from '../../shared/useZustandStore.js';
+import { useZustandFormStore } from '../../shared/useZustandFormStore';
 import { validator, checkEmail, checkPassword, checkPasswordRepeat, checkFullName } from '../../helpers/validation';
 
 const RegisterPage = () => {
-    const [formState, setFormState] = useState({
-        fullName: "",
-        email: "",
-        password: "",
-        passwordRepeat: "",
-        role: "student",
-        fullNameError: "",
-        emailError: "",
-        passwordError: "",
-        passwordRepeatError: ""
-    });
+    const formState = useZustandFormStore((store) => store.register);
+    const setFormState = useZustandFormStore((store) => store.setRegisterData);
     const roleOptions = [{ value: "student", name: "Студент" }, { value: "teacher", name: "Преподаватель" }];
 
     const regRef = useRef();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (localStorage.getItem("jwt")) navigate("/schedule");
-    }, []);
 
     const validateEmail = validator(checkEmail, formState, setFormState, "email");
     const validatePassword = validator(checkPassword, formState, setFormState, "password");
@@ -56,10 +44,10 @@ const RegisterPage = () => {
         catch (err) {
             regRef.current.classList.remove("disabled");
             if (!err.response || err.response.status != 409) {
-                setFormState(state => ({ ...state, formError: "Ошибка. Попробуйте позже" }));
+                setFormState("formError", "Ошибка. Попробуйте позже");
             }
             else {
-                setFormState(state => ({ ...state, formError: "Такой пользователь уже есть!" }));
+                setFormState("formError", "Такой пользователь уже есть!");
             }
         }
     };
@@ -91,7 +79,7 @@ const RegisterPage = () => {
                 formId="role"
                 label="Роль"
                 defaultValue={formState.role}
-                onChange={(e) => setFormState({ ...formState, role: e.target.value })}
+                onChange={(e) => setFormState("role", e.target.value)}
                 options={roleOptions}
             />
             <FormPairField

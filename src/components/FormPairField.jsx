@@ -7,7 +7,7 @@ const FormPairField = ({ formState, setFormState, validators, placeholders, form
                     {...props}
                     id={formIds[0]}
                     value={formState[formIds[0]]}
-                    onChange={(e) => setFormState((state) => ({ ...state, [formIds[0]]: e.target.value }))}
+                    onChange={(e) => setFormState(formIds[0], e.target.value)}
                     onBlur={() => {
                         validators[0]();
                         validators[1]();
@@ -25,7 +25,7 @@ const FormPairField = ({ formState, setFormState, validators, placeholders, form
                     {...props}
                     id={formIds[1]}
                     value={formState[formIds[1]]}
-                    onChange={(e) => setFormState((state) => ({ ...state, [formIds[1]]: e.target.value }))}
+                    onChange={(e) => setFormState(formIds[1], e.target.value)}
                     onBlur={() => {
                         validators[0]();
                         validators[1]();

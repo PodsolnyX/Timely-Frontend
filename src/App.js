@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import axios from 'axios';
 import MainPage from "./components/main-page/main-page";
 import SchedulePage from "./components/schedule-page/schedule-page";
@@ -11,16 +11,15 @@ import { useZustandStore } from './shared/useZustandStore';
 axios.defaults.baseURL = 'https://food-delivery.kreosoft.ru/api';
 
 function App() {
-    const init = useZustandStore((store) => store.init);
-    init();
+    const isAuth = useZustandStore((store) => store.isAuth);
     return (
         <div>
             <NavBar />
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/schedule" element={<SchedulePage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/login" element={isAuth ? <Navigate to="/schedule"/> : <LoginPage />} />
+                <Route path="/register" element={isAuth ? <Navigate to="/schedule"/> : <RegisterPage />} />
             </Routes>
         </div>
     );
