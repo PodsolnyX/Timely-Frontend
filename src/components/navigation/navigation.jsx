@@ -19,6 +19,7 @@ const NavBar = () => {
                         navbarScroll
                     >
                         <Link to={"/"}> Главная </Link>
+                        <Link className={"ms-2"} to={"/admin"}> Админ </Link>
                     </Nav>
                     {
                         isAuth ?

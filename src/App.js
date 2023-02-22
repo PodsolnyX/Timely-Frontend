@@ -7,6 +7,7 @@ import NavBar from "./components/navigation/navigation";
 import LoginPage from "./components/login-page/login-page";
 import RegisterPage from "./components/register-page/register-page";
 import { useZustandStore } from './shared/useZustandStore';
+import AdminPage from "./components/admin-panel-page/admin-page";
 
 axios.defaults.baseURL = 'https://food-delivery.kreosoft.ru/api';
 
@@ -20,6 +21,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/schedule" element={<SchedulePage />} />
+                <Route path="/admin" element={<AdminPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
             </Routes>
