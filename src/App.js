@@ -8,7 +8,7 @@ import LoginPage from "./components/login-page/login-page";
 import RegisterPage from "./components/register-page/register-page";
 import { useZustandStore } from './shared/useZustandStore';
 
-axios.defaults.baseURL = 'https://food-delivery.kreosoft.ru/api';
+axios.defaults.baseURL = 'http://timely.markridge.space/api/';
 
 function App() {
     const isAuth = useZustandStore((store) => store.isAuth);

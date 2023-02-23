@@ -21,6 +21,7 @@ const LoginPage = () => {
     const validatePassword = validator(checkPassword, formState, setFormState, "password");
 
     const tryLogin = async () => {
+        setFormState("formError", "");
         const checks = [validateEmail(), validatePassword()];
         if (!checks[0] || !checks[1]) return;
 

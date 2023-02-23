@@ -1,10 +1,9 @@
 import './register-page.css';
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import FormLayout from '../FormLayout';
 import FormField from '../FormField';
 import FormPairField from '../FormPairField';
-import FormSelect from '../FormSelect';
 import SubmitButton from '../SubmitButton';
 import LinkButton from "../LinkButton";
 import { useZustandStore } from '../../shared/useZustandStore.js';
@@ -14,7 +13,6 @@ import { validator, checkEmail, checkPassword, checkPasswordRepeat, checkFullNam
 const RegisterPage = () => {
     const formState = useZustandFormStore((store) => store.register);
     const setFormState = useZustandFormStore((store) => store.setRegisterData);
-    const roleOptions = [{ value: "student", name: "Студент" }, { value: "teacher", name: "Преподаватель" }];
 
     const regRef = useRef();
     const navigate = useNavigate();
@@ -26,19 +24,18 @@ const RegisterPage = () => {
 
     const register = useZustandStore((store) => store.register);
     const tryRegister = async () => {
+        setFormState("formError", "");
         const checks = [validateEmail(), validateFullName(), validatePassword(), validatePasswordRepeat()];
         for (let check of checks) {
             if (!check) return;
         }
         regRef.current.classList.add("disabled");
         try {
-            const token = await register(
+            await register(
                 formState.email,
                 formState.password,
-                formState.fullName,
-                formState.role
+                formState.fullName
             );
-            localStorage.setItem("jwt", token);
             navigate("/shedule");
         }
         catch (err) {
@@ -73,14 +70,6 @@ const RegisterPage = () => {
                 label="ФИО"
                 type="text"
                 placeholder="Введите ФИО"
-            />
-            <FormSelect
-                tabIndex="3"
-                formId="role"
-                label="Роль"
-                defaultValue={formState.role}
-                onChange={(e) => setFormState("role", e.target.value)}
-                options={roleOptions}
             />
             <FormPairField
                 index="5"
