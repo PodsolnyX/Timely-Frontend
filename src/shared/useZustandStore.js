@@ -125,6 +125,7 @@ export const useZustandStore = create(set => ({
             }
         })
     },
+    
     createTeacher: async (name) => await admin("create", "teacher", "name", name),
     editTeacher: async (id, name) => await admin("edit", "teacher", id, "name", name),
     deleteTeacher: async (id) => await admin("delete", "teacher", id),
