@@ -126,29 +126,70 @@ export const useZustandStore = create(set => ({
         })
     },
     
-    createTeacher: async (name) => await admin("create", "teacher", "name", name),
-    editTeacher: async (id, name) => await admin("edit", "teacher", id, "name", name),
+    createTeacher: async (name) => await admin("create", "teacher", { name }),
+    editTeacher: async (id, name) => await admin("edit", "teacher", id, { name }),
     deleteTeacher: async (id) => await admin("delete", "teacher", id),
 
-    createDomain: async (url) => await admin("create", "domain", "url", url),
-    editDomain: async (id, url) => await admin("edit", "domain", id, "url", url),
+    createDomain: async (url) => await admin("create", "domain", { url }),
+    editDomain: async (id, url) => await admin("edit", "domain", id, { url }),
     deleteDomain: async (id) => await admin("delete", "domain", id),
 
-    createClassroom: async (name) => await admin("create", "classroom", "name", name),
-    editClassroom: async (id, name) => await admin("edit", "classroom", id, "name", name),
+    createClassroom: async (name) => await admin("create", "classroom", { name }),
+    editClassroom: async (id, name) => await admin("edit", "classroom", id, { name }),
     deleteClassroom: async (id) => await admin("delete", "classroom", id),
 
-    createGroup: async (name) => await admin("create", "group", "name", name),
-    editGroup: async (id, name) => await admin("edit", "group", id, "name", name),
+    createGroup: async (name) => await admin("create", "group", { name }),
+    editGroup: async (id, name) => await admin("edit", "group", id, { name }),
     deleteGroup: async (id) => await admin("delete", "group", id),
 
-    createLessonName: async (name) => await admin("create", "lessonName", "name", name),
-    editLessonName: async (id, name) => await admin("edit", "lessonName", id, "name", name),
+    createLessonName: async (name) => await admin("create", "lessonName", { name }),
+    editLessonName: async (id, name) => await admin("edit", "lessonName", id, { name }),
     deleteLessonName: async (id) => await admin("delete", "lessonName", id),
 
-    createLessonTag: async (name) => await admin("create", "lessonTag", "name", name),
-    editLessonTag: async (id, name) => await admin("edit", "lessonTag", id, "name", name),
-    deleteLessonTag: async (id) => await admin("delete", "lessonTag", id)
+    createLessonTag: async (name) => await admin("create", "lessonTag", { name }),
+    editLessonTag: async (id, name) => await admin("edit", "lessonTag", id, { name }),
+    deleteLessonTag: async (id) => await admin("delete", "lessonTag", id),
+
+    createTimeInterval: async (startTime, endTime) => await admin("create", "timeInterval", { startTime, endTime }),
+    editTimeInterval: async (id, startTime, endTime) => await admin("edit", "timeInterval", id, { startTime, endTime }),
+    deleteTimeInterval: async (id) => await admin("delete", "timeInterval", id),
+
+    createLesson: async (
+        nameId,
+        tagId,
+        groupId,
+        teacherId,
+        timeIntervalId,
+        date,
+        classroomId
+    ) => await admin("create", "lesson", { 
+        nameId,
+        tagId,
+        groupId,
+        teacherId,
+        timeIntervalId,
+        date,
+        classroomId
+    }),
+    editLesson: async (
+        id,
+        nameId,
+        tagId,
+        groupId,
+        teacherId,
+        timeIntervalId,
+        date,
+        classroomId
+    ) => await admin("edit", "lesson", id, {
+        nameId,
+        tagId,
+        groupId,
+        teacherId,
+        timeIntervalId,
+        date,
+        classroomId
+    }),
+    deleteLesson: async (id) => await admin("delete", "lesson", id)
 }));
 
 async function admin(action, ...params) {
@@ -160,14 +201,10 @@ async function admin(action, ...params) {
     };
     switch(action) {
         case "create":
-            await axios.post(`admin/${params[0]}/create`, {
-                [params[1]]: params[2]
-            }, headers);
+            await axios.post(`admin/${params[0]}/create`, params[1], headers);
             break;
         case "edit":
-            await axios.put(`admin/${params[0]}/edit/${params[1]}`, {
-                [params[2]]: params[3]
-            }, headers);
+            await axios.put(`admin/${params[0]}/edit/${params[1]}`, params[2], headers);
             break;
         case "delete":
             await axios.delete(`admin/${params[0]}/delete/${params[1]}`, headers);
