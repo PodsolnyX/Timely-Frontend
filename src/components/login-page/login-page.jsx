@@ -1,5 +1,5 @@
 import './login-page.css';
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import SubmitButton from '../SubmitButton';
 import LinkButton from '../LinkButton';
@@ -7,21 +7,13 @@ import FormLayout from '../FormLayout';
 import FormField from '../FormField';
 import { validator, checkEmail, checkPassword } from '../../helpers/validation';
 import { useZustandStore } from '../../shared/useZustandStore.js';
+import { useZustandFormStore } from '../../shared/useZustandFormStore';
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    useEffect(() => {
-        if (localStorage.getItem("jwt")) navigate("/schedule");
-    }, []);
-
     const login = useZustandStore((store) => store.login);
-    const [formState, setFormState] = useState({
-        email: "",
-        password: "",
-        emailError: "",
-        passwordError: "",
-        formError: ""
-    });
+    const formState = useZustandFormStore((store) => store.login);
+    const setFormState = useZustandFormStore((store) => store.setLoginData);
 
     const loginRef = useRef();
 
@@ -29,6 +21,7 @@ const LoginPage = () => {
     const validatePassword = validator(checkPassword, formState, setFormState, "password");
 
     const tryLogin = async () => {
+        setFormState("formError", "");
         const checks = [validateEmail(), validatePassword()];
         if (!checks[0] || !checks[1]) return;
 
@@ -40,10 +33,10 @@ const LoginPage = () => {
         catch (err) {
             loginRef.current.classList.remove("disabled");
             if (!err.response) {
-                setFormState(state => ({ ...state, formError: "Ошибка соединения" }));
+                setFormState("formError", "Ошибка соединения");
             }
             else {
-                setFormState(state => ({ ...state, formError: "Неверные данные" }));
+                setFormState("formError", "Неверные данные");
             }
         }
     }

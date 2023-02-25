@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import axios from 'axios';
 import MainPage from "./components/main-page/main-page";
 import SchedulePage from "./components/schedule-page/schedule-page";
@@ -14,12 +14,10 @@ import GroupsPage from "./components/groups-page/groups-page";
 import AudiencesPage from "./components/audiences-page/audiences-page";
 import TeachersPage from "./components/teachers-page/teachers-page";
 
-axios.defaults.baseURL = 'https://food-delivery.kreosoft.ru/api';
+axios.defaults.baseURL = 'http://timely.markridge.space/api/';
 
 function App() {
-
-    const init = useZustandStore((store) => store.init);
-    init();
+    const isAuth = useZustandStore((store) => store.isAuth);
     return (
         <div className={"bg-main"}>
             <NavBar />
@@ -31,8 +29,8 @@ function App() {
                     <Route path="/teachers" element={<TeachersPage />} />
                     <Route path="/audiences" element={<AudiencesPage />} />
                     <Route path="/admin" element={<AdminPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/login" element={isAuth ? <Navigate to="/schedule"/> : <LoginPage />} />
+                    <Route path="/register" element={isAuth ? <Navigate to="/schedule"/> : <RegisterPage />} />
                 </Routes>
             </div>
             <Footer />

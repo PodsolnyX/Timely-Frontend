@@ -4,17 +4,26 @@ export const validator = (f, state, setState, ...names) => {
         names = names.map(name => state[name]);
         const check = f(...names);
         if (!check[0]) {
-            setState(state => ({ ...state, [err]: check[1] }));
+            setState(err, check[1]);
             return false;
         }
-        else setState(state => ({ ...state, [err]: "" }));
+        else setState(err, "");
         return true;
     }
 }
 
 export const checkPassword = (password) => {
-    if (password.length && !password.match(/^[а-яА-ЯёЁa-zA-Z0-9\-_!@#№$%^&?*+=(){}[\]<>~]+$/)) {
+    if (password.length && !password.match(/^[a-zA-Z0-9\-_!@#№$%^&?*+=(){}[\]<>~]+$/)) {
         return [false, "Недопустимые символы"];
+    }
+    else if (!password.match(/[\-_!@#№$%^&?*+=(){}[\]<>~]/)) {
+        return [false, "Пароль должен содержать спецсимволы"]
+    }
+    else if (!password.match(/[0-9]/)) {
+        return [false, "Пароль должен содержать цифры"]
+    }
+    else if (!password.match(/[A-Z]/)) {
+        return [false, "Пароль должен содержать заглавные латинские символы"]
     }
     else if (password.length < 8 || password.length > 64) {
         return [false, "Длина пароля от 8 до 64 символов"];
@@ -37,11 +46,11 @@ export const checkEmail = (email) => {
 }
 
 export const checkFullName = (fullName) => {
-    if (fullName.length && !fullName.match(/^[а-яА-ЯёЁa-zA-Z\-_ ]+$/)) {
-        return [false, "Недопустимые символы"];
+    if (fullName.length && !fullName.match(/^([A-ZА-ЯЁ][a-zа-яё]+[\s]?){2,3}$/)) {
+        return [false, "ФИО должно состоять из 2-3 слов, начинаться с заглавной буквы и содержать только латиницу, кириллицу, пробелы"];
     }
-    else if (fullName.length < 5 || fullName.length > 128) {
-        return [false, "Длина имени от 5 до 128 символов"];
+    else if (fullName.length > 64) {
+        return [false, "Длина ФИО не должна превышать 64 символа"]
     }
     return [true];
 }
