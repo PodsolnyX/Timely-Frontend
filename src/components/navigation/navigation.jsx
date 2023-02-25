@@ -1,13 +1,15 @@
-import { Container, Nav, Navbar, Button } from "react-bootstrap";
+import {Container, Nav, Navbar, Button} from "react-bootstrap";
+import {NavLink} from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useZustandStore } from '../../shared/useZustandStore';
+import "./navigation.css";
 
 const NavBar = () => {
     const logout = useZustandStore((store) => store.logout);
     const isAuth = useZustandStore((store) => store.isAuth);
     return (
         <Navbar variant="dark" expand="md" style={{background: "#202225", borderBottom: "1px solid gray", boxShadow: "0 6px 10px rgba(0,0,0,0.2)", height : "70px"}}>
-            <Container fluid style={{padding : "1px 5vw 1px 5vw"}}>
+            <Container>
                 <Link to={"/"}>
                     <Navbar.Brand>Timely</Navbar.Brand>
                 </Link>
@@ -18,11 +20,16 @@ const NavBar = () => {
                         style={{ maxHeight: '100px' }}
                         navbarScroll
                     >
-                        <Link to={"/"}> Главная </Link>
-                        <Link className={"ms-3"} to={"/"}> Группы </Link>
-                        <Link className={"ms-3"} to={"/"}> Преподаватели </Link>
-                        <Link className={"ms-3"} to={"/"}> Аудитории </Link>
-                        <Link className={"ms-3"} to={"/admin"}> Админ </Link>
+                        <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
+                                 to={"/"}> Главная </NavLink>
+                        <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
+                                 to={"/groups"}> Группы </NavLink>
+                        <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
+                                 to={"/teachers"}> Преподаватели </NavLink>
+                        <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
+                                 to={"/audiences"}> Аудитории </NavLink>
+                        <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
+                                 to={"/admin"}> Админ </NavLink>
                     </Nav>
                     {
                         isAuth ?

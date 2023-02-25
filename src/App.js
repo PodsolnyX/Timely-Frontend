@@ -10,6 +10,9 @@ import { useZustandStore } from './shared/useZustandStore';
 import AdminPage from "./components/admin-panel-page/admin-page";
 import React from "react";
 import Footer from "./components/footer/footer";
+import GroupsPage from "./components/groups-page/groups-page";
+import AudiencesPage from "./components/audiences-page/audiences-page";
+import TeachersPage from "./components/teachers-page/teachers-page";
 
 axios.defaults.baseURL = 'https://food-delivery.kreosoft.ru/api';
 
@@ -24,9 +27,9 @@ function App() {
                 <Routes>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/schedule" element={<SchedulePage />} />
-                    <Route path="/groups" element={<RegisterPage />} />
-                    <Route path="/teachers" element={<RegisterPage />} />
-                    <Route path="/auditories" element={<RegisterPage />} />
+                    <Route path="/groups" element={<GroupsPage />} />
+                    <Route path="/teachers" element={<TeachersPage />} />
+                    <Route path="/audiences" element={<AudiencesPage />} />
                     <Route path="/admin" element={<AdminPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />

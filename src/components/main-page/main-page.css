@@ -25,6 +25,7 @@
 }
 
 .button-bg:hover {
+    color: white;
     filter: contrast(95%);
 }
 

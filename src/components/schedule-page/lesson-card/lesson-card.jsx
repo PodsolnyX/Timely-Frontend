@@ -1,7 +1,7 @@
 import './lesson-card.css'
 
 const LessonCard = (props) => {
-    console.log(props)
+
     if (props.lessonData) {
         return (
             <div className={ `td-lesson lesson-${props.lessonData.lessonTag.title}` }

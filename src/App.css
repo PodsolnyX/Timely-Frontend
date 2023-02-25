@@ -2,9 +2,7 @@
 a {
     text-decoration: none;
     color: white;
-}
-a:hover {
-    color: gray;
+    transition: 0.3s;
 }
 
 ::-webkit-scrollbar {
