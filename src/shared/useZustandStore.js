@@ -1,5 +1,6 @@
-import { create } from "zustand";
+import {create} from "zustand";
 import axios from "axios";
+
 const initialState = {
     isAuth: !!localStorage.getItem("jwt"),
     isLoading: false,
@@ -10,9 +11,21 @@ const initialState = {
         group: 0,
         email: "",
     },
+
+    //Данные для модального окна редактирования пар
+    lessonEditModal: {
+        isShow: false,
+        currentLesson: {
+            curLessonNameId: null,
+            curGroupId: null,
+            curAudienceId: null,
+            curTeacherId: null,
+            curLessonTagId: null
+        }
+    }
 };
 
-export const useZustandStore = create(set => ({
+export const useZustandStore = create((set, get) => ({
     ...initialState,
     register: async (email, password, fullName) => {
         set({ isLoading: true });
@@ -57,10 +70,9 @@ export const useZustandStore = create(set => ({
                 password
             });
             localStorage.setItem("jwt", request.data.token);
-            set({ isAuth: true });
-        }
-        finally {
-            set({ isLoading: false });
+            set({isAuth: true});
+        } finally {
+            set({isLoading: false});
         }
     },
     logout: async () => {
@@ -72,9 +84,8 @@ export const useZustandStore = create(set => ({
                     "Authorization": `Bearer ${jwt}`
                 }
             })
-        }
-        finally {
-            set({ isAuth: false });
+        } finally {
+            set({isAuth: false});
         }
     },
     editProfile: async (fullName) => {
@@ -189,7 +200,54 @@ export const useZustandStore = create(set => ({
         date,
         classroomId
     }),
-    deleteLesson: async (id) => await admin("delete", "lesson", id)
+    deleteLesson: async (id) => await admin("delete", "lesson", id),
+    //////////////Методы для модального окна редактирования пар//////////////////
+    lessonEditModalClose: () => {
+        set((state) => {
+            return {
+                ...state, lessonEditModal: {...state.lessonEditModal, isShow: false}
+            };
+        })
+    },
+    lessonEditModalOpen: (isLesson, selectLesson) => {
+        if (isLesson) {
+            const _selectLesson= {
+                    curLessonNameId: selectLesson.lessonName.value,
+                    curGroupId: selectLesson.group.value,
+                    curAudienceId: selectLesson.audience.value,
+                    curTeacherId: selectLesson.teacher.value,
+                    curLessonTagId: selectLesson.lessonTag.value
+            };
+            set((state) => {
+                return {
+                    ...state,
+                    lessonEditModal: {
+                        ...state.lessonEditModal,
+                        isShow: true,
+                        currentLesson: _selectLesson,
+                    }
+                };
+            })
+        }
+        else {
+            set((state) => {
+                return {
+                    ...state,
+                    lessonEditModal: {
+                        ...state.lessonEditModal,
+                        isShow: true,
+                        currentLesson: {
+                            curLessonNameId: null,
+                            curGroupId: null,
+                            curAudienceId: null,
+                            curTeacherId: null,
+                            curLessonTagId: null
+                        },
+                    }
+                };
+            })
+        }
+    }
 }));
 
 async function admin(action, ...params) {
