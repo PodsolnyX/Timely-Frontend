@@ -11,9 +11,9 @@ const SchedulePage = () => {
     const lessonEditModalOpen = useZustandStore((state) => state.lessonEditModalOpen);
 
     return (
-        <div className={"container schedule-page-container"} style={{marginTop: 30, marginBottom: 30}}>
+        <div className={"container schedule-page-container"} >
             <LessonEditModal universityData={data.universityData} />
-            <div style={{padding: 20}}>
+            <div style={{padding: 20, margin: "30px 0"}}>
                 <h2> Расписание группы 972102 </h2>
                 <p style={{color: "gray"}}>13 февраля 2023 – 18 февраля 2023 | 25-я неделя</p>
                 <div className={"d-flex"}>

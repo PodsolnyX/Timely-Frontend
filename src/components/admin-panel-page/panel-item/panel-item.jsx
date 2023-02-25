@@ -1,12 +1,6 @@
 import {useState} from "react";
 import {Button, Card, Form} from "react-bootstrap";
-
-const
-    TYPE_TEACHER = "TYPE_TEACHER",
-    TYPE_LESSON = "TYPE_LESSON",
-    TYPE_AUDIENCE = "TYPE_AUDIENCE",
-    TYPE_GROUP = "TYPE_GROUP",
-    TYPE_LESSON_TYPE = "TYPE_LESSON_TYPE";
+import "./panel-item.css"
 
 const AdminPanelItem = (props) => {
 
@@ -20,56 +14,8 @@ const AdminPanelItem = (props) => {
     let onSubmitSaveItem = (e) => {
         e.preventDefault()
         console.log(e.target.elements.input.value)
-        saveItem();
+        props.saveItem();
         setIsEdit(false);
-    }
-
-    let onDeleteItem = () => {};
-    let saveItem = () => {};
-
-    switch (props.type) {
-        case TYPE_TEACHER:
-            onDeleteItem = () => {
-                console.log(TYPE_TEACHER)
-            };
-            saveItem = () => {
-                console.log(TYPE_TEACHER)
-            };
-            break;
-        case TYPE_LESSON:
-            onDeleteItem = () => {
-                console.log(TYPE_LESSON)
-            };
-            saveItem = () => {
-                console.log(TYPE_LESSON)
-            };
-            break;
-        case TYPE_AUDIENCE:
-            onDeleteItem = () => {
-                console.log(TYPE_AUDIENCE)
-            };
-            saveItem = () => {
-                console.log(TYPE_AUDIENCE)
-            };
-            break;
-        case TYPE_GROUP:
-            onDeleteItem = () => {
-                console.log(TYPE_GROUP)
-            };
-            saveItem = () => {
-                console.log(TYPE_GROUP)
-            };
-            break;
-        case TYPE_LESSON_TYPE:
-            onDeleteItem = () => {
-                console.log(TYPE_LESSON_TYPE)
-            };
-            saveItem = () => {
-                console.log(TYPE_LESSON_TYPE)
-            };
-            break;
-        default:
-            break;
     }
 
     return (
@@ -104,7 +50,7 @@ const AdminPanelItem = (props) => {
                                   onClick={onEditItem}>Изменить</Button>
                     }
                     <Button variant={"outline-danger"} type={"button"} size={"sm"} className={"ms-2"}
-                            onClick={onDeleteItem}>Удалить</Button>
+                            onClick={props.deleteItem}>Удалить</Button>
                 </div>
             </Card.Body>
         </Card>

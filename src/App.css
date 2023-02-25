@@ -1,11 +1,7 @@
-body {
-    background-color: #202225;
-}
 
 a {
     text-decoration: none;
     color: white;
-    transition: 0.2s;
 }
 a:hover {
     color: gray;
@@ -19,4 +15,13 @@ a:hover {
 
 ::-webkit-scrollbar-thumb {
     background-color: #929292;
+}
+
+.bg-main {
+    min-height: 100vh;
+    background: radial-gradient(#262a2d, #17181a);
+}
+
+.content {
+    min-height: calc(100vh - 70px);
 }
