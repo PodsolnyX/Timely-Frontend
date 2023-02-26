@@ -7,6 +7,7 @@ import "./navigation.css";
 const NavBar = () => {
     const logout = useZustandStore((store) => store.logout);
     const isAuth = useZustandStore((store) => store.isAuth);
+    console.log(isAuth)
     return (
         <Navbar variant="dark" expand="md" style={{background: "#202225", borderBottom: "1px solid gray", boxShadow: "0 6px 10px rgba(0,0,0,0.2)", height : "70px"}}>
             <Container>
@@ -33,7 +34,7 @@ const NavBar = () => {
                     </Nav>
                     {
                         isAuth ?
-                            <Button variant="outline-primary" onClick={logout}>Выйти</Button>
+                            <Button variant="outline-danger" onClick={logout}>Выйти</Button>
                             :
                             <Link to={"/login"}>
                                 <Button variant="outline-primary">Войти</Button>

@@ -4,7 +4,7 @@ import axios from "axios";
 const searchApi = "http://timely.markridge.space/api/search/";
 
 const initialState = {
-  isAuth: false,
+  isAuth: !!localStorage.getItem("jwt"),
   isLoading: false,
   error: "",
   profile: {

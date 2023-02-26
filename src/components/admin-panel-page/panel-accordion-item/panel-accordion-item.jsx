@@ -5,8 +5,8 @@ const PanelAccordionItem = (props) => {
 
     let onSubmitSaveItem = (e) => {
         e.preventDefault();
-        console.log(e.target.elements.input.value)
-        props.saveItem();
+        props.createItem(e.target.elements.input.value);
+        e.target.elements.input.value = "";
     }
 
     return (

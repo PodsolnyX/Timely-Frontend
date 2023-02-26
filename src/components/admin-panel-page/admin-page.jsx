@@ -1,53 +1,99 @@
 import "./admin-panel.css"
 import {Accordion, Container} from "react-bootstrap";
-import { data } from "../schedule-page/testData";
 import AdminPanelItem from "./panel-item/panel-item";
 import PanelAccordionItem from "./panel-accordion-item/panel-accordion-item";
+import {useZustandStore} from "../../shared/useZustandStore";
+import {useEffect} from "react";
 
 const AdminPage = (props) => {
 
-    let teacherItems = data.universityData.teachers.map((item, i) =>
-        <AdminPanelItem key={item.value} data={item}
-                        saveItem={()=>{console.log("SAVE_TEACHER")}} deleteItem={()=>{console.log("DELETE_TEACHER")}}/>);
+    const getTeachers = useZustandStore((state) => state.getTeachers)
+    const createTeacher = useZustandStore((state) => state.createTeacher)
+    const editTeacher = useZustandStore((state) => state.editTeacher)
+    const deleteTeacher = useZustandStore((state) => state.deleteTeacher)
 
-    let lessonItems = data.universityData.lessonsName.map((item, i) =>
-        <AdminPanelItem key={item.value} data={item}
-                        saveItem={()=>{console.log("SAVE_LESSON")}} deleteItem={()=>{console.log("DELETE_LESSON")}}/>);
+    const getClassrooms = useZustandStore((state) => state.getClassrooms)
+    const createClassroom = useZustandStore((state) => state.createClassroom)
+    const editClassroom = useZustandStore((state) => state.editClassroom)
+    const deleteClassroom = useZustandStore((state) => state.deleteClassroom)
 
-    let audienceItems = data.universityData.audience.map((item, i) =>
-        <AdminPanelItem key={item.value} data={item}
-                        saveItem={()=>{console.log("SAVE_AUDIENCE")}} deleteItem={()=>{console.log("DELETE_AUDIENCE")}}/>);
+    const getLessonNames = useZustandStore((state) => state.getLessonNames)
+    const createLessonName = useZustandStore((state) => state.createLessonName)
+    const editLessonName = useZustandStore((state) => state.editLessonName)
+    const deleteLessonName = useZustandStore((state) => state.deleteLessonName)
 
-    let groupItems = data.universityData.groups.map((item, i) =>
-        <AdminPanelItem key={item.value} data={item}
-                        saveItem={()=>{console.log("SAVE_GROUP")}} deleteItem={()=>{console.log("DELETE_GROUP")}}/>);
+    const getGroups = useZustandStore((state) => state.getGroups)
+    const createGroup = useZustandStore((state) => state.createGroup)
+    const editGroup = useZustandStore((state) => state.editGroup)
+    const deleteGroup = useZustandStore((state) => state.deleteGroup)
 
-    let lessonTypesItems = data.universityData.lessonsTypes.map((item, i) =>
-        <AdminPanelItem key={item.value} data={item}
-                        saveItem={()=>{console.log("SAVE_LESSON_TYPE")}} deleteItem={()=>{console.log("DELETE_LESSON_TYPE")}}/>);
+    const getLessonTags = useZustandStore((state) => state.getLessonTags)
+    const createLessonTag = useZustandStore((state) => state.createLessonTag)
+    const editLessonTag = useZustandStore((state) => state.editLessonTag)
+    const deleteLessonTag = useZustandStore((state) => state.deleteLessonTag)
+
+    useEffect(() => {
+        getTeachers();
+        getClassrooms();
+        getLessonNames();
+        getLessonTags();
+        getGroups();
+        }, [])
+
+    const teachers = useZustandStore((state) => state.teachers);
+    const classrooms = useZustandStore((state) => state.classrooms);
+    const lessonNames = useZustandStore((state) => state.lessonNames);
+    const groups = useZustandStore((state) => state.groups);
+    const lessonTags = useZustandStore((state) => state.lessonTags);
+
+
+    let teacherItems = teachers.map((item, i) =>
+        <AdminPanelItem key={item.id} data={item}
+                        saveItem={(id, name) => editTeacher(id, name).then(r => getTeachers())}
+                        deleteItem={(id) => deleteTeacher(id).then(r => getTeachers())}/>);
+
+    let lessonItems = lessonNames.map((item, i) =>
+        <AdminPanelItem key={item.id} data={item}
+                        saveItem={(id, name) => editLessonName(id, name).then(r => getLessonNames())}
+                        deleteItem={(id) => deleteLessonName(id).then(r => getLessonNames())}/>);
+
+    let audienceItems = classrooms.map((item, i) =>
+        <AdminPanelItem key={item.id} data={item}
+                        saveItem={(id, name) => editClassroom(id, name).then(r => getClassrooms())}
+                        deleteItem={(id) => deleteClassroom(id).then(r => getClassrooms())}/>);
+
+    let groupItems = groups.map((item, i) =>
+        <AdminPanelItem key={item.id} data={item}
+                        saveItem={(id, name) => editGroup(id, name).then(r => getGroups())}
+                        deleteItem={(id) => deleteGroup(id).then(r => getTeachers())}/>);
+
+    let lessonTypesItems = lessonTags.map((item, i) =>
+        <AdminPanelItem key={item.id} data={item}
+                        saveItem={(id, name) => editLessonTag(id, name).then(r => getLessonTags())}
+                        deleteItem={(id) => deleteLessonTag(id).then(r => getLessonTags())}/>);
 
     return (
         <Container className={"mt-5 col-11 col-lg-8"}>
             <Accordion>
                 <PanelAccordionItem listItems={teacherItems} eventKey={"0"}
                                     headerTitle={"Преподаватели"} placeholder={"Иванов Иван Иванович"}
-                                    saveItem={()=>{console.log("SAVE_TEACHER")}}/>
+                                    createItem={(name) => createTeacher(name).then(r => getTeachers())}/>
 
                 <PanelAccordionItem listItems={lessonItems} eventKey={"1"}
                                     headerTitle={"Предметы"} placeholder={"Математический Анализ"}
-                                    saveItem={()=>{console.log("SAVE_LESSON")}}/>
+                                    createItem={(name) => createLessonName(name).then(r => getLessonNames())}/>
 
                 <PanelAccordionItem listItems={audienceItems} eventKey={"2"}
                                     headerTitle={"Аудитории"} placeholder={"100 (1) Учебная аудитория"}
-                                    saveItem={()=>{console.log("SAVE_AUDIENCE")}}/>
+                                    createItem={(name) => createClassroom(name).then(r => getClassrooms())}/>
 
                 <PanelAccordionItem listItems={groupItems} eventKey={"3"}
                                     headerTitle={"Группы"} placeholder={"990301"}
-                                    saveItem={()=>{console.log("SAVE_GROUP")}}/>
+                                    createItem={(name) => createGroup(name).then(r => getGroups())}/>
 
                 <PanelAccordionItem listItems={lessonTypesItems} eventKey={"4"}
                                     headerTitle={"Типы занятий"} placeholder={"Лекция"}
-                                    saveItem={()=>{console.log("SAVE_LESSON_TYPE")}}/>
+                                    createItem={(name) => createLessonTag(name).then(r => getLessonTags())}/>
             </Accordion>
         </Container>
     )

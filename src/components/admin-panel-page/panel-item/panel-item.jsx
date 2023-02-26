@@ -5,7 +5,7 @@ import "./panel-item.css"
 const AdminPanelItem = (props) => {
 
     const [isEdit, setIsEdit] = useState(false);
-    const [inputText, setInputText] = useState(props.data.label);
+    const [inputText, setInputText] = useState(props.data.name);
 
     const onEditItem = () => {
         setIsEdit(true);
@@ -13,9 +13,12 @@ const AdminPanelItem = (props) => {
 
     let onSubmitSaveItem = (e) => {
         e.preventDefault()
-        console.log(e.target.elements.input.value)
-        props.saveItem();
+        props.saveItem(props.data.id, e.target.elements.input.value);
         setIsEdit(false);
+    }
+
+    const onDeleteItem = () => {
+        props.deleteItem(props.data.id)
     }
 
     return (
@@ -50,7 +53,7 @@ const AdminPanelItem = (props) => {
                                   onClick={onEditItem}>Изменить</Button>
                     }
                     <Button variant={"outline-danger"} type={"button"} size={"sm"} className={"ms-2"}
-                            onClick={props.deleteItem}>Удалить</Button>
+                            onClick={onDeleteItem}>Удалить</Button>
                 </div>
             </Card.Body>
         </Card>
