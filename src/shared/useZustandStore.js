@@ -1,4 +1,4 @@
-import {create} from "zustand";
+import { create } from "zustand";
 import axios from "axios";
 
 const initialState = {
@@ -70,22 +70,24 @@ export const useZustandStore = create((set, get) => ({
                 password
             });
             localStorage.setItem("jwt", request.data.token);
-            set({isAuth: true});
+            set({ isAuth: true });
         } finally {
-            set({isLoading: false});
+            set({ isLoading: false });
         }
     },
-    logout: async () => {
+    logout: async (force = false) => {
         const jwt = localStorage.getItem("jwt");
         localStorage.removeItem("jwt");
         try {
-            await axios.post("account/logout", null, {
-                headers: {
-                    "Authorization": `Bearer ${jwt}`
-                }
-            })
+            if (!force) {
+                await axios.post("account/logout", null, {
+                    headers: {
+                        "Authorization": `Bearer ${jwt}`
+                    }
+                })
+            }
         } finally {
-            set({isAuth: false});
+            set({ isAuth: false });
         }
     },
     editProfile: async (fullName) => {
@@ -136,7 +138,7 @@ export const useZustandStore = create((set, get) => ({
             }
         })
     },
-    
+
     createTeacher: async (name) => await admin("create", "teacher", { name }),
     editTeacher: async (id, name) => await admin("edit", "teacher", id, { name }),
     deleteTeacher: async (id) => await admin("delete", "teacher", id),
@@ -173,7 +175,7 @@ export const useZustandStore = create((set, get) => ({
         timeIntervalId,
         date,
         classroomId
-    ) => await admin("create", "lesson", { 
+    ) => await admin("create", "lesson", {
         nameId,
         tagId,
         groupId,
@@ -205,18 +207,18 @@ export const useZustandStore = create((set, get) => ({
     lessonEditModalClose: () => {
         set((state) => {
             return {
-                ...state, lessonEditModal: {...state.lessonEditModal, isShow: false}
+                ...state, lessonEditModal: { ...state.lessonEditModal, isShow: false }
             };
         })
     },
     lessonEditModalOpen: (isLesson, selectLesson) => {
         if (isLesson) {
-            const _selectLesson= {
-                    curLessonNameId: selectLesson.lessonName.value,
-                    curGroupId: selectLesson.group.value,
-                    curAudienceId: selectLesson.audience.value,
-                    curTeacherId: selectLesson.teacher.value,
-                    curLessonTagId: selectLesson.lessonTag.value
+            const _selectLesson = {
+                curLessonNameId: selectLesson.lessonName.value,
+                curGroupId: selectLesson.group.value,
+                curAudienceId: selectLesson.audience.value,
+                curTeacherId: selectLesson.teacher.value,
+                curLessonTagId: selectLesson.lessonTag.value
             };
             set((state) => {
                 return {
@@ -257,7 +259,7 @@ async function admin(action, ...params) {
             "Authorization": `Bearer ${jwt}`
         }
     };
-    switch(action) {
+    switch (action) {
         case "create":
             await axios.post(`admin/${params[0]}/create`, params[1], headers);
             break;
