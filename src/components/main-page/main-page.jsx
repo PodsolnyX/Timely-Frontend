@@ -9,7 +9,7 @@ const mainPage = () => {
     return (
         <div>
             <div className={"main-container"}>
-                <Link to={"/schedule"}>
+                <Link to={"/schedule/group/2345?name=972102&startDate=2023-02-22T16:59:59.999Z&endDate=2023-02-27T16:59:59.999Z"}>
                     <div className={"main-title"}>Расписание</div>
                 </Link>
                 <div className={"button-container"}>

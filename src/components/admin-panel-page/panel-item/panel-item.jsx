@@ -5,7 +5,7 @@ import "./panel-item.css"
 const AdminPanelItem = (props) => {
 
     const [isEdit, setIsEdit] = useState(false);
-    const [inputText, setInputText] = useState(props.data.name);
+    const [inputText, setInputText] = useState(props.data.label);
 
     const onEditItem = () => {
         setIsEdit(true);
@@ -13,12 +13,12 @@ const AdminPanelItem = (props) => {
 
     let onSubmitSaveItem = (e) => {
         e.preventDefault()
-        props.saveItem(props.data.id, e.target.elements.input.value);
+        props.saveItem(props.data.value, e.target.elements.input.value);
         setIsEdit(false);
     }
 
     const onDeleteItem = () => {
-        props.deleteItem(props.data.id)
+        props.deleteItem(props.data.value)
     }
 
     return (

@@ -46,29 +46,28 @@ const AdminPage = (props) => {
     const groups = useZustandStore((state) => state.groups);
     const lessonTags = useZustandStore((state) => state.lessonTags);
 
-
     let teacherItems = teachers.map((item, i) =>
-        <AdminPanelItem key={item.id} data={item}
+        <AdminPanelItem key={item.value} data={item}
                         saveItem={(id, name) => editTeacher(id, name).then(r => getTeachers())}
                         deleteItem={(id) => deleteTeacher(id).then(r => getTeachers())}/>);
 
     let lessonItems = lessonNames.map((item, i) =>
-        <AdminPanelItem key={item.id} data={item}
+        <AdminPanelItem key={item.value} data={item}
                         saveItem={(id, name) => editLessonName(id, name).then(r => getLessonNames())}
                         deleteItem={(id) => deleteLessonName(id).then(r => getLessonNames())}/>);
 
     let audienceItems = classrooms.map((item, i) =>
-        <AdminPanelItem key={item.id} data={item}
+        <AdminPanelItem key={item.value} data={item}
                         saveItem={(id, name) => editClassroom(id, name).then(r => getClassrooms())}
                         deleteItem={(id) => deleteClassroom(id).then(r => getClassrooms())}/>);
 
     let groupItems = groups.map((item, i) =>
-        <AdminPanelItem key={item.id} data={item}
+        <AdminPanelItem key={item.value} data={item}
                         saveItem={(id, name) => editGroup(id, name).then(r => getGroups())}
-                        deleteItem={(id) => deleteGroup(id).then(r => getTeachers())}/>);
+                        deleteItem={(id) => deleteGroup(id).then(r => getGroups())}/>);
 
     let lessonTypesItems = lessonTags.map((item, i) =>
-        <AdminPanelItem key={item.id} data={item}
+        <AdminPanelItem key={item.value} data={item}
                         saveItem={(id, name) => editLessonTag(id, name).then(r => getLessonTags())}
                         deleteItem={(id) => deleteLessonTag(id).then(r => getLessonTags())}/>);
 
