@@ -107,6 +107,13 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/groups`);
       const groups = response.data;
+      groups.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
       set({ groups: groups, error: "" });
     } catch (error) {
       set({ error: error.message, groups: [] });
@@ -119,6 +126,13 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/teachers`);
       const teachers = response.data;
+      teachers.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
       set({ teachers: teachers, error: "" });
     } catch (error) {
       set({ error: error.message, teachers: [] }); // Update the state with the error message and clear the groups and isAuth
@@ -131,6 +145,13 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/classrooms`);
       const classrooms = response.data;
+      classrooms.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
       set({ classrooms: classrooms, error: "" });
     } catch (error) {
       set({ error: error.message, classrooms: [] }); // Update the state with the error message and clear the groups and isAuth
@@ -155,6 +176,13 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/lessonNames`);
       const lessonNames = response.data;
+      lessonNames.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
       set({ lessonNames: lessonNames, error: "" });
     } catch (error) {
       set({ error: error.message, lessonNames: [] }); // Update the state with the error message and clear the groups and isAuth
@@ -167,6 +195,13 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/lessonTags`);
       const lessonTags = response.data;
+      lessonTags.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
       set({ lessonTags: lessonTags, error: "" });
     } catch (error) {
       set({ error: error.message, lessonTags: [] }); // Update the state with the error message and clear the groups and isAuth

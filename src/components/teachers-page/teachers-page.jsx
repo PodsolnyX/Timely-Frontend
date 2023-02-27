@@ -1,17 +1,33 @@
 import Select from "react-select";
 import React, {useState} from "react";
-import {data} from "../schedule-page/testData";
 import {Button} from "react-bootstrap";
+import {useZustandStore} from "../../shared/useZustandStore";
+import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
+import {getWeek} from "../../helpers/get-week";
 
-const TeachersPage = () => {
+const GroupsPage = () => {
 
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState(null)
+    const [label, setLabel] = useState(null)
+    const navigate = useNavigate();
+
+    let week = getWeek(new Date());
+
+    const getTeachers = useZustandStore((state) => state.getTeachers)
+    useEffect(() => {
+        getTeachers();
+    }, [])
+    const teachers = useZustandStore((state) => state.teachers);
 
     const onChangeSelect = (e) => {
         setValue(e.value);
+        setLabel(e.label);
     }
+    
     const onSubmitSchedule = () => {
         console.log(value);
+        navigate(`/schedule/teacher/${value}?name=${label}&startDate=${week[0]}&endDate=${week[5]}`)
     }
 
     return (
@@ -20,7 +36,8 @@ const TeachersPage = () => {
                 <h2 className={"text-white"}>Расписание преподавателей</h2>
                 <div className={"mt-4"}>
                     <h5 className={"text-white mb-4"}>Преподаватель:</h5>
-                    <Select options={data.universityData.teachers} onChange={onChangeSelect}/>
+                    <Select options={teachers}
+                            onChange={onChangeSelect}/>
                     <Button variant={"outline-primary"}
                             disabled={ value ? null : "disabled"}
                             onClick={onSubmitSchedule}
@@ -31,4 +48,4 @@ const TeachersPage = () => {
     )
 }
 
-export default TeachersPage;
+export default GroupsPage;

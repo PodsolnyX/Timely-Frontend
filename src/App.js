@@ -24,7 +24,7 @@ function App() {
             <div className={"content"}>
                 <Routes>
                     <Route path="/" element={<MainPage />} />
-                    <Route path="/schedule" element={<SchedulePage />} />
+                    <Route path="/schedule/:scheduleTag/:id" element={<SchedulePage />} />
                     <Route path="/groups" element={<GroupsPage />} />
                     <Route path="/teachers" element={<TeachersPage />} />
                     <Route path="/audiences" element={<AudiencesPage />} />
