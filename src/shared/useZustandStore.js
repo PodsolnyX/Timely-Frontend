@@ -1,31 +1,21 @@
 import { create } from "zustand";
 import axios from "axios";
-
-const searchApi = "http://timely.markridge.space/api/search/";
+import { sheduleMatrix } from "../helpers/sheduleMatrix";
 
 const initialState = {
   isAuth: !!localStorage.getItem("jwt"),
   isLoading: false,
   error: "",
-  profile: {
-    fullName: "",
-    userName: "",
-    email: "",
-    group: {
-      id: "",
-      name: "",
-    },
-    teacher: {
-      id: "",
-      name: "",
-    },
-    roles: [],
-  },
+  profile: {},
 
-  shedule: {},
+  groupSchedule: {},
+  classroomSchedule: {},
+  teacherSchedule: {},
+
   teachers: [],
   groups: [],
   classrooms: [],
+
   timeIntervals: [],
   lessonNames: [],
   lessonTags: [],
@@ -43,15 +33,79 @@ const initialState = {
   },
 };
 
-export const useZustandStore = create((set, get) => ({
+export const useZustandStore = create(set => ({
   ...initialState,
 
-  // getProfile () coming soon
+  getTeacherSchedule: async (date, teacherID) => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`schedule/teacher/${teacherID}`, {
+        params: {
+          date,
+        },
+      });
+      set({ teacherSchedule: sheduleMatrix(response), error: "" });
+    } catch (error) {
+      set({ error: error.message, profile: {} });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  getClassroomSchedule: async (date, classroomID) => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`schedule/classroom/${classroomID}`, {
+        params: {
+          date,
+        },
+      });
+      set({ classroomSchedule: sheduleMatrix(response), error: "" });
+    } catch (error) {
+      set({ error: error.message, profile: {} });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  getGroupSchedule: async (date, groupID) => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`schedule/group/${groupID}`, {
+        params: {
+          date,
+        },
+      });
+      set({ groupSchedule: sheduleMatrix(response), error: "" });
+    } catch (error) {
+      set({ error: error.message, profile: {} });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  getProfile: async () => {
+    set({ isLoading: true });
+    try {
+      const jwt = localStorage.getItem("jwt");
+      const response = await axios.get(`account/profile`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      const profile = response.data;
+      set({ profile: profile, error: "" });
+    } catch (error) {
+      set({ error: error.message, profile: {} });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 
   getGroups: async () => {
     set({ isLoading: true });
     try {
-      const response = await axios.get(`${searchApi}groups`);
+      const response = await axios.get(`search/groups`);
       const groups = response.data;
       set({ groups: groups, error: "" });
     } catch (error) {
@@ -63,7 +117,7 @@ export const useZustandStore = create((set, get) => ({
   getTeachers: async () => {
     set({ isLoading: true });
     try {
-      const response = await axios.get(`${searchApi}teachers`);
+      const response = await axios.get(`search/teachers`);
       const teachers = response.data;
       set({ teachers: teachers, error: "" });
     } catch (error) {
@@ -75,7 +129,7 @@ export const useZustandStore = create((set, get) => ({
   getClassrooms: async () => {
     set({ isLoading: true });
     try {
-      const response = await axios.get(`${searchApi}classrooms`);
+      const response = await axios.get(`search/classrooms`);
       const classrooms = response.data;
       set({ classrooms: classrooms, error: "" });
     } catch (error) {
@@ -87,7 +141,7 @@ export const useZustandStore = create((set, get) => ({
   getTimeIntervals: async () => {
     set({ isLoading: true });
     try {
-      const response = await axios.get(`${searchApi}timeIntervals`);
+      const response = await axios.get(`search/timeIntervals`);
       const timeIntervals = response.data;
       set({ timeIntervals: timeIntervals, error: "" });
     } catch (error) {
@@ -99,7 +153,7 @@ export const useZustandStore = create((set, get) => ({
   getLessonNames: async () => {
     set({ isLoading: true });
     try {
-      const response = await axios.get(`${searchApi}lessonNames`);
+      const response = await axios.get(`search/lessonNames`);
       const lessonNames = response.data;
       set({ lessonNames: lessonNames, error: "" });
     } catch (error) {
@@ -111,7 +165,7 @@ export const useZustandStore = create((set, get) => ({
   getLessonTags: async () => {
     set({ isLoading: true });
     try {
-      const response = await axios.get(`${searchApi}lessonTags`);
+      const response = await axios.get(`search/lessonTags`);
       const lessonTags = response.data;
       set({ lessonTags: lessonTags, error: "" });
     } catch (error) {
