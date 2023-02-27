@@ -49,12 +49,12 @@ const SchedulePage = () => {
 
     const onNextWeekSchedule = () => {
         let week = getNextWeek(search.get("startDate"));
-        navigate(`/schedule/group/${params.id}?name=${name}&startDate=${week[0]}&endDate=${week[5]}`)
+        navigate(`/schedule/${params.scheduleTag}/${params.id}?name=${name}&startDate=${week[0]}&endDate=${week[5]}`)
     }
 
     const onPastWeekSchedule = () => {
         let week = getPastWeek(search.get("startDate"));
-        navigate(`/schedule/group/${params.id}?name=${name}&startDate=${week[0]}&endDate=${week[5]}`)
+        navigate(`/schedule/${params.scheduleTag}/${params.id}?name=${name}&startDate=${week[0]}&endDate=${week[5]}`)
     }
 
     return (
