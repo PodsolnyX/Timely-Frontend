@@ -1,9 +1,9 @@
 const FormLayout = ({children, header}) => {
     return (
         <div className={"container"}>
-            <h1 className={"text-center"}>{header}</h1>
-            <div className="card p-0 mx-auto my-4 reg w-75 bold">
-                <div className="card-body">
+            <h2 className={"text-center text-white"}>{header}</h2>
+            <div className="card p-0 mx-auto my-4 reg bold">
+                <div className="card-body schedule-page-container">
                     <div className="row">
                         <form>
                             {children}

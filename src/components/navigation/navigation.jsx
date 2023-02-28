@@ -24,6 +24,8 @@ const NavBar = () => {
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
                                  to={"/"}> Главная </NavLink>
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
+                                 to={"/profile"}> Профиль </NavLink>
+                        <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
                                  to={"/groups"}> Группы </NavLink>
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
                                  to={"/teachers"}> Преподаватели </NavLink>

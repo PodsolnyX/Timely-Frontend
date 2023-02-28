@@ -2,7 +2,7 @@ const FormPairField = ({ formState, setFormState, validators, placeholders, form
     return (
         <>
             <div className="col-12">
-                <label htmlFor="password">{labels[0]}</label>
+                <label htmlFor={formIds[0]} className={"text-white"}>{labels[0]}</label>
                 <input
                     {...props}
                     id={formIds[0]}
@@ -17,10 +17,10 @@ const FormPairField = ({ formState, setFormState, validators, placeholders, form
                     placeholder={placeholders[0]}
                 />
             </div>
-            <p className="text-danger fw-bold">{formState.passwordError}</p>
+            <p className="text-danger fw-bold">{formState[formIds[0] + "Error"]}</p>
 
             <div className="col-12">
-                <label htmlFor="passwordRepeat">{labels[1]}</label>
+                <label htmlFor={formIds[1]} className={"text-white"}>{labels[1]}</label>
                 <input
                     {...props}
                     id={formIds[1]}
@@ -35,7 +35,7 @@ const FormPairField = ({ formState, setFormState, validators, placeholders, form
                     placeholder={placeholders[1]}
                 />
             </div>
-            <p className="text-danger fw-bold">{formState.passwordRepeatError}</p>
+            <p className="text-danger fw-bold">{formState[formIds[1] + "Error"]}</p>
         </>
 
     );

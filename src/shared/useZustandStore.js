@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import { sheduleMatrix } from "../helpers/sheduleMatrix";
-
+import { useZustandFormStore } from './useZustandFormStore';
 const initialState = {
   isAuth: !!localStorage.getItem("jwt"),
   isLoading: false,
@@ -259,19 +259,22 @@ export const useZustandStore = create(set => ({
       set({ isLoading: false });
     }
   },
-  logout: async () => {
+  logout: async (force = false) => {
     const jwt = localStorage.getItem("jwt");
     localStorage.removeItem("jwt");
     try {
-      await axios.post("account/logout", null, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
+        if (!force) {
+            await axios.post("account/logout", null, {
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            })
+        }
     } finally {
-      set({ isAuth: false });
+        useZustandFormStore.getState().reset();
+        set({ isAuth: false });
     }
-  },
+},
   editProfile: async fullName => {
     const jwt = localStorage.getItem("jwt");
     await axios.put(

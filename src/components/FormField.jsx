@@ -2,7 +2,7 @@ const FormField = ({ formState, setFormState, validator, formId, label, ...props
     return (
         <>
             <div className="col-12">
-                <label htmlFor={formId}>{label}</label>
+                <label htmlFor={formId} className={"text-white"}>{label}</label>
                 <input
                     {...props}
                     id={formId}
