@@ -11,8 +11,9 @@ import { useZustandFormStore } from '../../shared/useZustandFormStore';
 import { validator, checkEmail, checkPassword, checkPasswordRepeat, checkFullName } from '../../helpers/validation';
 
 const RegisterPage = () => {
-    const formState = useZustandFormStore((store) => store.register);
-    const setFormState = useZustandFormStore((store) => store.setRegisterData);
+    const formState = useZustandFormStore(store => store.register);
+    const setFormState = useZustandFormStore(store => store.setRegisterData);
+    const getProfile = useZustandStore(store => store.getProfile);
 
     const regRef = useRef();
     const navigate = useNavigate();
@@ -36,6 +37,7 @@ const RegisterPage = () => {
                 formState.password,
                 formState.fullName
             );
+            await getProfile();
             navigate("/shedule");
         }
         catch (err) {

@@ -11,9 +11,10 @@ import { useZustandFormStore } from '../../shared/useZustandFormStore';
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const login = useZustandStore((store) => store.login);
-    const formState = useZustandFormStore((store) => store.login);
-    const setFormState = useZustandFormStore((store) => store.setLoginData);
+    const login = useZustandStore(store => store.login);
+    const getProfile = useZustandStore(store => store.getProfile);
+    const formState = useZustandFormStore(store => store.login);
+    const setFormState = useZustandFormStore(store => store.setLoginData);
 
     const loginRef = useRef();
 
@@ -28,6 +29,7 @@ const LoginPage = () => {
         loginRef.current.classList.add("disabled");
         try {
             await login(formState.email, formState.password);
+            await getProfile();
             navigate("/schedule");
         } 
         catch (err) {
@@ -35,8 +37,11 @@ const LoginPage = () => {
             if (!err.response) {
                 setFormState("formError", "Ошибка соединения");
             }
-            else {
+            else if (err.response.status === 401) {
                 setFormState("formError", "Неверные данные");
+            }
+            else {
+                setFormState("formError", "Неизвестная ошибка");
             }
         }
     }
