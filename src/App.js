@@ -15,6 +15,14 @@ import AudiencesPage from "./components/audiences-page/audiences-page";
 import TeachersPage from "./components/teachers-page/teachers-page";
 
 axios.defaults.baseURL = 'http://timely.markridge.space/api/';
+axios.interceptors.response.use(response => response,
+    error => {
+        if (error.response.status === 401) {
+            useZustandStore.getState().logout(true);
+        }
+        return Promise.reject(error);
+    });
+
 
 function App() {
     const isAuth = useZustandStore((store) => store.isAuth);
