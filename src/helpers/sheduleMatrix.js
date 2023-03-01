@@ -21,7 +21,11 @@ function distribute(intervals, lesson, currentDay) {
   );
 }
 
-export const sheduleMatrix = async (response) => {
+function transpose(matrix) {
+  return matrix[0].map((col, i) => matrix.map(row => row[i]));
+}
+
+export const sheduleMatrix = (response) => {
   const lessons = response.data;
   const dates = new Set(lessons.map(lesson => lesson.date));
   const sortedDates = Array.from(dates).sort();
@@ -66,6 +70,6 @@ export const sheduleMatrix = async (response) => {
   return {
     sortedTimeIntervals,
     sortedDates,
-    matrix,
+    matrix: transpose(matrix)
   };
 };
