@@ -81,7 +81,7 @@ const RegisterPage = () => {
                 type="password"
                 placeholders={["Введите пароль", "Введите пароль ещё раз"]}
             />
-            <SubmitButton action={tryRegister} ref={regRef} text="Зарегистрироваться" />
+            <SubmitButton action={tryRegister} ref={regRef} text="Регистрация" />
             <LinkButton link="/login" text="Войти" />
 
             <p className="text-danger fw-bold">{formState.formError}</p>

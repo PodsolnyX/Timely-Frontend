@@ -46,7 +46,7 @@ export const checkEmail = (email) => {
 }
 
 export const checkFullName = (fullName) => {
-    if (fullName.length && !fullName.match(/^([A-ZА-ЯЁ][a-zа-яё]+[\s]?){2,3}$/)) {
+    if (!fullName.length || !fullName.match(/^([A-ZА-ЯЁ][a-zа-яё]+[\s]?){2,3}$/)) {
         return [false, "ФИО должно состоять из 2-3 слов, начинаться с заглавной буквы и содержать только латиницу, кириллицу, пробелы"];
     }
     else if (fullName.length > 64) {

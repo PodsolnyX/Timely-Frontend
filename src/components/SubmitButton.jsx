@@ -4,7 +4,7 @@ const SubmitButton = forwardRef((props, ref) => {
     return (
         <Button
             type="submit"
-            variant="primary"
+            variant="outline-primary"
             onClick={(event) => {
                 event.preventDefault();
                 props.action();

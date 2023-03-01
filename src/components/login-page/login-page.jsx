@@ -64,7 +64,7 @@ const LoginPage = () => {
                 placeholder="Введите пароль"
             />
             <SubmitButton action={tryLogin} ref={loginRef} text="Войти"/>
-            <LinkButton link="/register" text="Зарегистрироваться"/>
+            <LinkButton link="/register" text="Регистрация"/>
 
             <p className="text-danger fw-bold">{formState.formError}</p>
         </FormLayout>

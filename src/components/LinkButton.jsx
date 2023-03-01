@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const LinkButton = ({link, text}) => {
     return (
         <Link to={link}>
-            <Button variant="secondary">{text}</Button>
+            <Button variant="outline-secondary">{text}</Button>
         </Link>
     );
 };

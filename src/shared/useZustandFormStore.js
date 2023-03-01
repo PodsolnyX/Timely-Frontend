@@ -18,6 +18,37 @@ const initialState = {
         passwordError: "",
         passwordRepeatError: "",
         formError: ""
+    },
+    changePassword: {
+        newPassword: "",
+        newPasswordRepeat: "",
+        oldPassword: "",
+        newPasswordError: "",
+        newPasswordRepeatError: "",
+        oldPasswordError: "",
+        formMsg: {
+            err: "",
+            msg: ""
+        }
+    },
+    confirm: {
+        msg: "Отправить ещё раз",
+        sent: false,
+        err: false
+    },
+    fullName: {
+        edit: false,
+        fullName: "",
+        fullNameError: "",
+        err: "",
+        msg: ""
+    },
+    group: {
+        edit: false,
+        groupId: "",
+        groupName: "",
+        err: "",
+        msg: ""
     }
 };
 
@@ -39,5 +70,35 @@ export const useZustandFormStore = create(set => ({
                 [key]: value
             }
         }));
-    }
+    },
+    setChangePasswordData: (key, value) => {
+        set((state) => ({
+            changePassword: {
+                ...state.changePassword,
+                [key]: value
+            }
+        }));
+    },
+    setConfirmData: (value) => {
+        set(() => ({
+            confirm: value
+        }));
+    },
+    setFullNameData: (value) => {
+        set((state) => ({
+            fullName: {
+                ...state.fullName,
+                ...value
+            }
+        }));
+    },
+    setGroupData: (value) => {
+        set((state) => ({
+            group: {
+                ...state.group,
+                ...value
+            }
+        }));
+    },
+    reset: () => set(initialState)
 }));
