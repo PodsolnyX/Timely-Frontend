@@ -17,7 +17,7 @@ import ProfilePage from "./components/profile-page/profile-page"
 import ProfilePassword from './components/profile-page/profile-password/profile-password';
 import ProfileEdit from './components/profile-page/profile-edit/profile-edit';
 import ProfileConfirm from './components/profile-page/profile-confirm/profile-confirm';
-import MainPage from "./components/main-page/main-page";
+
 axios.defaults.baseURL = 'http://timely.markridge.space/api/';
 axios.interceptors.response.use(response => response,
     error => {
