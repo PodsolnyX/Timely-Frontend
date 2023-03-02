@@ -24,189 +24,195 @@ const initialState = {
 
 };
 
-export const useZustandStore = create((set, get) => ({
+export const useZustandStore = create(set => ({
     ...initialState,
 
-    getTeacherSchedule: async (date, teacherID) => {
-        set({ isLoading: true });
-        try {
-            const response = await axios.get(`schedule/teacher/${teacherID}`, {
-                params: {
-                    date,
-                },
-            });
-            set({ teacherSchedule: sheduleMatrix(response), error: "" });
-        } catch (error) {
-            set({ error: error.message, profile: {} });
-        } finally {
-            set({ isLoading: false });
-        }
-    },
+  getTeacherSchedule: async (date, teacherID) => {
+    set({ isLoading: true });
+    try {
+      const timeIntervals = await axios.get(`search/timeIntervals`);
+      const schedule = await axios.get(`schedule/teacher/${teacherID}`, {
+        params: {
+          date,
+        },
+      });
+      set({
+        teacherSchedule: sheduleMatrix(schedule.data, timeIntervals.data),
+        error: "",
+      });
+    } catch (error) {
+      set({ error: error.message, teacherSchedule: {} });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 
-    getClassroomSchedule: async (date, classroomID) => {
-        set({ isLoading: true });
-        try {
-            const response = await axios.get(`schedule/classroom/${classroomID}`, {
-                params: {
-                    date,
-                },
-            });
-            set({ classroomSchedule: sheduleMatrix(response), error: "" });
-        } catch (error) {
-            set({ error: error.message, profile: {} });
-        } finally {
-            set({ isLoading: false });
-        }
-    },
+  getClassroomSchedule: async (date, classroomID) => {
+    set({ isLoading: true });
+    try {
+      const timeIntervals = await axios.get(`search/timeIntervals`);
+      const schedule = await axios.get(`schedule/classroom/${classroomID}`, {
+        params: {
+          date,
+        },
+      });
+      set({
+        classroomSchedule: sheduleMatrix(schedule.data, timeIntervals.data),
+        error: "",
+      });
+    } catch (error) {
+      set({ error: error.message, classroomSchedule: {} });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 
-    getGroupSchedule: async (date, groupID) => {
-        set({isLoadingSchedule: true});
-        try {
-            const response = await axios.get(`schedule/group/${groupID}`, {
-                params: {
-                    date,
-                },
-            });
-            console.log(response)
-            set(state => {
-                return {
-                    ...state,
-                    groupSchedule: sheduleMatrix(response)
-                };
-            });
-        } catch (error) {
-            set({error: error.message, groupSchedule: null});
-        } finally {
-            set({isLoadingSchedule: false});
-        }
-    },
+  getGroupSchedule: async (date, groupID) => {
+    set({ isLoadingSchedule: true });
+    try {
+      const timeIntervals = await axios.get(`search/timeIntervals`);
+      const schedule = await axios.get(`schedule/group/${groupID}`, {
+        params: {
+          date,
+        },
+      });
+      set({
+        groupSchedule: sheduleMatrix(schedule.data, timeIntervals.data),
+        error: "",
+      });
+    } catch (error) {
+      set({ error: error.message, groupSchedule: null });
+    } finally {
+      set({ isLoadingSchedule: false });
+    }
+  },
 
-    getProfile: async () => {
-        set({ isLoading: true });
-        try {
-            const jwt = localStorage.getItem("jwt");
-            const response = await axios.get(`account/profile`, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                },
-            });
-            const profile = response.data;
-            set({ profile: profile, error: "" });
-            localStorage.setItem("profile", JSON.stringify(profile));
-        } catch (error) {
-            set({ error: error.message, profile: {} });
-        } finally {
-            set({ isLoading: false });
-        }
-    },
+  getProfile: async () => {
+    set({ isLoading: true });
+    try {
+      const jwt = localStorage.getItem("jwt");
+      const response = await axios.get(`account/profile`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      const profile = response.data;
+      set({ profile: profile, error: "" });
+      localStorage.setItem("profile", JSON.stringify(profile));
+    } catch (error) {
+      set({ error: error.message, profile: {} });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 
-    getGroups: async () => {
-        set({isLoading: true});
-        try {
-            const response = await axios.get(`search/groups`);
-            const groups = response.data;
-            groups.forEach(el => {
-                delete Object.assign(el, {
-                    ["value"]: el["id"],
-                    ["label"]: el["name"],
-                })["id"];
-                delete el["name"];
-            });
-            set({groups: groups, error: ""});
-        } catch (error) {
-            set({error: error.message, groups: []});
-        } finally {
-            set({isLoading: false});
-        }
-    },
-    getTeachers: async () => {
-        set({isLoading: true});
-        try {
-            const response = await axios.get(`search/teachers`);
-            const teachers = response.data;
-            teachers.forEach(el => {
-                delete Object.assign(el, {
-                    ["value"]: el["id"],
-                    ["label"]: el["name"],
-                })["id"];
-                delete el["name"];
-            });
-            set({teachers: teachers, error: ""});
-        } catch (error) {
-            set({error: error.message, teachers: []}); // Update the state with the error message and clear the groups and isAuth
-        } finally {
-            set({isLoading: false});
-        }
-    },
-    getClassrooms: async () => {
-        set({isLoading: true});
-        try {
-            const response = await axios.get(`search/classrooms`);
-            const classrooms = response.data;
-            classrooms.forEach(el => {
-                delete Object.assign(el, {
-                    ["value"]: el["id"],
-                    ["label"]: el["name"],
-                })["id"];
-                delete el["name"];
-            });
-            set({classrooms: classrooms, error: ""});
-        } catch (error) {
-            set({error: error.message, classrooms: []}); // Update the state with the error message and clear the groups and isAuth
-        } finally {
-            set({isLoading: false});
-        }
-    },
-    getTimeIntervals: async () => {
-        set({isLoading: true});
-        try {
-            const response = await axios.get(`search/timeIntervals`);
-            const timeIntervals = response.data;
-            set({timeIntervals: timeIntervals, error: ""});
-        } catch (error) {
-            set({error: error.message, timeIntervals: []}); // Update the state with the error message and clear the groups and isAuth
-        } finally {
-            set({isLoading: false});
-        }
-    },
-    getLessonNames: async () => {
-        set({isLoading: true});
-        try {
-            const response = await axios.get(`search/lessonNames`);
-            const lessonNames = response.data;
-            lessonNames.forEach(el => {
-                delete Object.assign(el, {
-                    ["value"]: el["id"],
-                    ["label"]: el["name"],
-                })["id"];
-                delete el["name"];
-            });
-            set({lessonNames: lessonNames, error: ""});
-        } catch (error) {
-            set({error: error.message, lessonNames: []}); // Update the state with the error message and clear the groups and isAuth
-        } finally {
-            set({isLoading: false});
-        }
-    },
-    getLessonTags: async () => {
-        set({isLoading: true});
-        try {
-            const response = await axios.get(`search/lessonTags`);
-            const lessonTags = response.data;
-            lessonTags.forEach(el => {
-                delete Object.assign(el, {
-                    ["value"]: el["id"],
-                    ["label"]: el["name"],
-                })["id"];
-                delete el["name"];
-            });
-            set({lessonTags: lessonTags, error: ""});
-        } catch (error) {
-            set({error: error.message, lessonTags: []}); // Update the state with the error message and clear the groups and isAuth
-        } finally {
-            set({isLoading: false});
-        }
-    },
+  getGroups: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`search/groups`);
+      const groups = response.data;
+      groups.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
+      set({ groups: groups, error: "" });
+    } catch (error) {
+      set({ error: error.message, groups: [] });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  getTeachers: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`search/teachers`);
+      const teachers = response.data;
+      teachers.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
+      set({ teachers: teachers, error: "" });
+    } catch (error) {
+      set({ error: error.message, teachers: [] }); // Update the state with the error message and clear the groups and isAuth
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  getClassrooms: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`search/classrooms`);
+      const classrooms = response.data;
+      classrooms.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
+      set({ classrooms: classrooms, error: "" });
+    } catch (error) {
+      set({ error: error.message, classrooms: [] }); // Update the state with the error message and clear the groups and isAuth
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  getTimeIntervals: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`search/timeIntervals`);
+      const timeIntervals = response.data;
+      set({ timeIntervals: timeIntervals, error: "" });
+    } catch (error) {
+      set({ error: error.message, timeIntervals: [] }); // Update the state with the error message and clear the groups and isAuth
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  getLessonNames: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`search/lessonNames`);
+      const lessonNames = response.data;
+      lessonNames.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
+      set({ lessonNames: lessonNames, error: "" });
+    } catch (error) {
+      set({ error: error.message, lessonNames: [] }); // Update the state with the error message and clear the groups and isAuth
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  getLessonTags: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`search/lessonTags`);
+      const lessonTags = response.data;
+      lessonTags.forEach(el => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["name"],
+        })["id"];
+        delete el["name"];
+      });
+      set({ lessonTags: lessonTags, error: "" });
+    } catch (error) {
+      set({ error: error.message, lessonTags: [] }); // Update the state with the error message and clear the groups and isAuth
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 
     register: async (email, password, fullName) => {
         set({isLoading: true});
@@ -358,44 +364,44 @@ export const useZustandStore = create((set, get) => ({
         await admin("edit", "timeInterval", id, {startTime, endTime}),
     deleteTimeInterval: async id => await admin("delete", "timeInterval", id),
 
-    createLesson: async (
-        nameId,
-        tagId,
-        groupId,
-        teacherId,
-        timeIntervalId,
-        date,
-        classroomId
-    ) =>
-        await admin("create", "lesson", {
-            nameId,
-            tagId,
-            groupId,
-            teacherId,
-            timeIntervalId,
-            date,
-            classroomId,
-        }),
-    editLesson: async (
-        id,
-        nameId,
-        tagId,
-        groupId,
-        teacherId,
-        timeIntervalId,
-        date,
-        classroomId
-    ) =>
-        await admin("edit", "lesson", id, {
-            nameId,
-            tagId,
-            groupId,
-            teacherId,
-            timeIntervalId,
-            date,
-            classroomId,
-        }),
-    deleteLesson: async id => await admin("delete", "lesson", id)
+  createLesson: async (
+    nameId,
+    tagId,
+    groupId,
+    teacherId,
+    timeIntervalId,
+    date,
+    classroomId
+  ) =>
+    await admin("create", "lesson", {
+      nameId,
+      tagId,
+      groupId,
+      teacherId,
+      timeIntervalId,
+      date,
+      classroomId,
+    }),
+  editLesson: async (
+    id,
+    nameId,
+    tagId,
+    groupId,
+    teacherId,
+    timeIntervalId,
+    date,
+    classroomId
+  ) =>
+    await admin("edit", "lesson", id, {
+      nameId,
+      tagId,
+      groupId,
+      teacherId,
+      timeIntervalId,
+      date,
+      classroomId,
+    }),
+  deleteLesson: async id => await admin("delete", "lesson", id),
 }));
 
 async function admin(action, ...params) {

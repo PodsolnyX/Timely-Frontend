@@ -25,12 +25,11 @@ function transpose(matrix) {
   return matrix[0].map((col, i) => matrix.map(row => row[i]));
 }
 
-export const sheduleMatrix = (response) => {
-  const lessons = response.data;
-  const dates = new Set(lessons.map(lesson => lesson.date));
+export const sheduleMatrix = (schedule, timeIntervals) => {
+
+  const dates = new Set(schedule.map(lesson => lesson.date));
   const sortedDates = Array.from(dates).sort();
 
-  const timeIntervals = new Set(lessons.map(lesson => lesson.timeInterval));
   const sortedTimeIntervals = Array.from(timeIntervals).sort().reverse();
 
   const matrix = [];
@@ -45,22 +44,22 @@ export const sheduleMatrix = (response) => {
   for (let i = 0; i < sortedDates.length; i++) {
     switch (getDayOfWeek(sortedDates[i])) {
       case "Monday":
-        matrix[0] = distribute(sortedTimeIntervals, lessons[i], matrix[0]);
+        matrix[0] = distribute(sortedTimeIntervals, schedule[i], matrix[0]);
         break;
       case "Tuesday":
-        matrix[1] = distribute(sortedTimeIntervals, lessons[i], matrix[1]);
+        matrix[1] = distribute(sortedTimeIntervals, schedule[i], matrix[1]);
         break;
       case "Wednesday":
-        matrix[2] = distribute(sortedTimeIntervals, lessons[i], matrix[2]);
+        matrix[2] = distribute(sortedTimeIntervals, schedule[i], matrix[2]);
         break;
       case "Thursday":
-        matrix[3] = distribute(sortedTimeIntervals, lessons[i], matrix[3]);
+        matrix[3] = distribute(sortedTimeIntervals, schedule[i], matrix[3]);
         break;
       case "Friday":
-        matrix[4] = distribute(sortedTimeIntervals, lessons[i], matrix[4]);
+        matrix[4] = distribute(sortedTimeIntervals, schedule[i], matrix[4]);
         break;
       case "Saturday":
-        matrix[5] = distribute(sortedTimeIntervals, lessons[i], matrix[5]);
+        matrix[5] = distribute(sortedTimeIntervals, schedule[i], matrix[5]);
         break;
       default:
         break;
@@ -70,6 +69,6 @@ export const sheduleMatrix = (response) => {
   return {
     sortedTimeIntervals,
     sortedDates,
-    matrix: transpose(matrix)
+    matrix: transpose(matrix),
   };
 };
