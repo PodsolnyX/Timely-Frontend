@@ -28,8 +28,8 @@ axios.interceptors.response.use(response => response,
     });
 
 function App() {
-    const isAuth = useZustandStore((store) => store.isAuth);
-
+    const isAuth = useZustandStore(store => store.isAuth);
+    const profile = useZustandStore(store => store.profile);
 
     return (
         <div className={"bg-main"}>
@@ -47,7 +47,9 @@ function App() {
                     <Route path="/groups" element={<GroupsPage />} />
                     <Route path="/teachers" element={<TeachersPage />} />
                     <Route path="/audiences" element={<AudiencesPage />} />
-                    <Route path="/admin" element={!isAuth ? <Navigate to="/login"/> : <AdminPage />} />
+                    <Route path="/admin" element={  !isAuth ? <Navigate to="/login"/> :
+                                                    !profile.roles?.includes("Administrator") ? <Navigate to="/"/> :
+                                                <AdminPage />} />
                     <Route path="/login" element={isAuth ? <Navigate to="/schedule"/> : <LoginPage />} />
                     <Route path="/register" element={isAuth ? <Navigate to="/schedule"/> : <RegisterPage />} />
                 </Routes>

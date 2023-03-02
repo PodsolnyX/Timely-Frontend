@@ -8,7 +8,7 @@ const initialState = {
     isLoading: false,
     isLoadingSchedule: false,
     error: "",
-    profile: {},
+    profile: JSON.parse(localStorage.getItem("profile")) || {},
 
     groupSchedule: null,
     classroomSchedule: {},
@@ -37,38 +37,38 @@ const initialState = {
     },
 };
 
-export const useZustandStore = create((set, get) => ({
+export const useZustandStore = create(set => ({
     ...initialState,
 
     getTeacherSchedule: async (date, teacherID) => {
-        set({isLoading: true});
+        set({ isLoading: true });
         try {
             const response = await axios.get(`schedule/teacher/${teacherID}`, {
                 params: {
                     date,
                 },
             });
-            set({teacherSchedule: sheduleMatrix(response), error: ""});
+            set({ teacherSchedule: sheduleMatrix(response), error: "" });
         } catch (error) {
-            set({error: error.message, profile: {}});
+            set({ error: error.message, profile: {} });
         } finally {
-            set({isLoading: false});
+            set({ isLoading: false });
         }
     },
 
     getClassroomSchedule: async (date, classroomID) => {
-        set({isLoading: true});
+        set({ isLoading: true });
         try {
             const response = await axios.get(`schedule/classroom/${classroomID}`, {
                 params: {
                     date,
                 },
             });
-            set({classroomSchedule: sheduleMatrix(response), error: ""});
+            set({ classroomSchedule: sheduleMatrix(response), error: "" });
         } catch (error) {
-            set({error: error.message, profile: {}});
+            set({ error: error.message, profile: {} });
         } finally {
-            set({isLoading: false});
+            set({ isLoading: false });
         }
     },
 
@@ -95,7 +95,7 @@ export const useZustandStore = create((set, get) => ({
     },
 
     getProfile: async () => {
-        set({isLoading: true});
+        set({ isLoading: true });
         try {
             const jwt = localStorage.getItem("jwt");
             const response = await axios.get(`account/profile`, {
@@ -104,11 +104,12 @@ export const useZustandStore = create((set, get) => ({
                 },
             });
             const profile = response.data;
-            set({profile: profile, error: ""});
+            set({ profile: profile, error: "" });
+            localStorage.setItem("profile", JSON.stringify(profile));
         } catch (error) {
-            set({error: error.message, profile: {}});
+            set({ error: error.message, profile: {} });
         } finally {
-            set({isLoading: false});
+            set({ isLoading: false });
         }
     },
 
@@ -413,7 +414,7 @@ export const useZustandStore = create((set, get) => ({
         set(state => {
             return {
                 ...state,
-                lessonEditModal: {...state.lessonEditModal, isShow: false},
+                lessonEditModal: { ...state.lessonEditModal, isShow: false },
             };
         });
     },

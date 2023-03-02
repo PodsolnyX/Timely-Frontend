@@ -4,7 +4,7 @@ import FormField from '../../FormField';
 import Field from "../../Field";
 import { useZustandStore } from '../../../shared/useZustandStore';
 import { useZustandFormStore } from '../../../shared/useZustandFormStore';
-import { validator, checkFullName, checkEmpty } from '../../../helpers/validation';
+import { validator, checkFullName } from '../../../helpers/validation';
 import FormLayout from "../../FormLayout";
 import Select from "react-select";
 import './profile-edit.css'
@@ -43,7 +43,7 @@ const ProfileEdit = () => {
             })
         }
     }, [])
-    const validateFullName = validator(checkFullName, fullNameState, (k, v) => setFullNameState({[k]: v}), "fullName");
+    const validateFullName = validator(checkFullName, fullNameState, (k, v) => setFullNameState({ [k]: v }), "fullName");
     const changeFullName = useZustandStore(store => store.editProfile);
     const changeGroup = useZustandStore(store => store.setGroup);
     const removeGroup = useZustandStore(store => store.removeGroup);
@@ -82,7 +82,7 @@ const ProfileEdit = () => {
         groupBtnRef.current.classList.add("disabled");
         try {
             if (groupState.groupId === "group-none") await removeGroup();
-            else changeGroup(groupState.groupId);
+            else await changeGroup(groupState.groupId);
             setGroupState({ err: "", msg: "Успешно!" })
         }
         catch (err) {
@@ -123,25 +123,27 @@ const ProfileEdit = () => {
                     <p className="text-danger fw-bold">{fullNameState.err}</p>
                     <p className="text-success fw-bold">{fullNameState.msg}</p>
                 </FormLayout>
-
-                <FormLayout header={"Группа"}>
-                    <Select options={[{ label: "Не выбрано", value: "group-none" }, ...groups]}
-                        styles={customStyles}
-                        isDisabled={!groupState.edit || groupState.msg}
-                        value={groupState.groupId ? { value: groupState.groupId, label: groupState.groupName } : { value: "group-none", label: "Не выбрано" }}
-                        onChange={(e) => setGroupState({ groupId: e.value, groupName: e.label })}
-                        placeholder="Выберите группу" />
-                    <Button variant={groupState.edit ? "outline-success" : "outline-warning"}
-                        ref={groupBtnRef}
-                        disabled={groupState.msg}
-                        type="submit"
-                        onClick={(e) => tryChangeGroup(e)}
-                        className={"mt-4"}>
-                        {groupState.edit ? "Сохранить" : "Править"}
-                    </Button>
-                    <p className="text-danger fw-bold">{groupState.err}</p>
-                    <p className="text-success fw-bold">{groupState.msg}</p>
-                </FormLayout>
+                {
+                    profile.roles?.includes("Student") &&
+                    <FormLayout header={"Группа"}>
+                        <Select options={[{ label: "Не выбрано", value: "group-none" }, ...groups]}
+                            styles={customStyles}
+                            isDisabled={!groupState.edit || groupState.msg}
+                            value={groupState.groupId ? { value: groupState.groupId, label: groupState.groupName } : { value: "group-none", label: "Не выбрано" }}
+                            onChange={(e) => setGroupState({ groupId: e.value, groupName: e.label })}
+                            placeholder="Выберите группу" />
+                        <Button variant={groupState.edit ? "outline-success" : "outline-warning"}
+                            ref={groupBtnRef}
+                            disabled={groupState.msg}
+                            type="submit"
+                            onClick={(e) => tryChangeGroup(e)}
+                            className={"mt-4"}>
+                            {groupState.edit ? "Сохранить" : "Править"}
+                        </Button>
+                        <p className="text-danger fw-bold">{groupState.err}</p>
+                        <p className="text-success fw-bold">{groupState.msg}</p>
+                    </FormLayout>
+                }
                 <FormLayout header={"Другое"}>
                     <h5>Здесь приведены данные, которые Вы не можете править</h5>
                     <Field

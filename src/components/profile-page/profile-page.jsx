@@ -25,7 +25,7 @@ const ProfilePage = () => {
             <div style={{ padding: 20, margin: "50px 0", color: "black" }}>
                 <h2 className={"text-white"}>Страница профиля</h2>
                 <div className={"mt-4"}>
-                    <h5 className={"text-white mb-3"}>{ profile.teacher ? "Преподаватель" : "Студент" }</h5>
+                    <h5 className={"text-white mb-3"}>{ profile.roles.includes("Administrator") ? "Админ" : profile.teacher ? "Преподаватель" : "Студент" }</h5>
 
                     <div className="row" style={{ color: "white" }}>
                         <div className="col-sm-12 col-md-4">
