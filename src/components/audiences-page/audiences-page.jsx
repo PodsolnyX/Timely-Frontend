@@ -4,7 +4,7 @@ import {Button} from "react-bootstrap";
 import {useZustandStore} from "../../shared/useZustandStore";
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import {getWeek} from "../../helpers/get-week";
+import {getWeekFromMS} from "../../helpers/get-week";
 
 const GroupsPage = () => {
 
@@ -12,7 +12,7 @@ const GroupsPage = () => {
     const [label, setLabel] = useState(null)
     const navigate = useNavigate();
 
-    let week = getWeek(new Date());
+    let week = getWeekFromMS(new Date());
 
     const getClassrooms = useZustandStore((state) => state.getClassrooms)
     useEffect(() => {

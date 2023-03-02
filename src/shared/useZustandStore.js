@@ -6,10 +6,11 @@ import {useZustandFormStore} from './useZustandFormStore';
 const initialState = {
     isAuth: !!localStorage.getItem("jwt"),
     isLoading: false,
+    isLoadingSchedule: false,
     error: "",
     profile: {},
 
-    groupSchedule: {},
+    groupSchedule: null,
     classroomSchedule: {},
     teacherSchedule: {},
 
@@ -23,7 +24,9 @@ const initialState = {
 
     //Данные для модального окна редактирования пар
     lessonEditModal: {
+        currentLessonData: null,
         isShow: false,
+        date: null,
         currentLesson: {
             curLessonNameId: null,
             curGroupId: null,
@@ -34,7 +37,7 @@ const initialState = {
     },
 };
 
-export const useZustandStore = create(set => ({
+export const useZustandStore = create((set, get) => ({
     ...initialState,
 
     getTeacherSchedule: async (date, teacherID) => {
@@ -70,18 +73,24 @@ export const useZustandStore = create(set => ({
     },
 
     getGroupSchedule: async (date, groupID) => {
-        set({isLoading: true});
+        set({isLoadingSchedule: true});
         try {
             const response = await axios.get(`schedule/group/${groupID}`, {
                 params: {
                     date,
                 },
             });
-            set({groupSchedule: sheduleMatrix(response), error: ""});
+            //set({groupSchedule: sheduleMatrix(response), error: ""});
+            set(state => {
+                return {
+                    ...state,
+                    groupSchedule: sheduleMatrix(response)
+                };
+            });
         } catch (error) {
-            set({error: error.message, profile: {}});
+            set({error: error.message, groupSchedule: null});
         } finally {
-            set({isLoading: false});
+            set({isLoadingSchedule: false});
         }
     },
 
@@ -408,22 +417,16 @@ export const useZustandStore = create(set => ({
             };
         });
     },
-    lessonEditModalOpen: (isLesson, selectLesson) => {
+    lessonEditModalOpen: (isLesson, date, selectLesson) => {
         if (isLesson) {
-            const _selectLesson = {
-                curLessonNameId: selectLesson.lessonName.value,
-                curGroupId: selectLesson.group.value,
-                curAudienceId: selectLesson.audience.value,
-                curTeacherId: selectLesson.teacher.value,
-                curLessonTagId: selectLesson.lessonTag.value,
-            };
             set(state => {
                 return {
                     ...state,
                     lessonEditModal: {
                         ...state.lessonEditModal,
+                        currentLessonData: selectLesson,
                         isShow: true,
-                        currentLesson: _selectLesson,
+                        date: date
                     },
                 };
             });
@@ -433,14 +436,9 @@ export const useZustandStore = create(set => ({
                     ...state,
                     lessonEditModal: {
                         ...state.lessonEditModal,
+                        currentLessonData: null,
                         isShow: true,
-                        currentLesson: {
-                            curLessonNameId: null,
-                            curGroupId: null,
-                            curAudienceId: null,
-                            curTeacherId: null,
-                            curLessonTagId: null,
-                        },
+                        date: date
                     },
                 };
             });

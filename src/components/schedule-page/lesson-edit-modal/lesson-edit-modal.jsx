@@ -5,19 +5,46 @@ import './lesson-edit-modal.css';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import {useZustandStore} from "../../../shared/useZustandStore";
+import {useEffect} from "react";
 
 const LessonEditModal = (props) => {
 
+    const currentLessonData = useZustandStore((state) => state.lessonEditModal.currentLessonData)
+    const date = useZustandStore((state) => state.lessonEditModal.date)
+
+    const getTeachers = useZustandStore((state) => state.getTeachers)
+    const getClassrooms = useZustandStore((state) => state.getClassrooms)
+    const getLessonNames = useZustandStore((state) => state.getLessonNames)
+    const getGroups = useZustandStore((state) => state.getGroups)
+    const getLessonTags = useZustandStore((state) => state.getLessonTags)
+
+    const teachers = useZustandStore((state) => state.teachers);
+    const classrooms = useZustandStore((state) => state.classrooms);
+    const lessonNames = useZustandStore((state) => state.lessonNames);
+    const groups = useZustandStore((state) => state.groups);
+    const lessonTags = useZustandStore((state) => state.lessonTags);
+
+    useEffect(() => {
+        getTeachers();
+        getClassrooms();
+        getLessonNames();
+        getLessonTags();
+        getGroups();
+    }, [])
+
     const animatedComponents = makeAnimated();
-    const currentLesson = useZustandStore((state) => state.lessonEditModal.currentLesson)
     const isShow = useZustandStore((state) => state.lessonEditModal.isShow)
     const lessonEditModalClose = useZustandStore((state) => state.lessonEditModalClose)
 
-    const curLessonIndex = props.universityData.lessonsName.findIndex(obj => obj.value === currentLesson.curLessonNameId);
-    const curGroupIndex = props.universityData.groups.findIndex(obj => obj.value === currentLesson.curGroupId);
-    const curAudienceIndex = props.universityData.audience.findIndex(obj => obj.value === currentLesson.curAudienceId);
-    const curTeacherIndex = props.universityData.teachers.findIndex(obj => obj.value === currentLesson.curTeacherId);
-    const curLessonTagIndex = props.universityData.lessonsTypes.findIndex(obj => obj.value === currentLesson.curLessonTagId);
+    const curLessonIndex = currentLessonData ? lessonNames.findIndex(obj => obj.value === currentLessonData.name.id) : null;
+    const curGroupIndex = currentLessonData ? groups.findIndex(obj => obj.value === currentLessonData.group.id) : null;
+    const curAudienceIndex = currentLessonData ? classrooms.findIndex(obj => obj.value === currentLessonData.classroom.id) : null;
+    const curTeacherIndex = currentLessonData ? teachers.findIndex(obj => obj.value === currentLessonData.teacher.id) : null;
+    const curLessonTagIndex = currentLessonData ? lessonTags.findIndex(obj => obj.value === currentLessonData.tag.id) : null;
+
+    const onSaveLesson = () => {
+        lessonEditModalClose();
+    }
 
     return (
         <>
@@ -29,37 +56,37 @@ const LessonEditModal = (props) => {
 
             >
                 <Modal.Header closeButton className={"justify-content-between modal-header"}>
-                    <h5>ВТ - 10:35 | 14 февр.</h5>
+                    <h5> {date} </h5>
                 </Modal.Header>
                 <Modal.Body className={"modal-body"}>
 
                     <h5>Предмет</h5>
                     <Select
-                        defaultValue={props.universityData.lessonsName[curLessonIndex]}
-                        options={props.universityData.lessonsName}
+                        defaultValue={lessonNames[curLessonIndex]}
+                        options={lessonNames}
                     />
                     <h5 className={"mt-2"}>Группа</h5>
                     <Select
-                        defaultValue={props.universityData.groups[curGroupIndex]}
+                        defaultValue={groups[curGroupIndex]}
                         closeMenuOnSelect={false}
                         components={animatedComponents}
                         isMulti
-                        options={props.universityData.groups}
+                        options={groups}
                     />
                     <h5 className={"mt-2"}>Аудитория</h5>
                     <Select
-                        defaultValue={props.universityData.audience[curAudienceIndex]}
-                        options={props.universityData.audience}
+                        defaultValue={classrooms[curAudienceIndex]}
+                        options={classrooms}
                     />
                     <h5 className={"mt-2"}>Преподаватель</h5>
                     <Select
-                        defaultValue={props.universityData.teachers[curTeacherIndex]}
-                        options={props.universityData.teachers}
+                        defaultValue={teachers[curTeacherIndex]}
+                        options={teachers}
                     />
                     <h5 className={"mt-2"}>Тип пары</h5>
                     <Select
-                        defaultValue={props.universityData.lessonsTypes[curLessonTagIndex]}
-                        options={props.universityData.lessonsTypes}
+                        defaultValue={lessonTags[curLessonTagIndex]}
+                        options={lessonTags}
                     />
 
                 </Modal.Body>
@@ -70,7 +97,7 @@ const LessonEditModal = (props) => {
                         </Button>
                     </div>
                     <div>
-                        <Button variant="outline-primary" onClick={lessonEditModalClose}>
+                        <Button variant="outline-primary" onClick={onSaveLesson}>
                             Сохранить
                         </Button>
                         <Button className={"ms-2"} variant="outline-secondary" onClick={lessonEditModalClose}>
