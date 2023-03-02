@@ -47,8 +47,6 @@ const SchedulePage = () => {
 
     const navigate = useNavigate();
 
-    const lessonEditModalOpen = useZustandStore((state) => state.lessonEditModalOpen);
-
     const onNextWeekSchedule = () => {
         let week = getNextWeek(search.get("startDate"));
         navigate(`/schedule/${params.scheduleTag}/${params.id}?name=${name}&startDate=${week[0]}&endDate=${week[5]}`)
@@ -84,7 +82,7 @@ const SchedulePage = () => {
                 </div>
                 {isLoadingSchedule ? <div>Loading</div> :
                     <ScheduleTable lessonsDays={data.lessonsDays} week={getWeek(search.get("startDate"))}
-                                   handleShow={lessonEditModalOpen} data={groupSchedule}
+                                   data={groupSchedule}
                     />
                 }
             </div>

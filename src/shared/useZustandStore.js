@@ -22,22 +22,9 @@ const initialState = {
     lessonNames: [],
     lessonTags: [],
 
-    //Данные для модального окна редактирования пар
-    lessonEditModal: {
-        currentLessonData: null,
-        isShow: false,
-        date: null,
-        currentLesson: {
-            curLessonNameId: null,
-            curGroupId: null,
-            curAudienceId: null,
-            curTeacherId: null,
-            curLessonTagId: null,
-        },
-    },
 };
 
-export const useZustandStore = create(set => ({
+export const useZustandStore = create((set, get) => ({
     ...initialState,
 
     getTeacherSchedule: async (date, teacherID) => {
@@ -80,7 +67,7 @@ export const useZustandStore = create(set => ({
                     date,
                 },
             });
-            //set({groupSchedule: sheduleMatrix(response), error: ""});
+            console.log(response)
             set(state => {
                 return {
                     ...state,
@@ -408,43 +395,7 @@ export const useZustandStore = create(set => ({
             date,
             classroomId,
         }),
-    deleteLesson: async id => await admin("delete", "lesson", id),
-    //////////////Методы для модального окна редактирования пар//////////////////
-    lessonEditModalClose: () => {
-        set(state => {
-            return {
-                ...state,
-                lessonEditModal: { ...state.lessonEditModal, isShow: false },
-            };
-        });
-    },
-    lessonEditModalOpen: (isLesson, date, selectLesson) => {
-        if (isLesson) {
-            set(state => {
-                return {
-                    ...state,
-                    lessonEditModal: {
-                        ...state.lessonEditModal,
-                        currentLessonData: selectLesson,
-                        isShow: true,
-                        date: date
-                    },
-                };
-            });
-        } else {
-            set(state => {
-                return {
-                    ...state,
-                    lessonEditModal: {
-                        ...state.lessonEditModal,
-                        currentLessonData: null,
-                        isShow: true,
-                        date: date
-                    },
-                };
-            });
-        }
-    },
+    deleteLesson: async id => await admin("delete", "lesson", id)
 }));
 
 async function admin(action, ...params) {

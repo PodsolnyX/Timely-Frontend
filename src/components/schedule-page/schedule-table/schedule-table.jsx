@@ -3,10 +3,11 @@ import LessonCard from "../lesson-card/lesson-card";
 import React from "react";
 import {useZustandStore} from "../../../shared/useZustandStore";
 import {formatDate, formatDateModal} from "../../../helpers/get-week";
+import {useScheduleModalStore} from "../../../shared/useScheduleModalStore";
 
 const ScheduleTable = (props) => {
 
-    const lessonEditModalOpen = useZustandStore((state) => state.lessonEditModalOpen);
+    const lessonEditModalOpen = useScheduleModalStore((state) => state.lessonEditModalOpen);
 
     if (!props.data) return;
 
@@ -30,12 +31,18 @@ const ScheduleTable = (props) => {
             lessonsTd.push(
                 <td className={props.data.matrix[index][k] ? null : "td-container"}
                     onClick={props.data.matrix[index][k] ? null : () =>
-                        lessonEditModalOpen(false, formatDateModal(props.data.sortedTimeIntervals[index], props.week[k]))}
+                        lessonEditModalOpen(
+                            false,
+                            formatDateModal(props.data.sortedTimeIntervals[index], props.week[k]),
+                            props.data.sortedTimeIntervals[index],
+                            props.week[k]
+                        )}
                     style={{width: `${100 / (props.lessonsDays.length)}%`}}
                     key={k}
                 >
-                    <LessonCard handleShow={props.handleShow}
+                    <LessonCard handleShow={lessonEditModalOpen}
                                 date={formatDateModal(props.data.sortedTimeIntervals[index], props.week[k])}
+                                timeInterval={props.data.sortedTimeIntervals[index]}
                                 data={props.data.matrix[index][k]}
                     />
                 </td>

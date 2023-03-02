@@ -6,11 +6,18 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import {useZustandStore} from "../../../shared/useZustandStore";
 import {useEffect} from "react";
+import {useScheduleModalStore} from "../../../shared/useScheduleModalStore";
 
 const LessonEditModal = (props) => {
 
-    const currentLessonData = useZustandStore((state) => state.lessonEditModal.currentLessonData)
-    const date = useZustandStore((state) => state.lessonEditModal.date)
+    const currentLesson = useScheduleModalStore((state) => state.lessonEditModal.currentLesson)
+    const dateTitle = useScheduleModalStore((state) => state.lessonEditModal.dateTitle)
+
+    const setLessonNameId = useScheduleModalStore((state) => state.setLessonNameId)
+    const setTeacherId = useScheduleModalStore((state) => state.setTeacherId)
+    const setGroupId = useScheduleModalStore((state) => state.setGroupId)
+    const setAudienceId = useScheduleModalStore((state) => state.setAudienceId)
+    const setLessonTagId = useScheduleModalStore((state) => state.setLessonTagId)
 
     const getTeachers = useZustandStore((state) => state.getTeachers)
     const getClassrooms = useZustandStore((state) => state.getClassrooms)
@@ -24,6 +31,12 @@ const LessonEditModal = (props) => {
     const groups = useZustandStore((state) => state.groups);
     const lessonTags = useZustandStore((state) => state.lessonTags);
 
+    const curLessonIndex = lessonNames.findIndex(obj => obj.value === currentLesson.lessonNameId);
+    const curGroupIndex = groups.findIndex(obj => obj.value === currentLesson.groupId);
+    const curAudienceIndex = classrooms.findIndex(obj => obj.value === currentLesson.audienceId);
+    const curTeacherIndex = teachers.findIndex(obj => obj.value === currentLesson.teacherId);
+    const curLessonTagIndex = lessonTags.findIndex(obj => obj.value === currentLesson.lessonTagId);
+
     useEffect(() => {
         getTeachers();
         getClassrooms();
@@ -33,18 +46,38 @@ const LessonEditModal = (props) => {
     }, [])
 
     const animatedComponents = makeAnimated();
-    const isShow = useZustandStore((state) => state.lessonEditModal.isShow)
-    const lessonEditModalClose = useZustandStore((state) => state.lessonEditModalClose)
+    const isShow = useScheduleModalStore((state) => state.lessonEditModal.isShow)
+    const lessonEditModalClose = useScheduleModalStore((state) => state.lessonEditModalClose)
 
-    const curLessonIndex = currentLessonData ? lessonNames.findIndex(obj => obj.value === currentLessonData.name.id) : null;
-    const curGroupIndex = currentLessonData ? groups.findIndex(obj => obj.value === currentLessonData.group.id) : null;
-    const curAudienceIndex = currentLessonData ? classrooms.findIndex(obj => obj.value === currentLessonData.classroom.id) : null;
-    const curTeacherIndex = currentLessonData ? teachers.findIndex(obj => obj.value === currentLessonData.teacher.id) : null;
-    const curLessonTagIndex = currentLessonData ? lessonTags.findIndex(obj => obj.value === currentLessonData.tag.id) : null;
+    const createLesson = useZustandStore((state) => state.createLesson);
 
     const onSaveLesson = () => {
-        lessonEditModalClose();
+        createLesson(
+            currentLesson.lessonNameId,
+            currentLesson.lessonTagId,
+            currentLesson.groupId,
+            currentLesson.teacherId,
+            currentLesson.timeIntervalId,
+            currentLesson.lessonDate,
+            currentLesson.audienceId
+        )
+        console.log(currentLesson.groupId)
+        console.log(
+            currentLesson.lessonNameId,
+            currentLesson.lessonTagId,
+            currentLesson.groupId,
+            currentLesson.teacherId,
+            currentLesson.timeIntervalId,
+            currentLesson.lessonDate,
+            currentLesson.audienceId
+        )
     }
+
+    const onChangeLesson = (e) => { setLessonNameId(e.value) }
+    const onChangeTeacher = (e) => { setTeacherId(e.value) }
+    const onChangeGroup = (e) => { setGroupId(e[0].value) }
+    const onChangeAudience = (e) => { setAudienceId(e.value) }
+    const onChangeLessonTag = (e) => { setLessonTagId(e.value) }
 
     return (
         <>
@@ -56,7 +89,7 @@ const LessonEditModal = (props) => {
 
             >
                 <Modal.Header closeButton className={"justify-content-between modal-header"}>
-                    <h5> {date} </h5>
+                    <h5> {dateTitle} </h5>
                 </Modal.Header>
                 <Modal.Body className={"modal-body"}>
 
@@ -64,6 +97,7 @@ const LessonEditModal = (props) => {
                     <Select
                         defaultValue={lessonNames[curLessonIndex]}
                         options={lessonNames}
+                        onChange={onChangeLesson}
                     />
                     <h5 className={"mt-2"}>Группа</h5>
                     <Select
@@ -72,21 +106,25 @@ const LessonEditModal = (props) => {
                         components={animatedComponents}
                         isMulti
                         options={groups}
+                        onChange={onChangeGroup}
                     />
                     <h5 className={"mt-2"}>Аудитория</h5>
                     <Select
                         defaultValue={classrooms[curAudienceIndex]}
                         options={classrooms}
+                        onChange={onChangeAudience}
                     />
                     <h5 className={"mt-2"}>Преподаватель</h5>
                     <Select
                         defaultValue={teachers[curTeacherIndex]}
                         options={teachers}
+                        onChange={onChangeTeacher}
                     />
                     <h5 className={"mt-2"}>Тип пары</h5>
                     <Select
                         defaultValue={lessonTags[curLessonTagIndex]}
                         options={lessonTags}
+                        onChange={onChangeLessonTag}
                     />
 
                 </Modal.Body>
