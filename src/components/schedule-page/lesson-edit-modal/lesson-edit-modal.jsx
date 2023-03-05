@@ -4,140 +4,159 @@ import Modal from 'react-bootstrap/Modal';
 import './lesson-edit-modal.css';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
-import {useZustandStore} from "../../../shared/useZustandStore";
 import {useEffect} from "react";
-import {useScheduleModalStore} from "../../../shared/useScheduleModalStore";
+import {useNavigate} from "react-router-dom";
 
 const LessonEditModal = (props) => {
+    console.log(props.lessonError)
 
-    const currentLesson = useScheduleModalStore((state) => state.lessonEditModal.currentLesson)
-    const dateTitle = useScheduleModalStore((state) => state.lessonEditModal.dateTitle)
+    const navigate = useNavigate();
+    const animatedComponents = makeAnimated();
 
-    const setLessonNameId = useScheduleModalStore((state) => state.setLessonNameId)
-    const setTeacherId = useScheduleModalStore((state) => state.setTeacherId)
-    const setGroupId = useScheduleModalStore((state) => state.setGroupId)
-    const setAudienceId = useScheduleModalStore((state) => state.setAudienceId)
-    const setLessonTagId = useScheduleModalStore((state) => state.setLessonTagId)
-
-    const getTeachers = useZustandStore((state) => state.getTeachers)
-    const getClassrooms = useZustandStore((state) => state.getClassrooms)
-    const getLessonNames = useZustandStore((state) => state.getLessonNames)
-    const getGroups = useZustandStore((state) => state.getGroups)
-    const getLessonTags = useZustandStore((state) => state.getLessonTags)
-
-    const teachers = useZustandStore((state) => state.teachers);
-    const classrooms = useZustandStore((state) => state.classrooms);
-    const lessonNames = useZustandStore((state) => state.lessonNames);
-    const groups = useZustandStore((state) => state.groups);
-    const lessonTags = useZustandStore((state) => state.lessonTags);
-
-    const curLessonIndex = lessonNames.findIndex(obj => obj.value === currentLesson.lessonNameId);
-    const curGroupIndex = groups.findIndex(obj => obj.value === currentLesson.groupId);
-    const curAudienceIndex = classrooms.findIndex(obj => obj.value === currentLesson.audienceId);
-    const curTeacherIndex = teachers.findIndex(obj => obj.value === currentLesson.teacherId);
-    const curLessonTagIndex = lessonTags.findIndex(obj => obj.value === currentLesson.lessonTagId);
+    const curLessonIndex = props.lessonNames.findIndex(obj => obj.value === props.currentLesson.lessonNameId);
+    const curGroupIndex = !props.currentLesson.groupId ? null :
+        props.currentLesson.groupId.map((g) => props.groups[props.groups.findIndex(obj => obj.value === g)]);
+    const curAudienceIndex = props.classrooms.findIndex(obj => obj.value === props.currentLesson.audienceId);
+    const curTeacherIndex = props.teachers.findIndex(obj => obj.value === props.currentLesson.teacherId);
+    const curLessonTagIndex = props.lessonTags.findIndex(obj => obj.value === props.currentLesson.lessonTagId);
 
     useEffect(() => {
-        getTeachers();
-        getClassrooms();
-        getLessonNames();
-        getLessonTags();
-        getGroups();
+        props.getTeachers();
+        props.getClassrooms();
+        props.getLessonNames();
+        props.getLessonTags();
+        props.getGroups();
     }, [])
 
-    const animatedComponents = makeAnimated();
-    const isShow = useScheduleModalStore((state) => state.lessonEditModal.isShow)
-    const lessonEditModalClose = useScheduleModalStore((state) => state.lessonEditModalClose)
-
-    const createLesson = useZustandStore((state) => state.createLesson);
     const onSaveLesson = () => {
-        createLesson(
-            currentLesson.lessonNameId,
-            currentLesson.lessonTagId,
-            currentLesson.groupId,
-            currentLesson.teacherId,
-            currentLesson.timeIntervalId,
-            currentLesson.lessonDate,
-            currentLesson.audienceId
-        )
-        console.log(currentLesson.groupId)
-        console.log(
-            currentLesson.lessonNameId,
-            currentLesson.lessonTagId,
-            currentLesson.groupId,
-            currentLesson.teacherId,
-            currentLesson.timeIntervalId,
-            currentLesson.lessonDate,
-            currentLesson.audienceId
-        )
+        props.createLesson(
+            props.currentLesson.lessonNameId,
+            props.currentLesson.lessonTagId,
+            props.currentLesson.groupId,
+            props.currentLesson.teacherId,
+            props.currentLesson.timeIntervalId,
+            props.currentLesson.lessonDate,
+            props.currentLesson.audienceId
+        ).then(r => {
+            if (props.lessonError === "") {
+                props.lessonEditModalClose();
+                navigate(0);
+            }
+        });
     }
 
-    const onChangeLesson = (e) => { setLessonNameId(e.value) }
-    const onChangeTeacher = (e) => { setTeacherId(e.value) }
-    const onChangeGroup = (e) => { setGroupId(e[0].value) }
-    const onChangeAudience = (e) => { setAudienceId(e.value) }
-    const onChangeLessonTag = (e) => { setLessonTagId(e.value) }
+    const onEditLesson = () => {
+        props.editLesson(
+            props.lessonId,
+            props.currentLesson.lessonNameId,
+            props.currentLesson.lessonTagId,
+            props.currentLesson.groupId,
+            props.currentLesson.teacherId,
+            props.currentLesson.timeIntervalId,
+            props.currentLesson.lessonDate,
+            props.currentLesson.audienceId
+        ).then(r => {
+            if (props.lessonError === "") {
+                props.lessonEditModalClose();
+                navigate(0);
+            }
+        });
+    }
+
+    const onDeleteLesson = () => {
+        props.deleteLesson(props.lessonId).then(r => {
+            if (props.lessonError === "") {
+                props.lessonEditModalClose();
+                navigate(0);
+            }
+        });
+    }
+
+    const onModalClose = () => {
+        props.resetLessonError();
+        props.lessonEditModalClose();
+    }
+
+    const onChangeLessonName = (e) => {
+        props.setLessonNameId(e.value)
+    }
+    const onChangeTeacher = (e) => {
+        props.setTeacherId(e.value)
+    }
+    const onChangeGroup = (e) => {
+        props.setGroupId(e.map((g) => g.value))
+    }
+    const onChangeAudience = (e) => {
+        props.setAudienceId(e.value)
+    }
+    const onChangeLessonTag = (e) => {
+        props.setLessonTagId(e.value)
+    }
 
     return (
         <>
             <Modal
-                show={isShow}
-                onHide={lessonEditModalClose}
+                show={props.isShow}
+                onHide={onModalClose}
                 backdrop="static"
                 keyboard={false}
 
             >
                 <Modal.Header closeButton className={"justify-content-between modal-header"}>
-                    <h5> {dateTitle} </h5>
+                    <h5> {props.dateTitle} </h5>
                 </Modal.Header>
                 <Modal.Body className={"modal-body"}>
-
                     <h5>Предмет</h5>
                     <Select
-                        defaultValue={lessonNames[curLessonIndex]}
-                        options={lessonNames}
-                        onChange={onChangeLesson}
+                        defaultValue={props.lessonNames[curLessonIndex]}
+                        options={props.lessonNames}
+                        onChange={onChangeLessonName}
                     />
                     <h5 className={"mt-2"}>Группа</h5>
                     <Select
-                        defaultValue={groups[curGroupIndex]}
+                        defaultValue={curGroupIndex}
                         closeMenuOnSelect={false}
                         components={animatedComponents}
                         isMulti
-                        options={groups}
+                        options={props.groups}
                         onChange={onChangeGroup}
                     />
                     <h5 className={"mt-2"}>Аудитория</h5>
                     <Select
-                        defaultValue={classrooms[curAudienceIndex]}
-                        options={classrooms}
+                        defaultValue={props.classrooms[curAudienceIndex]}
+                        options={props.classrooms}
                         onChange={onChangeAudience}
                     />
                     <h5 className={"mt-2"}>Преподаватель</h5>
                     <Select
-                        defaultValue={teachers[curTeacherIndex]}
-                        options={teachers}
+                        defaultValue={props.teachers[curTeacherIndex]}
+                        options={props.teachers}
                         onChange={onChangeTeacher}
                     />
                     <h5 className={"mt-2"}>Тип пары</h5>
                     <Select
-                        defaultValue={lessonTags[curLessonTagIndex]}
-                        options={lessonTags}
+                        defaultValue={props.lessonTags[curLessonTagIndex]}
+                        options={props.lessonTags}
                         onChange={onChangeLessonTag}
                     />
-
+                    <div className={"text-danger mt-3"}>
+                        {props.lessonError}
+                    </div>
                 </Modal.Body>
                 <Modal.Footer className={"justify-content-between modal-footer mt-2"}>
                     <div>
-                        <Button variant="outline-danger" onClick={lessonEditModalClose}>
-                            Удалить
-                        </Button>
+                        {props.isLesson
+                            ? <Button variant="outline-danger" onClick={onDeleteLesson}> Удалить </Button>
+                            : null
+                        }
                     </div>
+                    <div>{props.isLoadingLesson ? "LOADING..." : null}</div>
                     <div>
-                        <Button variant="outline-primary" onClick={onSaveLesson}>
-                            Сохранить
-                        </Button>
-                        <Button className={"ms-2"} variant="outline-secondary" onClick={lessonEditModalClose}>
+                        {props.isLesson
+                            ? <Button variant="outline-primary" onClick={onEditLesson}> Сохранить </Button>
+                            : <Button variant="outline-primary" onClick={onSaveLesson}> Создать </Button>
+                        }
+                        <Button className={"ms-2"} variant="outline-secondary" onClick={onModalClose}>
                             Закрыть
                         </Button>
                     </div>

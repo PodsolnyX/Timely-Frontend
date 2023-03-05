@@ -1,10 +1,8 @@
-import axios from "axios";
-
 function getDayOfWeek(date) {
   const dayOfWeek = new Date(date).getDay();
   return isNaN(dayOfWeek)
-    ? null
-    : [
+      ? null
+      : [
         "Sunday",
         "Monday",
         "Tuesday",
@@ -17,7 +15,7 @@ function getDayOfWeek(date) {
 
 function distribute(intervals, lesson, currentDay) {
   return intervals.map((interval, i) =>
-    interval.id == lesson.timeInterval.id ? lesson : currentDay[i]
+      interval.id == lesson.timeInterval.id ? lesson : currentDay[i]
   );
 }
 
@@ -25,13 +23,17 @@ function transpose(matrix) {
   return matrix[0].map((col, i) => matrix.map(row => row[i]));
 }
 
+function sortTime(arr) {
+  arr.sort(function (a, b) {
+    var timeA = new Date("1970-01-01T" + a.startTime),
+        timeB = new Date("1970-01-01T" + b.startTime);
+    return timeA - timeB;
+  });
+  return arr;
+}
+
 export const sheduleMatrix = (schedule, timeIntervals) => {
-
-  const dates = new Set(schedule.map(lesson => lesson.date));
-  const sortedDates = Array.from(dates).sort();
-
-  const sortedTimeIntervals = Array.from(timeIntervals).sort().reverse();
-
+  const sortedTimeIntervals = sortTime(timeIntervals);
   const matrix = [];
 
   for (let i = 0; i < 6; i++) {
@@ -41,8 +43,9 @@ export const sheduleMatrix = (schedule, timeIntervals) => {
     }
   }
 
-  for (let i = 0; i < sortedDates.length; i++) {
-    switch (getDayOfWeek(sortedDates[i])) {
+
+  for (let i = 0; i < schedule.length; i++) {
+    switch (getDayOfWeek(schedule[i].date)) {
       case "Monday":
         matrix[0] = distribute(sortedTimeIntervals, schedule[i], matrix[0]);
         break;
@@ -68,7 +71,6 @@ export const sheduleMatrix = (schedule, timeIntervals) => {
 
   return {
     sortedTimeIntervals,
-    sortedDates,
     matrix: transpose(matrix),
   };
 };

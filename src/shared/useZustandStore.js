@@ -6,6 +6,7 @@ import { useZustandFormStore } from "./useZustandFormStore";
 const initialState = {
   isAuth: !!localStorage.getItem("jwt"),
   isLoading: false,
+  isLoadingLesson: false,
   isLoadingSchedule: false,
   error: "",
   lessonError: "",
@@ -383,7 +384,7 @@ export const useZustandStore = create((set) => ({
     classroomId
   ) => {
     try {
-      set({ lessonError: "" });
+      set({ lessonError: "", isLoadingLesson: true});
       await admin("create", "lesson", {
         nameId,
         tagId,
@@ -395,6 +396,8 @@ export const useZustandStore = create((set) => ({
       });
     } catch (error) {
       set({ lessonError: error.response.data.title });
+    } finally {
+      set({ isLoadingLesson: false})
     }
   },
   editLesson: async (
@@ -408,7 +411,7 @@ export const useZustandStore = create((set) => ({
     classroomId
   ) => {
     try {
-      set({ lessonError: "" });
+      set({ lessonError: "", isLoadingLesson: true});
       await admin("edit", "lesson", id, {
         nameId,
         tagId,
@@ -420,9 +423,23 @@ export const useZustandStore = create((set) => ({
       });
     } catch (error) {
       set({ lessonError: error.response.data.title });
+    } finally {
+      set({ isLoadingLesson: false})
     }
   },
-  deleteLesson: async (id) => await admin("delete", "lesson", id),
+  deleteLesson: async (id) => {
+    try {
+      set({lessonError: "", isLoadingLesson: true});
+      await admin("delete", "lesson", id);
+    } catch (error) {
+      set({lessonError: error.response.data.title});
+    } finally {
+      set({isLoadingLesson: false})
+    }
+  },
+  resetLessonError: () => {
+    set({lessonError: ""});
+  }
 }));
 
 async function admin(action, ...params) {
@@ -465,20 +482,20 @@ function adminErrHandler(action, error, ...params) {
   if (action === "create") {
     useZustandStore.setState((state) => (
       {
-        [errKey]: { 
+        [errKey]: {
           ...state[errKey],
           create: errName
         }
-      } 
+      }
     ));
     return;
   }
   useZustandStore.setState((state) => (
     {
       [errKey]: {
-        ...state[errKey], 
+        ...state[errKey],
         [params[1]]: errName
       }
-    } 
+    }
   ));
 }

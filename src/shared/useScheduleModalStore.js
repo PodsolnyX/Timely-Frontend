@@ -3,6 +3,8 @@ import {create} from "zustand";
 const initialState = {
     lessonEditModal: {
         isShow: false,
+        isLesson: false,
+        lessonId: false,
         dateTitle: null,
         currentLesson: {
             lessonNameId: null,
@@ -29,10 +31,11 @@ export const useScheduleModalStore = create((set, get) => ({
     },
 
     lessonEditModalOpen: (isLesson, dateTitle, timeInterval, dateLesson, selectLesson) => {
+        console.log(selectLesson)
         if (isLesson) {
             const _selectLesson= {
                 lessonNameId: selectLesson.name.id,
-                groupId: selectLesson.group.id,
+                groupId: selectLesson.group.map((g) => g.id),
                 audienceId: selectLesson.classroom.id,
                 teacherId: selectLesson.teacher.id,
                 lessonTagId: selectLesson.tag.id,
@@ -46,6 +49,8 @@ export const useScheduleModalStore = create((set, get) => ({
                         ...state.lessonEditModal,
                         currentLesson: _selectLesson,
                         isShow: true,
+                        isLesson: true,
+                        lessonId: selectLesson.id,
                         dateTitle: dateTitle,
                     },
                 };
@@ -57,6 +62,8 @@ export const useScheduleModalStore = create((set, get) => ({
                     lessonEditModal: {
                         ...state.lessonEditModal,
                         isShow: true,
+                        isLesson: false,
+                        lessonId: false,
                         dateTitle: dateTitle,
                         currentLesson: {
                             lessonNameId: null,
