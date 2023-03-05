@@ -22,6 +22,14 @@ const initialState = {
   timeIntervals: [],
   lessonNames: [],
   lessonTags: [],
+
+  teacherErrors: {},
+  domainErrors: {},
+  classroomErrors: {},
+  groupErrors: {},
+  lessonTagErrors: {},
+  lessonNameErrors: {},
+  timeIntervalErrors: {},
 };
 
 export const useZustandStore = create((set) => ({
@@ -424,19 +432,53 @@ async function admin(action, ...params) {
       Authorization: `Bearer ${jwt}`,
     },
   };
-  switch (action) {
-    case "create":
-      await axios.post(`admin/${params[0]}/create`, params[1], headers);
-      break;
-    case "edit":
-      await axios.put(
-        `admin/${params[0]}/edit/${params[1]}`,
-        params[2],
-        headers
-      );
-      break;
-    case "delete":
-      await axios.delete(`admin/${params[0]}/delete/${params[1]}`, headers);
-      break;
+  try {
+    adminErrHandler(action, null, ...params);
+    switch (action) {
+      case "create":
+        await axios.post(`admin/${params[0]}/create`, params[1], headers);
+        break;
+      case "edit":
+        await axios.put(
+          `admin/${params[0]}/edit/${params[1]}`,
+          params[2],
+          headers
+        );
+        break;
+      case "delete":
+        await axios.delete(`admin/${params[0]}/delete/${params[1]}`, headers);
+        break;
+      default:
+        throw Error();
+    }
+  } catch (error) {
+    adminErrHandler(action, error, ...params);
+    throw error;
   }
+}
+
+function adminErrHandler(action, error, ...params) {
+  //if (!error.isAxiosError && error !== null) return;
+  let errName = error ? error.response?.data?.title : "";
+  if (!errName && errName !== "") errName = "Нет соединения";
+  const errKey = `${params[0]}Errors`;
+  if (action === "create") {
+    useZustandStore.setState((state) => (
+      {
+        [errKey]: { 
+          ...state[errKey],
+          create: errName
+        }
+      } 
+    ));
+    return;
+  }
+  useZustandStore.setState((state) => (
+    {
+      [errKey]: {
+        ...state[errKey], 
+        [params[1]]: errName
+      }
+    } 
+  ));
 }

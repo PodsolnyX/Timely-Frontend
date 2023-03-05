@@ -50,7 +50,6 @@ const LessonEditModal = (props) => {
     const lessonEditModalClose = useScheduleModalStore((state) => state.lessonEditModalClose)
 
     const createLesson = useZustandStore((state) => state.createLesson);
-
     const onSaveLesson = () => {
         createLesson(
             currentLesson.lessonNameId,
