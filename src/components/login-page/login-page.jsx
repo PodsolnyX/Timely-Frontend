@@ -30,7 +30,7 @@ const LoginPage = () => {
         try {
             await login(formState.email, formState.password);
             await getProfile();
-            navigate("/schedule");
+            navigate("/");
         } 
         catch (err) {
             loginRef.current.classList.remove("disabled");

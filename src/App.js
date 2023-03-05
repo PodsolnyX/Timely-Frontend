@@ -51,8 +51,8 @@ function App() {
                     <Route path="/admin" element={  !isAuth ? <Navigate to="/login"/> :
                                                     !profile.roles?.includes("Administrator") ? <Navigate to="/"/> :
                                                 <AdminPageContainer />} />
-                    <Route path="/login" element={isAuth ? <Navigate to="/schedule"/> : <LoginPage />} />
-                    <Route path="/register" element={isAuth ? <Navigate to="/schedule"/> : <RegisterPage />} />
+                    <Route path="/login" element={isAuth ? <Navigate to="/"/> : <LoginPage />} />
+                    <Route path="/register" element={isAuth ? <Navigate to="/"/> : <RegisterPage />} />
                 </Routes>
             </div>
             <Footer />

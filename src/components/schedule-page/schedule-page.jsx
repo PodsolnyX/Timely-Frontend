@@ -1,7 +1,6 @@
 import './schedule-page.css';
 import {Button} from "react-bootstrap";
 import React from "react";
-import LessonEditModal from "./lesson-edit-modal/lesson-edit-modal";
 import ScheduleTable from "./schedule-table/schedule-table";
 import {useZustandStore} from "../../shared/useZustandStore";
 import {data} from "./testData.js";
@@ -10,11 +9,6 @@ import {getNextWeek, getPastWeek, getWeek} from "../../helpers/get-week";
 import {useEffect} from "react";
 import LessonEditModalContainer from "./lesson-edit-modal/lesson-edit-modal-container";
 
-const scheduleTags = {
-    "group": "группы",
-    "teacher": "преподавателя",
-    "audience": "аудитории"
-};
 const weekDays = {
     "01": "января",
     "02": "февраля",
@@ -31,10 +25,38 @@ const weekDays = {
 };
 
 const SchedulePage = () => {
+    const scheduleTags = {
+        "teacher": {
+            label: "преподователя",
+            getSchedule: useZustandStore((state) => state.getTeacherSchedule),
+            schedule: useZustandStore((state) => state.teacherSchedule),
+        },
+        "audience": {
+            label: "аудитории",
+            getSchedule: useZustandStore((state) => state.getClassroomSchedule),
+            schedule: useZustandStore((state) => state.classroomSchedule),
+        },
+        "group": {
+            label: "группы",
+            getSchedule: useZustandStore((state) => state.getGroupSchedule),
+            schedule: useZustandStore((state) => state.groupSchedule),
+        },
+    };
 
+    //const getGroupSchedule =
+    //const getTeacherSchedule = useZustandStore((state) => state.getTeacherSchedule);
+    //const getClassroomSchedule = useZustandStore((state) => state.getClassroomSchedule);
+
+    //const groupSchedule = useZustandStore((state) => state.groupSchedule);
+    //const teacherSchedule = useZustandStore((state) => state.teacherSchedule);
+    //const classroomSchedule = useZustandStore((state) => state.classroomSchedule);
+
+    const isLoadingSchedule = useZustandStore((state) => state.isLoading);
 
     const params = useParams();
+    const navigate = useNavigate();
     const [search, setSearch] = useSearchParams();
+
     const name = search.get("name");
     const startDay = `
             ${search.get("startDate").slice(8, 10)} 
@@ -45,8 +67,6 @@ const SchedulePage = () => {
             ${search.get("endDate").slice(8, 10)} 
             ${weekDays[search.get("endDate").slice(5, 7)]} 
             ${search.get("endDate").slice(0, 4)}`;
-
-    const navigate = useNavigate();
 
     const onNextWeekSchedule = () => {
         let week = getNextWeek(search.get("startDate"));
@@ -60,21 +80,15 @@ const SchedulePage = () => {
         navigate(0);
     }
 
-    const getGroupSchedule = useZustandStore((state) => state.getGroupSchedule);
-    const groupSchedule = useZustandStore((state) => state.groupSchedule);
-    const isLoadingSchedule = useZustandStore((state) => state.isLoading);
-
     useEffect(() => {
-        getGroupSchedule(search.get("startDate"), params.id);
-
+        scheduleTags[params.scheduleTag].getSchedule(search.get("startDate"), params.id);
     }, [])
-
 
     return (
         <div className={"container schedule-page-container"}>
             <LessonEditModalContainer/>
             <div style={{padding: 20, margin: "30px 0"}}>
-                <h2> Расписание {scheduleTags[params.scheduleTag]} {name} </h2>
+                <h2> Расписание {scheduleTags[params.scheduleTag].label} {name} </h2>
                 <p style={{color: "gray"}}>{startDay} – {endDay}</p>
                 <div className={"d-flex"}>
                     <Button variant={"outline-secondary"} onClick={onPastWeekSchedule}>Предыдущая неделя</Button>
@@ -83,7 +97,7 @@ const SchedulePage = () => {
                 </div>
                 {isLoadingSchedule ? <div>Loading</div> :
                     <ScheduleTable lessonsDays={data.lessonsDays} week={getWeek(search.get("startDate"))}
-                                   data={groupSchedule}
+                                   data={scheduleTags[params.scheduleTag].schedule}
                     />
                 }
             </div>

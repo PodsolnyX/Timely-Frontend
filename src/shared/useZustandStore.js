@@ -13,8 +13,8 @@ const initialState = {
   profile: JSON.parse(localStorage.getItem("profile")) || {},
 
   groupSchedule: null,
-  classroomSchedule: {},
-  teacherSchedule: {},
+  classroomSchedule: null,
+  teacherSchedule: null,
 
   teachers: [],
   groups: [],
@@ -51,7 +51,7 @@ export const useZustandStore = create((set) => ({
         error: "",
       });
     } catch (error) {
-      set({ error: error.message, teacherSchedule: {} });
+      set({ error: error.message, teacherSchedule: null });
     } finally {
       set({ isLoading: false });
     }
@@ -71,7 +71,7 @@ export const useZustandStore = create((set) => ({
         error: "",
       });
     } catch (error) {
-      set({ error: error.message, classroomSchedule: {} });
+      set({ error: error.message, classroomSchedule: null });
     } finally {
       set({ isLoading: false });
     }

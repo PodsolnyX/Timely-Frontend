@@ -23,11 +23,6 @@ const NavBar = () => {
                     >
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
                                  to={"/"}> Главная </NavLink>
-                        {
-                            isAuth &&
-                            <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
-                                    to={"/profile"}> Профиль </NavLink>
-                        }
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
                                  to={"/groups"}> Группы </NavLink>
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
@@ -35,14 +30,21 @@ const NavBar = () => {
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
                                  to={"/audiences"}> Аудитории </NavLink>
                         {
-                            profile.roles?.includes("Administrator") &&
+                            isAuth &&
+                            <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
+                                     to={"/profile"}> Профиль </NavLink>
+                        }
+                        {
+                            profile.roles?.includes("Administrator") && isAuth &&
                             <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
                                  to={"/admin"}> Админ </NavLink>
                         }
                     </Nav>
                     {
                         isAuth ?
-                            <Button variant="outline-danger" onClick={logout}>Выйти</Button>
+                            <Link to={"/"}>
+                                <Button variant="outline-danger" onClick={logout}>Выйти</Button>
+                            </Link>
                             :
                             <Link to={"/login"}>
                                 <Button variant="outline-primary">Войти</Button>
