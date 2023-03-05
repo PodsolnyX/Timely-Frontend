@@ -19,6 +19,7 @@ const initialState = {
   teachers: [],
   groups: [],
   classrooms: [],
+  domains: [],
 
   timeIntervals: [],
   lessonNames: [],
@@ -223,6 +224,26 @@ export const useZustandStore = create((set) => ({
     }
   },
 
+  getDomains: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`search/domains`);
+      const domains = response.data;
+      domains.forEach((el) => {
+        delete Object.assign(el, {
+          ["value"]: el["id"],
+          ["label"]: el["url"],
+        })["id"];
+        delete el["url"];
+      });
+      set({ domains: domains, error: "" });
+    } catch (error) {
+      set({ error: error.message, domains: [] });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
   register: async (email, password, fullName) => {
     set({ isLoading: true });
     try {
@@ -370,8 +391,10 @@ export const useZustandStore = create((set) => ({
 
   createTimeInterval: async (startTime, endTime) =>
     await admin("create", "timeInterval", { startTime, endTime }),
-  editTimeInterval: async (id, startTime, endTime) =>
-    await admin("edit", "timeInterval", id, { startTime, endTime }),
+  editTimeInterval: async (id, startTime, endTime) => {
+    console.log(id, { startTime, endTime })
+    await admin("edit", "timeInterval", id, { startTime, endTime })
+  },
   deleteTimeInterval: async (id) => await admin("delete", "timeInterval", id),
 
   createLesson: async (

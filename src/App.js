@@ -17,6 +17,7 @@ import ProfilePage from "./components/profile-page/profile-page"
 import ProfilePassword from './components/profile-page/profile-password/profile-password';
 import ProfileEdit from './components/profile-page/profile-edit/profile-edit';
 import ProfileConfirm from './components/profile-page/profile-confirm/profile-confirm';
+import AdminPageContainer from "./components/admin-panel-page/admin-page-container";
 
 axios.defaults.baseURL = 'http://timely.markridge.space/api/';
 axios.interceptors.response.use(response => response,
@@ -49,7 +50,7 @@ function App() {
                     <Route path="/audiences" element={<AudiencesPage />} />
                     <Route path="/admin" element={  !isAuth ? <Navigate to="/login"/> :
                                                     !profile.roles?.includes("Administrator") ? <Navigate to="/"/> :
-                                                <AdminPage />} />
+                                                <AdminPageContainer />} />
                     <Route path="/login" element={isAuth ? <Navigate to="/schedule"/> : <LoginPage />} />
                     <Route path="/register" element={isAuth ? <Navigate to="/schedule"/> : <RegisterPage />} />
                 </Routes>

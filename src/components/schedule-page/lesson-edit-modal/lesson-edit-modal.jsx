@@ -6,6 +6,7 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+import {useZustandStore} from "../../../shared/useZustandStore";
 
 const LessonEditModal = (props) => {
     console.log(props.lessonError)
@@ -38,7 +39,7 @@ const LessonEditModal = (props) => {
             props.currentLesson.lessonDate,
             props.currentLesson.audienceId
         ).then(r => {
-            if (props.lessonError === "") {
+            if (useZustandStore.getState().lessonError === ""){
                 props.lessonEditModalClose();
                 navigate(0);
             }
@@ -56,7 +57,7 @@ const LessonEditModal = (props) => {
             props.currentLesson.lessonDate,
             props.currentLesson.audienceId
         ).then(r => {
-            if (props.lessonError === "") {
+            if (useZustandStore.getState().lessonError === ""){
                 props.lessonEditModalClose();
                 navigate(0);
             }
@@ -65,7 +66,7 @@ const LessonEditModal = (props) => {
 
     const onDeleteLesson = () => {
         props.deleteLesson(props.lessonId).then(r => {
-            if (props.lessonError === "") {
+            if (useZustandStore.getState().lessonError === ""){
                 props.lessonEditModalClose();
                 navigate(0);
             }
