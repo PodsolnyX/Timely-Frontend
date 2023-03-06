@@ -59,7 +59,7 @@ export const useScheduleModalStore = create((set, get) => ({
     },
 
     lessonEditModalOpen: (isLesson, dateTitle, timeInterval, dateLesson, selectLesson) => {
-        console.log(selectLesson)
+
         if (isLesson) {
             const _selectLesson= {
                 lessonNameId: selectLesson.name.id,

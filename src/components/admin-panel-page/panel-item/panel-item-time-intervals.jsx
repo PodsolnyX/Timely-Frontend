@@ -13,7 +13,6 @@ const AdminPanelItemTimeIntervals = (props) => {
 
   let onSubmitSaveItem = async (e) => {
     e.preventDefault();
-    console.log(props.data.id, inputTextStart, inputTextEnd)
     try {
       await props.saveItem(props.data.id, inputTextStart, inputTextEnd);
       setIsEdit(false);

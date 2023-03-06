@@ -10,7 +10,6 @@ const ScheduleTable = (props) => {
     const lessonEditModalOpen = useScheduleModalStore((state) => state.lessonEditModalOpen);
     const lessonViewModalOpen = useScheduleModalStore((state) => state.lessonViewModalOpen);
     const profile = useZustandStore((state) => state.profile);
-    console.log(profile)
 
     if (!props.data) return;
 

@@ -26,7 +26,6 @@ const GroupsPage = () => {
     }
     
     const onSubmitSchedule = () => {
-        console.log(value);
         navigate(`/schedule/audience/${value}?name=${label}&startDate=${week[0]}&endDate=${week[5]}`)
     }
 

@@ -392,10 +392,8 @@ export const useZustandStore = create((set) => ({
 
   createTimeInterval: async (startTime, endTime) =>
     await admin("create", "timeInterval", { startTime, endTime }),
-  editTimeInterval: async (id, startTime, endTime) => {
-    console.log(id, { startTime, endTime })
-    await admin("edit", "timeInterval", id, { startTime, endTime })
-  },
+  editTimeInterval: async (id, startTime, endTime) =>
+    await admin("edit", "timeInterval", id, { startTime, endTime }),
   deleteTimeInterval: async (id) => await admin("delete", "timeInterval", id),
 
   createLesson: async (

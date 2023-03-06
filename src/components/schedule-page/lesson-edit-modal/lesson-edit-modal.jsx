@@ -9,7 +9,6 @@ import {useNavigate} from "react-router-dom";
 import {useZustandStore} from "../../../shared/useZustandStore";
 
 const LessonEditModal = (props) => {
-    console.log(props.lessonError)
 
     const navigate = useNavigate();
     const animatedComponents = makeAnimated();
