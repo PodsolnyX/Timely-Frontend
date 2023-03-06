@@ -14,5 +14,5 @@
 }
 
 .non-active-link:hover{
-    color: white;
+    color: white !important;
 }

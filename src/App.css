@@ -5,6 +5,10 @@ a {
     transition: 0.3s;
 }
 
+a:hover {
+    color: #b2b2b2;
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 10px;

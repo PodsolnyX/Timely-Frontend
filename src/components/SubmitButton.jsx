@@ -10,7 +10,7 @@ const SubmitButton = forwardRef((props, ref) => {
                 props.action();
             }}
             ref={ref}
-            className="mx-2"
+            className="me-2"
         >
             {props.text}
         </Button>

@@ -8,6 +8,7 @@ import FormField from '../FormField';
 import { validator, checkEmail, checkPassword } from '../../helpers/validation';
 import { useZustandStore } from '../../shared/useZustandStore.js';
 import { useZustandFormStore } from '../../shared/useZustandFormStore';
+import {Container} from "react-bootstrap";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -30,6 +31,7 @@ const LoginPage = () => {
         try {
             await login(formState.email, formState.password);
             await getProfile();
+            navigate(0);
             navigate("/");
         } 
         catch (err) {
@@ -47,32 +49,35 @@ const LoginPage = () => {
     }
 
     return (
-        <FormLayout header="Вход">
-            <FormField
-                formId="email"
-                tabIndex="1"
-                formState={formState}
-                setFormState={setFormState}
-                validator={validateEmail}
-                label="Почта"
-                type="email"
-                placeholder="Введите почту"
-            />
-            <FormField
-                formId="password"
-                tabIndex="2"
-                formState={formState}
-                setFormState={setFormState}
-                validator={validatePassword}
-                label="Пароль"
-                type="password"
-                placeholder="Введите пароль"
-            />
-            <SubmitButton action={tryLogin} ref={loginRef} text="Войти"/>
-            <LinkButton link="/register" text="Регистрация"/>
-
-            <p className="text-danger fw-bold">{formState.formError}</p>
-        </FormLayout>
+        <Container className={"mt-5 col-12 col-lg-6"}>
+            <FormLayout header="Вход">
+                <FormField
+                    formId="email"
+                    tabIndex="1"
+                    formState={formState}
+                    setFormState={setFormState}
+                    validator={validateEmail}
+                    label="Почта"
+                    type="email"
+                    placeholder="Введите почту"
+                />
+                <FormField
+                    formId="password"
+                    tabIndex="2"
+                    formState={formState}
+                    setFormState={setFormState}
+                    validator={validatePassword}
+                    label="Пароль"
+                    type="password"
+                    placeholder="Введите пароль"
+                />
+                <div className={"mt-4"}>
+                    <SubmitButton action={tryLogin} ref={loginRef} text="Войти"/>
+                    <LinkButton link="/register" text="Регистрация"/>
+                </div>
+                <div className="text-danger fw-bold mt-2">{formState.formError}</div>
+            </FormLayout>
+        </Container>
     );
 }
 
