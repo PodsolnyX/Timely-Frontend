@@ -24,20 +24,19 @@ const NavBar = () => {
         path = `/main`;
 
     const onLogout = () => {
-        logout().then(navigate(0));
+        logout().then(r => {navigate(0); navigate("/main")});
     }
 
     return (
-        <Navbar variant="dark" expand="lg" style={{background: "#202225", borderBottom: "1px solid gray", boxShadow: "0 6px 10px rgba(0,0,0,0.2)", height : "70px"}}>
+        <Navbar variant="dark" expand="lg" style={{background: "#202225", borderBottom: "1px solid gray", boxShadow: "0 6px 10px rgba(0,0,0,0.2)", minHeight : "70px"}}>
             <Container>
-                <Link to={"/"}>
+                <Link to={"/"} className={"me-5"}>
                     <Navbar.Brand>Timely</Navbar.Brand>
                 </Link>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll">
                     <Nav
-                        className="me-auto my-2 my-lg-0 ms-5"
-                        style={{ maxHeight: '100px' }}
+                        className="me-auto"
                         navbarScroll
                     >
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}

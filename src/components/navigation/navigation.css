@@ -1,7 +1,7 @@
 
 .active-link {
     color: white;
-    margin-left: 15px;
+    margin: 8px 8px;
 }
 
 .active-link:hover{
@@ -10,7 +10,7 @@
 
 .non-active-link {
     color: gray;
-    margin-left: 15px;
+    margin: 8px 8px;
 }
 
 .non-active-link:hover{

@@ -11,7 +11,7 @@ const mainPage = () => {
             <div className={"main-container"}>
                 <div className={"main-title"}>Расписание</div>
                 <div className={"button-container"}>
-                    <div className={"d-md-flex"}>
+                    <div className={"d-flex"}>
                         <Link to={"/groups"}>
                             <div className={"button-bg"}>
                                 <Image fluid src={groupImage}  className={"main-button svg-filter"}/>
