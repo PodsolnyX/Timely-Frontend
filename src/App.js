@@ -37,7 +37,8 @@ function App() {
             <NavBar />
             <div className={"content"}>
                 <Routes>
-                    <Route path="/" element={<MainPage />} />
+                    <Route path="/" element={!isAuth ? <Navigate to="/main"/> : <Navigate to="/main"/>} />
+                    <Route path="/main" element={<MainPage />} />
                     <Route path="/schedule/:scheduleTag/:id" element={<SchedulePage />} />
                     <Route path="/profile/*" element={!isAuth ? <Navigate to="/login"/> : <ProfilePage />}>
                         <Route path="main" index element={<ProfileEdit />} />

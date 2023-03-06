@@ -1,5 +1,5 @@
 const ONE_WEEK_MS = 604800000;
-const MONTHS = [
+const MONTHS_SHORT = [
     "янв.",
     "февр.",
     "мар.",
@@ -12,6 +12,20 @@ const MONTHS = [
     "окт.",
     "нояб.",
     "дек.",
+];
+const MONTHS = [
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря",
 ];
 
 export function getWeek(fromDate) {
@@ -48,7 +62,7 @@ export function formatDate(dateString) {
     const date = new Date(Date.parse(dateString.replace("T", " ").slice(0, -1)));
     const day = date.getDate();
     const monthIndex = date.getMonth();
-    const month = MONTHS[monthIndex];
+    const month = MONTHS_SHORT[monthIndex];
     return `${day} ${month}`;
 }
 

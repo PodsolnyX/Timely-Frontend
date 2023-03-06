@@ -296,6 +296,7 @@ export const useZustandStore = create((set) => ({
   logout: async (force = false) => {
     const jwt = localStorage.getItem("jwt");
     localStorage.removeItem("jwt");
+    localStorage.removeItem("profile");
     try {
       if (!force) {
         await axios.post("account/logout", null, {

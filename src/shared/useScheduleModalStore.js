@@ -16,10 +16,38 @@ const initialState = {
             lessonDate: null,
         },
     },
+    lessonViewModal: {
+        isShow: false,
+        dateTitle: null,
+        lessonData: null,
+    }
 };
 
 export const useScheduleModalStore = create((set, get) => ({
     ...initialState,
+
+    lessonViewModalOpen: (dateTitle, selectLesson) => {
+        set(state => {
+            return {
+                ...state,
+                lessonViewModal: {
+                    ...state.lessonViewModal,
+                    isShow: true,
+                    dateTitle: dateTitle,
+                    lessonData: selectLesson
+                },
+            };
+        });
+    },
+
+    lessonViewModalClose: () => {
+        set(state => {
+            return {
+                ...state,
+                lessonViewModal: { ...state.lessonViewModal, isShow: false },
+            };
+        });
+    },
 
     lessonEditModalClose: () => {
         set(state => {

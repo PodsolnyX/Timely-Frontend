@@ -8,6 +8,9 @@ import {useScheduleModalStore} from "../../../shared/useScheduleModalStore";
 const ScheduleTable = (props) => {
 
     const lessonEditModalOpen = useScheduleModalStore((state) => state.lessonEditModalOpen);
+    const lessonViewModalOpen = useScheduleModalStore((state) => state.lessonViewModalOpen);
+    const profile = useZustandStore((state) => state.profile);
+    console.log(profile)
 
     if (!props.data) return;
 
@@ -27,26 +30,41 @@ const ScheduleTable = (props) => {
 
     let createTd = (index) => {
         let lessonsTd = [];
+
         for (let k = 0; k < props.lessonsDays.length; k++) {
-            lessonsTd.push(
-                <td className={props.data.matrix[index][k] ? null : "td-container"}
-                    onClick={props.data.matrix[index][k] ? null : () =>
-                        lessonEditModalOpen(
-                            false,
-                            formatDateModal(props.data.sortedTimeIntervals[index], props.week[k]),
-                            props.data.sortedTimeIntervals[index],
-                            props.week[k]
-                        )}
-                    style={{width: `${100 / (props.lessonsDays.length)}%`}}
-                    key={k}
-                >
-                    <LessonCard handleShow={lessonEditModalOpen}
-                                date={formatDateModal(props.data.sortedTimeIntervals[index], props.week[k])}
-                                timeInterval={props.data.sortedTimeIntervals[index]}
-                                data={props.data.matrix[index][k]}
-                    />
-                </td>
-            )
+            if (profile.roles?.includes("Administrator")) {
+                lessonsTd.push(
+                    <td className={props.data.matrix[index][k] ? null : "td-container"}
+                        onClick={props.data.matrix[index][k] ? null : () =>
+                            lessonEditModalOpen(
+                                false,
+                                formatDateModal(props.data.sortedTimeIntervals[index], props.week[k]),
+                                props.data.sortedTimeIntervals[index],
+                                props.week[k]
+                            )}
+                        style={{width: `${100 / (props.lessonsDays.length)}%`}}
+                        key={k}
+                    >
+                        <LessonCard handleShow={lessonEditModalOpen}
+                                    date={formatDateModal(props.data.sortedTimeIntervals[index], props.week[k])}
+                                    timeInterval={props.data.sortedTimeIntervals[index]}
+                                    data={props.data.matrix[index][k]}
+                                    isReadOnly={false}
+                        />
+                    </td>
+                )
+            } else {
+                lessonsTd.push(
+                    <td style={{width: `${100 / (props.lessonsDays.length)}%`}} key={k} >
+                        <LessonCard handleShow={lessonViewModalOpen}
+                                    date={formatDateModal(props.data.sortedTimeIntervals[index], props.week[k])}
+                                    timeInterval={props.data.sortedTimeIntervals[index]}
+                                    data={props.data.matrix[index][k]}
+                                    isReadOnly={true}
+                        />
+                    </td>
+                )
+            }
         }
         return lessonsTd;
     }
@@ -57,16 +75,15 @@ const ScheduleTable = (props) => {
             <tr key={i}>
                 <th scope="row" className={"text-center d-flex flex-column"}
                     style={{color: "white", padding: 15, borderLeft: 0, borderRight: 0}}>
-                    <span>{props.data.sortedTimeIntervals[i].startTime.slice(0,5)}</span>
+                    <span>{props.data.sortedTimeIntervals[i].startTime.slice(0, 5)}</span>
                     <span style={{fontSize: 13, fontWeight: "normal", color: "gray"}}>
-                        {props.data.sortedTimeIntervals[i].endTime.slice(0,5)}
+                        {props.data.sortedTimeIntervals[i].endTime.slice(0, 5)}
                     </span>
                 </th>
                 {createTd(i)}
             </tr>
         )
     }
-
 
 
     return (

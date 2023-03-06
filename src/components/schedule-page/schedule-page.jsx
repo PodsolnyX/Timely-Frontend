@@ -8,6 +8,7 @@ import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {getNextWeek, getPastWeek, getWeek} from "../../helpers/get-week";
 import {useEffect} from "react";
 import LessonEditModalContainer from "./lesson-edit-modal/lesson-edit-modal-container";
+import LessonViewModal from "./lesson-view-modal/lesson-view-modal";
 
 const weekDays = {
     "01": "января",
@@ -87,6 +88,7 @@ const SchedulePage = () => {
     return (
         <div className={"container schedule-page-container"}>
             <LessonEditModalContainer/>
+            <LessonViewModal/>
             <div style={{padding: 20, margin: "30px 0"}}>
                 <h2> Расписание {scheduleTags[params.scheduleTag].label} {name} </h2>
                 <p style={{color: "gray"}}>{startDay} – {endDay}</p>

@@ -29,7 +29,7 @@ const NavBar = () => {
                         navbarScroll
                     >
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
-                                 to={"/"}> Главная </NavLink>
+                                 to={"/main"}> Главная </NavLink>
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
                                  to={"/groups"}> Группы </NavLink>
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
