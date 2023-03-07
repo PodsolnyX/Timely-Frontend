@@ -64,7 +64,7 @@
 
 .lesson-cian {
     background-color: rgba(29, 132, 196, 0.07);
-    color: #3da2e0;
+    color: #48b4f6;
     border-color: #3da2e0;
 }
 
@@ -78,44 +78,24 @@
     color: #3793cc;
 }
 
-.lesson-green:hover {
-    background-color: rgba(29, 196, 32, 0.2);
-}
-
-.lesson-green {
-    background-color: rgba(29, 196, 32, 0.07);
-    color: #7ede47;
-    border-color: #7ede47;
-}
-
-.audience-num-green {
-    font-weight: normal;
-    color: #71d339;
-    margin: 1px 0 1px 0;
-}
-
-.group-num-green {
-    color: #68c533;
-}
-
 .lesson-orange {
-    background-color: rgba(196, 157, 29, 0.07);
-    color: #e0b547;
-    border-color: #e0b547;
+    background-color: rgba(231, 141, 69, 0.07);
+    color: rgb(252, 157, 82);
+    border-color: rgb(231, 141, 69);
 }
 
 .lesson-orange:hover {
-    background-color: rgba(196, 157, 29, 0.2);
+    background-color: rgba(231, 141, 69, 0.2);
 }
 
 .audience-num-orange {
     font-weight: normal;
-    color: #d7ab3b;
+    color: rgb(231, 141, 69);
     margin: 1px 0 1px 0;
 }
 
 .group-num-orange {
-    color: #daaf3f;
+    color: rgb(231, 141, 69);
 }
 
 .lesson-purple:hover {
