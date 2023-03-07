@@ -75,7 +75,7 @@ const LoginPage = () => {
                     <SubmitButton action={tryLogin} ref={loginRef} text="Войти"/>
                     <LinkButton link="/register" text="Регистрация"/>
                 </div>
-                <div className="text-danger fw-bold mt-2">{formState.formError}</div>
+                <div className="text-danger fw-bold mt-2 small">{formState.formError}</div>
             </FormLayout>
         </Container>
     );

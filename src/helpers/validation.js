@@ -13,7 +13,10 @@ export const validator = (f, state, setState, ...names) => {
 }
 
 export const checkPassword = (password) => {
-    if (password.length && !password.match(/^[a-zA-Z0-9\-_!@#№$%^&?*+=(){}[\]<>~]+$/)) {
+    if (password.length < 8 || password.length > 64) {
+        return [false, "Длина пароля от 8 до 64 символов"];
+    }
+    else if (!password.match(/^[a-zA-Z0-9\-_!@#№$%^&?*+=(){}[\]<>~]+$/)) {
         return [false, "Недопустимые символы"];
     }
     else if (!password.match(/[\-_!@#№$%^&?*+=(){}[\]<>~]/)) {
@@ -25,14 +28,11 @@ export const checkPassword = (password) => {
     else if (!password.match(/[A-Z]/)) {
         return [false, "Пароль должен содержать заглавные латинские символы"]
     }
-    else if (password.length < 8 || password.length > 64) {
-        return [false, "Длина пароля от 8 до 64 символов"];
-    }
     return [true];
 }
 
 export const checkPasswordRepeat = (password, passwordRepeat) => {
-    if (passwordRepeat != password) {
+    if (passwordRepeat !== password) {
         return [false, "Пароли не совпадают"];
     }
     return [true];

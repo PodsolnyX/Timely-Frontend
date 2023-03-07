@@ -42,7 +42,7 @@ const RegisterPage = () => {
             navigate("/");
         } catch (err) {
             regRef.current.classList.remove("disabled");
-            if (!err.response || err.response.status != 409) {
+            if (!err.response || err.response.status !== 409) {
                 setFormState("formError", "Ошибка. Попробуйте позже");
             } else {
                 setFormState("formError", "Такой пользователь уже есть!");
@@ -88,7 +88,7 @@ const RegisterPage = () => {
                     <LinkButton link="/login" text="Войти"/>
                 </div>
 
-                <div className="text-danger fw-bold mt-2">{formState.formError}</div>
+                <div className="text-danger fw-bold mt-2 small">{formState.formError}</div>
             </FormLayout>
         </Container>
     );

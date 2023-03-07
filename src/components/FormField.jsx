@@ -11,7 +11,7 @@ const FormField = ({ formState, setFormState, validator, formId, label, ...props
                     onChange={(e) => setFormState(formId, e.target.value)}
                     onBlur={validator} />
             </div>
-            <p className="text-danger fw-bold">{formState[formId + "Error"]}</p>
+            <p className="text-danger fw-bold small">{formState[formId + "Error"]}</p>
         </>
     );
 }

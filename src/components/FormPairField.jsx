@@ -17,7 +17,7 @@ const FormPairField = ({ formState, setFormState, validators, placeholders, form
                     placeholder={placeholders[0]}
                 />
             </div>
-            <p className="text-danger fw-bold">{formState[formIds[0] + "Error"]}</p>
+            <p className="text-danger fw-bold small">{formState[formIds[0] + "Error"]}</p>
 
             <div className="col-12">
                 <label htmlFor={formIds[1]} className={"text-white"}>{labels[1]}</label>
@@ -35,7 +35,7 @@ const FormPairField = ({ formState, setFormState, validators, placeholders, form
                     placeholder={placeholders[1]}
                 />
             </div>
-            <p className="text-danger fw-bold">{formState[formIds[1] + "Error"]}</p>
+            <p className="text-danger fw-bold small">{formState[formIds[1] + "Error"]}</p>
         </>
 
     );

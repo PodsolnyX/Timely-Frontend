@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Outlet } from 'react-router-dom';
 import { useZustandStore } from '../../shared/useZustandStore.js';
+import { useZustandFormStore } from "../../shared/useZustandFormStore.js";
 import "./profile-page.css";
 
 const ProfilePage = () => {
@@ -12,6 +13,7 @@ const ProfilePage = () => {
         err: false
     });
     useEffect(() => {
+        useZustandFormStore.getState().reset();
         getProfile()
             .then(() => getGroups())
             .then(() => setState({isLoading: false, err: false}))
