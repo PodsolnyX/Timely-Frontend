@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useZustandStore } from '../../shared/useZustandStore';
 import "./navigation.css";
 import {getWeekFromMS} from "../../helpers/get-week";
-
+import {Image} from "react-bootstrap";
 const NavBar = () => {
     const logout = useZustandStore((store) => store.logout);
     const isAuth = useZustandStore((store) => store.isAuth);
@@ -56,13 +56,21 @@ const NavBar = () => {
                     <div>
                         {
                             isAuth ?
-                                <div className="dropdown">
+                            <div className="d-flex">
+                                <Link to="/profile/main">
+                                    <Image fluid src={profile.avatarLink} className={"user-nav-avatar"} onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src =
+              "https://i.ibb.co/kDw4Sd3/photo243703137-457255699.jpg";
+          }}/>
+                                </Link>
+                                <div className="dropdown my-auto">
                                     <button className="btn text-white dropdown-toggle" type="button" id="dropdownMenuButton1"
                                             data-bs-toggle="dropdown" aria-expanded="false"
                                     > {profile.fullName} </button>
                                     <ul className="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
                                         <li>
-                                            <Link className="dropdown-item" to={"/profile"}>Профиль</Link>
+                                            <Link className="dropdown-item" to={"/profile/main"}>Профиль</Link>
 
                                         </li>
                                         <li>
@@ -79,10 +87,12 @@ const NavBar = () => {
                                         </li>
                                     </ul>
                                 </div>
+                                </div>
                                 :
                                 <Link to={"/login"}>
                                     <Button variant="outline-primary">Войти</Button>
                                 </Link>
+                            
                         }
                     </div>
                 </Navbar.Collapse>

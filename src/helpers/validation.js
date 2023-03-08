@@ -45,6 +45,13 @@ export const checkEmail = (email) => {
     return [true];
 }
 
+export const checkLink = (link) => {
+    if (link.length && !link.match(/^https?:\/\/.*\/.*\.(png|gif|webp|jpeg|jpg)\??.*$/)) {
+        return [false, "Некорректный URL"];
+    }
+    return [true];
+}
+
 export const checkFullName = (fullName) => {
     if (!fullName.length || !fullName.match(/^([A-ZА-ЯЁ][a-zа-яё]+[\s]?){2,3}$/)) {
         return [false, "ФИО должно состоять из 2-3 слов, начинаться с заглавной буквы и содержать только латиницу, кириллицу, пробелы"];
@@ -58,4 +65,15 @@ export const checkFullName = (fullName) => {
 export const checkEmpty = (value) => {
     if (!value) return [false, "Поле обязательно"];
     return [true];
+}
+
+export const checkImage = (url) => {
+    return new Promise(function (resolve, reject) {
+        if (!url) resolve(false);
+        let testImage = new Image();
+        testImage.onload = () => resolve(true);
+        testImage.onerror = () => resolve(false);
+        testImage.src = url;
+    })
+    
 }

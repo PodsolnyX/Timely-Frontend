@@ -50,6 +50,12 @@ const initialState = {
         groupName: "",
         err: "",
         msg: ""
+    },
+    avatar: {
+        edit: false,
+        avatar: "",
+        err: "",
+        msg: ""
     }
 };
 
@@ -97,6 +103,14 @@ export const useZustandFormStore = create(set => ({
         set((state) => ({
             group: {
                 ...state.group,
+                ...value
+            }
+        }));
+    },
+    setAvatarData: (value) => {
+        set((state) => ({
+            avatar: {
+                ...state.avatar,
                 ...value
             }
         }));

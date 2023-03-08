@@ -27,3 +27,21 @@
 .non-active-link:hover{
     color: gray;
 }
+
+.user-profile-avatar {
+    border-radius: 50%;
+    outline: 2px solid teal;
+    width: 200px;
+    height: 200px;
+    margin-left: auto;
+    box-shadow: 0 0 18px rgba(0,0,0,0.9);
+}
+
+.user-profile-avatar:after {
+    content: "Новьё!"; /* Добавляемый текст */ 
+    color: #333; /* Цвет текста */ 
+    background-color: #fc0; /* Цвет фона */ 
+    font-size: 90%; /* Размер шрифта */ 
+    padding: 2px; 
+    z-index: 100;
+}

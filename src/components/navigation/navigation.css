@@ -16,3 +16,16 @@
 .non-active-link:hover{
     color: white !important;
 }
+
+.user-nav-avatar {
+    border-radius: 50%;
+    outline: 1px solid teal;
+    width: 45px;
+    height: 45px;
+    margin-left: auto;
+    transition: transform .5s ease-in-out;
+}
+
+.user-nav-avatar:hover {
+    transform: scale(1.05);
+  }

@@ -323,6 +323,14 @@ export const useZustandStore = create((set) => ({
         },
       }
     );
+    set((state) => (
+      {
+        profile: {
+          ...state.profile,
+          fullName
+        }
+      }
+    ));
   },
   changePassword: async (currentPassword, newPassword) => {
     const jwt = localStorage.getItem("jwt");
@@ -339,7 +347,7 @@ export const useZustandStore = create((set) => ({
       }
     );
   },
-  setGroup: async (groupId) => {
+  setGroup: async (groupId, gorupName) => {
     const jwt = localStorage.getItem("jwt");
     await axios.put(
       "account/group/set",
@@ -352,6 +360,17 @@ export const useZustandStore = create((set) => ({
         },
       }
     );
+    set((state) => (
+      {
+        profile: {
+          ...state.profile,
+          group: {
+            name: gorupName,
+            id: groupId
+          }
+        }
+      }
+    ));
   },
   removeGroup: async () => {
     const jwt = localStorage.getItem("jwt");
@@ -360,6 +379,52 @@ export const useZustandStore = create((set) => ({
         Authorization: `Bearer ${jwt}`,
       },
     });
+    set((state) => (
+      {
+        profile: {
+          ...state.profile,
+          group: null
+        }
+      }
+    ));
+  },
+  setAvatar: async (avatarLink) => {
+    const jwt = localStorage.getItem("jwt");
+    await axios.put(
+      "account/avatar/set",
+      {
+        avatarLink,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    );
+    set((state) => (
+      {
+        profile: {
+          ...state.profile,
+          avatarLink
+        }
+      }
+    ));
+  },
+  removeAvatar: async () => {
+    const jwt = localStorage.getItem("jwt");
+    await axios.delete("account/avatar/remove", {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+    set((state) => (
+      {
+        profile: {
+          ...state.profile,
+          avatarLink: "https://i.ibb.co/kDw4Sd3/photo243703137-457255699.jpg"
+        }
+      }
+    ));
   },
 
   createTeacher: async (name) => await admin("create", "teacher", { name }),
