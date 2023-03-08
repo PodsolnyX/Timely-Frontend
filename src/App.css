@@ -1,0 +1,29 @@
+
+a {
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: #b2b2b2;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+    background-color: #1e1e21;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #929292;
+}
+
+.bg-main {
+    min-height: 100vh;
+    background: radial-gradient(#262a2d, #17181a);
+}
+
+.content {
+    min-height: calc(100vh - 70px);
+}

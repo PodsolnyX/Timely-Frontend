@@ -1,0 +1,18 @@
+
+.active-link {
+    color: white;
+    margin: 8px 8px;
+}
+
+.active-link:hover{
+    color: white;
+}
+
+.non-active-link {
+    color: gray;
+    margin: 8px 8px;
+}
+
+.non-active-link:hover{
+    color: white !important;
+}
