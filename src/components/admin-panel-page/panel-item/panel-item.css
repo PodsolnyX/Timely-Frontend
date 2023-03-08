@@ -1,0 +1,13 @@
+.card {
+    border-radius: 0;
+    border-color: #464646;
+}
+
+.card-body-admin {
+    background-color: #333538;
+}
+
+.form-control:disabled {
+    background-color: #f3f3f3;
+    color: black;
+}
