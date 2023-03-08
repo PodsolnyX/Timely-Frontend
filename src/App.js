@@ -18,7 +18,7 @@ import ProfileEdit from './components/profile-page/profile-edit/profile-edit';
 import ProfileConfirm from './components/profile-page/profile-confirm/profile-confirm';
 import AdminPageContainer from "./components/admin-panel-page/admin-page-container";
 
-axios.defaults.baseURL = 'http://timely.markridge.space/api/';
+axios.defaults.baseURL = 'https://timely.markridge.space/api/';
 axios.interceptors.response.use(response => response,
     error => {
         if (error.response?.status === 401) {
