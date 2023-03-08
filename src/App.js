@@ -17,6 +17,7 @@ import ProfilePassword from './components/profile-page/profile-password/profile-
 import ProfileEdit from './components/profile-page/profile-edit/profile-edit';
 import ProfileConfirm from './components/profile-page/profile-confirm/profile-confirm';
 import AdminPageContainer from "./components/admin-panel-page/admin-page-container";
+import ConfirmEmailPage from "./components/confirm-email-page/confirm-email-page";
 
 axios.defaults.baseURL = 'https://timely.markridge.space/api/';
 axios.interceptors.response.use(response => response,
@@ -53,6 +54,7 @@ function App() {
                                                 <AdminPageContainer />} />
                     <Route path="/login" element={isAuth ? <Navigate to="/"/> : <LoginPage />} />
                     <Route path="/register" element={isAuth ? <Navigate to="/"/> : <RegisterPage />} />
+                    <Route path="/confirm-email" element={isAuth ? <ConfirmEmailPage /> : <Navigate to="/login" />}/>
                     <Route path="/*" element={<Navigate to="/main"/>} />
                 </Routes>
             </div>

@@ -73,3 +73,9 @@ export function formatDateModal(timeString, dateString) {
     const month = MONTHS[monthIndex];
     return `${timeString.startTime.slice(0,5)} | ${day} ${month}`;
 }
+
+export function isLaterThanNow(timeString, dateString) {
+    const dateInput = new Date(Date.parse((dateString.slice(0, 11)+timeString).replace("T", " ")));
+    const dateNow = new Date()
+    return dateInput > dateNow;
+}

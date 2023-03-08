@@ -11,7 +11,6 @@ const NavBar = () => {
     const profile = useZustandStore((store) => store.profile);
 
     const navigate = useNavigate();
-    console.log(profile)
 
     let week = getWeekFromMS(new Date());
 

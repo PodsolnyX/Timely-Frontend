@@ -8,6 +8,8 @@ const initialState = {
   isLoading: false,
   isLoadingLesson: false,
   isLoadingSchedule: false,
+  isLoadingConfirmEmail: false,
+  confirmEmailError: "",
   error: "",
   lessonError: "",
   profile: JSON.parse(localStorage.getItem("profile")) || {},
@@ -268,17 +270,26 @@ export const useZustandStore = create((set) => ({
   },
   confirmEmail: async (token) => {
     const jwt = localStorage.getItem("jwt");
-    await axios.post(
-      "account/confirm-email",
-      {
-        token,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      }
-    );
+    set({isLoadingConfirmEmail: true, confirmEmailError: ""})
+    try {
+      await axios.post(
+          "account/confirm-email",
+          {
+            token,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+      )
+    }
+    catch (error) {
+      set({confirmEmailError: error.response.data.title})
+    }
+    finally {
+      set({isLoadingConfirmEmail: false})
+    }
   },
   login: async (email, password) => {
     set({ isLoading: true });

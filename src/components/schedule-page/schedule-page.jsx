@@ -26,6 +26,7 @@ const weekDays = {
 };
 
 const SchedulePage = () => {
+
     const scheduleTags = {
         "teacher": {
             label: "преподователя",
@@ -43,14 +44,6 @@ const SchedulePage = () => {
             schedule: useZustandStore((state) => state.groupSchedule),
         },
     };
-
-    //const getGroupSchedule =
-    //const getTeacherSchedule = useZustandStore((state) => state.getTeacherSchedule);
-    //const getClassroomSchedule = useZustandStore((state) => state.getClassroomSchedule);
-
-    //const groupSchedule = useZustandStore((state) => state.groupSchedule);
-    //const teacherSchedule = useZustandStore((state) => state.teacherSchedule);
-    //const classroomSchedule = useZustandStore((state) => state.classroomSchedule);
 
     const isLoadingSchedule = useZustandStore((state) => state.isLoading);
 

@@ -2,7 +2,7 @@ import './schedule-table.css'
 import LessonCard from "../lesson-card/lesson-card";
 import React from "react";
 import {useZustandStore} from "../../../shared/useZustandStore";
-import {formatDate, formatDateModal} from "../../../helpers/get-week";
+import {formatDate, formatDateModal, isLaterThanNow} from "../../../helpers/get-week";
 import {useScheduleModalStore} from "../../../shared/useScheduleModalStore";
 
 const ScheduleTable = (props) => {
@@ -31,7 +31,8 @@ const ScheduleTable = (props) => {
         let lessonsTd = [];
 
         for (let k = 0; k < props.lessonsDays.length; k++) {
-            if (profile.roles?.includes("Administrator")) {
+            if (profile.roles?.includes("Administrator") &&
+                isLaterThanNow(props.data.sortedTimeIntervals[index].endTime, props.week[k])) {
                 lessonsTd.push(
                     <td className={props.data.matrix[index][k] ? null : "td-container"}
                         onClick={props.data.matrix[index][k] ? null : () =>
