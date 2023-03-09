@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import './lesson-edit-modal.css';
@@ -19,6 +19,7 @@ const LessonEditModal = (props) => {
     const curAudienceIndex = props.classrooms.findIndex(obj => obj.value === props.currentLesson.audienceId);
     const curTeacherIndex = props.teachers.findIndex(obj => obj.value === props.currentLesson.teacherId);
     const curLessonTagIndex = props.lessonTags.findIndex(obj => obj.value === props.currentLesson.lessonTagId);
+    const curTimeIntervalIndex = props.timeIntervals.findIndex(obj => obj.value === props.currentLesson.timeIntervalId);
 
     useEffect(() => {
         props.getTeachers();
@@ -26,6 +27,7 @@ const LessonEditModal = (props) => {
         props.getLessonNames();
         props.getLessonTags();
         props.getGroups();
+        props.getTimeIntervals();
     }, [])
 
     const onSaveLesson = () => {
@@ -77,21 +79,20 @@ const LessonEditModal = (props) => {
         props.lessonEditModalClose();
     }
 
-    const onChangeLessonName = (e) => {
-        props.setLessonNameId(e.value)
+    const onChangeLessonName = (e) => props.setLessonNameId(e.value)
+    const onChangeTeacher = (e) => props.setTeacherId(e.value)
+    const onChangeGroup = (e) => props.setGroupId(e.map((g) => g.value))
+    const onChangeAudience = (e) => props.setAudienceId(e.value)
+    const onChangeLessonTag = (e) => props.setLessonTagId(e.value)
+    const onChangeTimeInterval = (e) => props.setTimeIntervalId(e.value)
+    const onChangeLessonDate = (e) => {
+        const day = new Date(e.target.value).getUTCDay();
+        if([7,0].includes(day))
+            e.preventDefault();
+        else
+            props.setLessonDate(e.target.value + "T00:00:00Z");
     }
-    const onChangeTeacher = (e) => {
-        props.setTeacherId(e.value)
-    }
-    const onChangeGroup = (e) => {
-        props.setGroupId(e.map((g) => g.value))
-    }
-    const onChangeAudience = (e) => {
-        props.setAudienceId(e.value)
-    }
-    const onChangeLessonTag = (e) => {
-        props.setLessonTagId(e.value)
-    }
+
 
     return (
         <>
@@ -100,7 +101,7 @@ const LessonEditModal = (props) => {
                 onHide={onModalClose}
                 backdrop="static"
                 keyboard={false}
-
+                centered
             >
                 <Modal.Header closeButton className={"justify-content-between modal-header"}>
                     <h5> {props.dateTitle} </h5>
@@ -139,6 +140,23 @@ const LessonEditModal = (props) => {
                         options={props.lessonTags}
                         onChange={onChangeLessonTag}
                     />
+                    <div className={"row"}>
+                        <div className={"col"}>
+                            <h5 className={"mt-2 text-white"}>Время пары</h5>
+                            <Select
+                                defaultValue={props.timeIntervals[curTimeIntervalIndex]}
+                                options={props.timeIntervals}
+                                onChange={onChangeTimeInterval}
+                            />
+                        </div>
+                        <div className={"col"}>
+                            <h5 className={"mt-2 text-white"}>Дата пары</h5>
+                            <input min={new Date().toISOString().slice(0, 10)} className="form-control"
+                                   type="date" value={props.currentLesson.lessonDate?.slice(0, 10)}
+                                   onChange={onChangeLessonDate}
+                            />
+                        </div>
+                    </div>
                     <div className={"text-danger mt-3"}>
                         {props.lessonError}
                     </div>

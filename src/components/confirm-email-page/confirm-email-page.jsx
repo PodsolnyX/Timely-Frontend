@@ -13,7 +13,6 @@ const ConfirmEmailPage = () => {
     const [isConfirm, setIsConfirm] = useState(false);
 
     const onConfirm = () => {
-        console.log(search.get("token"))
         confirmEmail(search.get("token").replaceAll(" ", "+"))
             .then(() => {
                 if (useZustandStore.getState().confirmEmailError === "") setIsConfirm(true)

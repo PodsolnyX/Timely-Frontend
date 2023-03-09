@@ -182,4 +182,34 @@ export const useScheduleModalStore = create((set, get) => ({
             };
         });
     },
+
+    setTimeIntervalId: (id) => {
+        set(state => {
+            return {
+                ...state,
+                lessonEditModal: {
+                    ...state.lessonEditModal,
+                    currentLesson: {
+                        ...state.lessonEditModal.currentLesson,
+                        timeIntervalId: id
+                    },
+                },
+            };
+        });
+    },
+
+    setLessonDate: (date) => {
+        set(state => {
+            return {
+                ...state,
+                lessonEditModal: {
+                    ...state.lessonEditModal,
+                    currentLesson: {
+                        ...state.lessonEditModal.currentLesson,
+                        lessonDate: date
+                    },
+                },
+            };
+        });
+    },
 }));
