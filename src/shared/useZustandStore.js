@@ -12,6 +12,7 @@ const initialState = {
   confirmEmailError: "",
   error: "",
   lessonError: "",
+  duplicateLessonError: "",
   profile: JSON.parse(localStorage.getItem("profile")) || {},
 
   groupSchedule: null,
@@ -42,7 +43,30 @@ const initialState = {
 
 export const useZustandStore = create((set) => ({
   ...initialState,
-
+  duplicateLesson: async (dateToCopy, amountOfWeeks, schedulleType, id) => {
+    set({ isLoading: true });
+    const jwt = localStorage.getItem("jwt");
+    try {
+      await axios.post(
+        `admin/lesson/duplicate`,
+        {
+          dateToCopy,
+          amountOfWeeks,
+          schedulleType,
+          id
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+    } catch (error) {
+      set({ duplicateLessonError: error.response.data.title });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
   editUserRoles: async (email, roles) => {
     set({ isLoading: true });
     const jwt = localStorage.getItem("jwt");
