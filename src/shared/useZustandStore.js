@@ -40,7 +40,7 @@ const initialState = {
   timeIntervalErrors: {},
 };
 
-export const useZustandStore = create(set => ({
+export const useZustandStore = create((set) => ({
   ...initialState,
 
   editUserRoles: async (email, roles) => {
@@ -186,7 +186,7 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/groups`);
       const groups = response.data;
-      groups.forEach(el => {
+      groups.forEach((el) => {
         delete Object.assign(el, {
           ["value"]: el["id"],
           ["label"]: el["name"],
@@ -206,7 +206,7 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/teachers`);
       const teachers = response.data;
-      teachers.forEach(el => {
+      teachers.forEach((el) => {
         delete Object.assign(el, {
           ["value"]: el["id"],
           ["label"]: el["name"],
@@ -226,7 +226,7 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/classrooms`);
       const classrooms = response.data;
-      classrooms.forEach(el => {
+      classrooms.forEach((el) => {
         delete Object.assign(el, {
           ["value"]: el["id"],
           ["label"]: el["name"],
@@ -259,7 +259,7 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/lessonNames`);
       const lessonNames = response.data;
-      lessonNames.forEach(el => {
+      lessonNames.forEach((el) => {
         delete Object.assign(el, {
           ["value"]: el["id"],
           ["label"]: el["name"],
@@ -279,7 +279,7 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/lessonTags`);
       const lessonTags = response.data;
-      lessonTags.forEach(el => {
+      lessonTags.forEach((el) => {
         delete Object.assign(el, {
           ["value"]: el["id"],
           ["label"]: el["name"],
@@ -299,7 +299,7 @@ export const useZustandStore = create(set => ({
     try {
       const response = await axios.get(`search/domains`);
       const domains = response.data;
-      domains.forEach(el => {
+      domains.forEach((el) => {
         delete Object.assign(el, {
           ["value"]: el["id"],
           ["label"]: el["url"],
@@ -338,7 +338,7 @@ export const useZustandStore = create(set => ({
     });
   },
 
-  confirmEmail: async token => {
+  confirmEmail: async (token) => {
     const jwt = localStorage.getItem("jwt");
     set({ isLoadingConfirmEmail: true, confirmEmailError: "" });
     try {
@@ -353,6 +353,7 @@ export const useZustandStore = create(set => ({
           },
         }
       );
+      updateUserData("isEmailConfirmed", true);
     } catch (error) {
       set({ confirmEmailError: error.response.data.title });
     } finally {
@@ -392,7 +393,7 @@ export const useZustandStore = create(set => ({
     }
   },
 
-  editProfile: async fullName => {
+  editProfile: async (fullName) => {
     const jwt = localStorage.getItem("jwt");
     await axios.put(
       "account/profile",
@@ -405,12 +406,18 @@ export const useZustandStore = create(set => ({
         },
       }
     );
-    set(state => ({
+    updateUserData("fullName", fullName);
+    set((state) => ({
       profile: {
         ...state.profile,
         fullName,
       },
     }));
+    const user = JSON.parse(localStorage.getItem("profile"));
+      if (user) {
+        user.fullName = fullName;
+        localStorage.setItem("profile", JSON.stringify(user));
+    }
   },
 
   changePassword: async (currentPassword, newPassword) => {
@@ -429,7 +436,7 @@ export const useZustandStore = create(set => ({
     );
   },
 
-  setGroup: async (groupId, gorupName) => {
+  setGroup: async (groupId, groupName) => {
     const jwt = localStorage.getItem("jwt");
     await axios.put(
       "account/group/set",
@@ -442,11 +449,15 @@ export const useZustandStore = create(set => ({
         },
       }
     );
-    set(state => ({
+    updateUserData("group", {
+      name: groupName,
+      id: groupId,
+    });
+    set((state) => ({
       profile: {
         ...state.profile,
         group: {
-          name: gorupName,
+          name: groupName,
           id: groupId,
         },
       },
@@ -460,7 +471,8 @@ export const useZustandStore = create(set => ({
         Authorization: `Bearer ${jwt}`,
       },
     });
-    set(state => ({
+    updateUserData("group", null);
+    set((state) => ({
       profile: {
         ...state.profile,
         group: null,
@@ -468,7 +480,7 @@ export const useZustandStore = create(set => ({
     }));
   },
 
-  setAvatar: async avatarLink => {
+  setAvatar: async (avatarLink) => {
     const jwt = localStorage.getItem("jwt");
     await axios.put(
       "account/avatar/set",
@@ -481,7 +493,8 @@ export const useZustandStore = create(set => ({
         },
       }
     );
-    set(state => ({
+    updateUserData("avatarLink", avatarLink);
+    set((state) => ({
       profile: {
         ...state.profile,
         avatarLink,
@@ -491,51 +504,54 @@ export const useZustandStore = create(set => ({
 
   removeAvatar: async () => {
     const jwt = localStorage.getItem("jwt");
+    const defaultLink = "https://i.ibb.co/kDw4Sd3/photo243703137-457255699.jpg";
     await axios.delete("account/avatar/remove", {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
     });
-    set(state => ({
+    updateUserData("avatarLink", defaultLink);
+    set((state) => ({
       profile: {
         ...state.profile,
-        avatarLink: "https://i.ibb.co/kDw4Sd3/photo243703137-457255699.jpg",
+        avatarLink: defaultLink,
       },
     }));
   },
 
-  createTeacher: async name => await admin("create", "teacher", { name }),
+  createTeacher: async (name) => await admin("create", "teacher", { name }),
   editTeacher: async (id, name) => await admin("edit", "teacher", id, { name }),
-  deleteTeacher: async id => await admin("delete", "teacher", id),
+  deleteTeacher: async (id) => await admin("delete", "teacher", id),
 
-  createDomain: async url => await admin("create", "domain", { url }),
+  createDomain: async (url) => await admin("create", "domain", { url }),
   editDomain: async (id, url) => await admin("edit", "domain", id, { url }),
-  deleteDomain: async id => await admin("delete", "domain", id),
+  deleteDomain: async (id) => await admin("delete", "domain", id),
 
-  createClassroom: async name => await admin("create", "classroom", { name }),
+  createClassroom: async (name) => await admin("create", "classroom", { name }),
   editClassroom: async (id, name) =>
     await admin("edit", "classroom", id, { name }),
-  deleteClassroom: async id => await admin("delete", "classroom", id),
+  deleteClassroom: async (id) => await admin("delete", "classroom", id),
 
-  createGroup: async name => await admin("create", "group", { name }),
+  createGroup: async (name) => await admin("create", "group", { name }),
   editGroup: async (id, name) => await admin("edit", "group", id, { name }),
-  deleteGroup: async id => await admin("delete", "group", id),
+  deleteGroup: async (id) => await admin("delete", "group", id),
 
-  createLessonName: async name => await admin("create", "lessonName", { name }),
+  createLessonName: async (name) =>
+    await admin("create", "lessonName", { name }),
   editLessonName: async (id, name) =>
     await admin("edit", "lessonName", id, { name }),
-  deleteLessonName: async id => await admin("delete", "lessonName", id),
+  deleteLessonName: async (id) => await admin("delete", "lessonName", id),
 
-  createLessonTag: async name => await admin("create", "lessonTag", { name }),
+  createLessonTag: async (name) => await admin("create", "lessonTag", { name }),
   editLessonTag: async (id, name) =>
     await admin("edit", "lessonTag", id, { name }),
-  deleteLessonTag: async id => await admin("delete", "lessonTag", id),
+  deleteLessonTag: async (id) => await admin("delete", "lessonTag", id),
 
   createTimeInterval: async (startTime, endTime) =>
     await admin("create", "timeInterval", { startTime, endTime }),
   editTimeInterval: async (id, startTime, endTime) =>
     await admin("edit", "timeInterval", id, { startTime, endTime }),
-  deleteTimeInterval: async id => await admin("delete", "timeInterval", id),
+  deleteTimeInterval: async (id) => await admin("delete", "timeInterval", id),
 
   createLesson: async (
     nameId,
@@ -590,7 +606,7 @@ export const useZustandStore = create(set => ({
       set({ isLoadingLesson: false });
     }
   },
-  deleteLesson: async id => {
+  deleteLesson: async (id) => {
     try {
       set({ lessonError: "", isLoadingLesson: true });
       await admin("delete", "lesson", id);
@@ -643,7 +659,7 @@ function adminErrHandler(action, error, ...params) {
   if (!errName && errName !== "") errName = "Нет соединения";
   const errKey = `${params[0]}Errors`;
   if (action === "create") {
-    useZustandStore.setState(state => ({
+    useZustandStore.setState((state) => ({
       [errKey]: {
         ...state[errKey],
         create: errName,
@@ -651,10 +667,18 @@ function adminErrHandler(action, error, ...params) {
     }));
     return;
   }
-  useZustandStore.setState(state => ({
+  useZustandStore.setState((state) => ({
     [errKey]: {
       ...state[errKey],
       [params[1]]: errName,
     },
   }));
+}
+
+const updateUserData = (field, value) => {
+  const user = JSON.parse(localStorage.getItem("profile"));
+  if (user) {
+    user[field] = value;
+    localStorage.setItem("profile", JSON.stringify(user));
+  }
 }
