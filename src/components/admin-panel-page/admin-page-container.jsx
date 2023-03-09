@@ -41,6 +41,12 @@ const AdminPageContainer = (props) => {
             editTimeInterval={useZustandStore((state) => state.editTimeInterval)}
             deleteTimeInterval={useZustandStore((state) => state.deleteTimeInterval)}
 
+            getUsers={useZustandStore((state) => state.getUsers)}
+            editUserRoles={useZustandStore((state) => state.editUserRoles)}
+            users={useZustandStore((state) => state.users)}
+            getRoles={useZustandStore((state) => state.getRoles)}
+            roles={useZustandStore((state) => state.roles)}
+
             teachers={useZustandStore((state) => state.teachers)}
             classrooms={useZustandStore((state) => state.classrooms)}
             lessonNames={useZustandStore((state) => state.lessonNames)}

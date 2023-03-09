@@ -38,7 +38,7 @@ const initialState = {
   groupErrors: {},
   lessonTagErrors: {},
   lessonNameErrors: {},
-  timeIntervalErrors: {},
+  timeIntervalErrors: {}
 };
 
 export const useZustandStore = create((set) => ({
@@ -100,6 +100,7 @@ export const useZustandStore = create((set) => ({
         },
       });
       const users = response.data;
+      console.log(users)
       set({ users: users, error: "" });
     } catch (error) {
       set({ error: error.message, users: [] });
@@ -117,6 +118,7 @@ export const useZustandStore = create((set) => ({
           Authorization: `Bearer ${jwt}`,
         },
       });
+      console.log(111, response.data)
       const roles = response.data;
       set({ roles: roles, error: "" });
     } catch (error) {

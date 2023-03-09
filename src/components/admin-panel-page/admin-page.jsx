@@ -5,6 +5,8 @@ import PanelAccordionItem from "./panel-accordion-item/panel-accordion-item";
 import {useEffect} from "react";
 import PanelAccordionTimeIntervals from "./panel-accordion-item/panel-accordion-time-intervals";
 import AdminPanelItemTimeIntervals from "./panel-item/panel-item-time-intervals";
+import PanelAccordionUserRoles from "./panel-accordion-item/panel-accordion-user-roles";
+import AdminPanelItemUserRoles from "./panel-item/panel-item-user-roles";
 
 const AdminPage = (props) => {
 
@@ -16,7 +18,9 @@ const AdminPage = (props) => {
         props.getGroups();
         props.getDomains();
         props.getTimeIntervals();
-        }, [])
+        props.getUsers();
+        props.getRoles();
+    }, [])
 
     let teacherItems = props.teachers.map((item, i) =>
         <AdminPanelItem key={item.value} data={item} err={props.teacherErrors[item.value]}
@@ -50,9 +54,14 @@ const AdminPage = (props) => {
 
     let timeIntervalsItems = props.timeIntervals.map((item, i) =>
         <AdminPanelItemTimeIntervals key={item.id} data={item} err={props.timeIntervals[item.value]}
-                        saveItem={(id, startTime, endTime) => props.editTimeInterval(id, startTime, endTime)
-                            .then(r => props.getTimeIntervals())}
-                        deleteItem={(id) => props.deleteTimeInterval(id).then(r => props.getTimeIntervals())}/>);
+                                     saveItem={(id, startTime, endTime) => props.editTimeInterval(id, startTime, endTime)
+                                         .then(r => props.getTimeIntervals())}
+                                     deleteItem={(id) => props.deleteTimeInterval(id).then(r => props.getTimeIntervals())}/>);
+
+    let userRolesItems = props.users.map((item, i) =>
+        <AdminPanelItemUserRoles key={item.email} data={item} err={props.timeIntervals[item.value]} roles={props.roles}
+                                 saveItem={(email, roles) => props.editUserRoles(email, roles)
+                                     .then(r => props.getUsers())}/>);
 
     return (
         <Container className={"mt-5 col-11 col-lg-8"}>
@@ -81,10 +90,15 @@ const AdminPage = (props) => {
                                     headerTitle={"Домены"} placeholder={"yandex.ru"}
                                     createItem={(name) => props.createDomain(name).then(r => props.getDomains())}/>
 
-                <PanelAccordionTimeIntervals listItems={timeIntervalsItems} eventKey={"6"} err={props.timeIntervalErrors.create}
-                                    headerTitle={"Время проведения пар"}
-                                    createItem={(startTime, endTime) => props.createTimeInterval(startTime, endTime)
-                                        .then(r => props.getTimeIntervals())}/>
+                <PanelAccordionTimeIntervals listItems={timeIntervalsItems} eventKey={"6"}
+                                             err={props.timeIntervalErrors.create}
+                                             headerTitle={"Время проведения пар"}
+                                             createItem={(startTime, endTime) => props.createTimeInterval(startTime, endTime)
+                                                 .then(r => props.getTimeIntervals())}/>
+                <PanelAccordionUserRoles listItems={userRolesItems} eventKey={"7"} err={props.timeIntervalErrors.create}
+                                         headerTitle={"Роли пользователей"}
+                                         createItem={(startTime, endTime) => props.createTimeInterval(startTime, endTime)
+                                             .then(r => props.getTimeIntervals())}/>
             </Accordion>
         </Container>
     )
