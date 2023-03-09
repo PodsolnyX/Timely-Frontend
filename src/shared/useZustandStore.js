@@ -45,13 +45,20 @@ export const useZustandStore = create(set => ({
 
   editUserRoles: async (email, roles) => {
     set({ isLoading: true });
+    const jwt = localStorage.getItem("jwt");
     try {
-      const response = await axios.put(`admin/user-roles`, {
-        body: {
+      await axios.put(
+        `admin/user-roles`,
+        {
           email,
           roles,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
     } catch (error) {
       set({ adminErrors: error.response.data.title });
     } finally {
