@@ -6,6 +6,12 @@ import ProfileTab from "./profile-layout/profile-tab.jsx";
 import "./profile-page.css";
 
 const ProfilePage = () => {
+    const roles = {
+        Administrator: "Админ",
+        Student: "Студент",
+        Composer: "Составитель",
+        Teacher: "Препод"
+    }
     const getProfile = useZustandStore(store => store.getProfile);
     const getGroups = useZustandStore(store => store.getGroups);
     const profile = useZustandStore(store => store.profile);
@@ -27,7 +33,7 @@ const ProfilePage = () => {
         <div className={"container schedule-page-container text-white mt-4"}>
             <div style={{ padding: 20, margin: "50px 0", color: "black" }}>
                 <h2 className={"text-white"}>Страница профиля</h2>
-                <h5 className={"text-white my-3"}>{ profile.roles.includes("Administrator") ? "Админ" : profile.teacher ? "Преподаватель" : "Студент" }</h5>
+                <h5 className={"text-white my-3"}>{ profile.roles?.length ? profile.roles.map(r => roles[r]).join(", ") : "Нет ролей" }</h5>
                 <div className="row" style={{ color: "white" }}>
                     <ProfileTab title="Основные данные" to="main"/>
                     <ProfileTab title="Безопасность" to="password"/>
