@@ -9,10 +9,13 @@ const initialState = {
   isLoadingLesson: false,
   isLoadingSchedule: false,
   isLoadingConfirmEmail: false,
+  isLoadingDuplicateSchedule: false,
+
   confirmEmailError: "",
   error: "",
   lessonError: "",
-  duplicateLessonError: "",
+  duplicateScheduleError: "",
+
   profile: JSON.parse(localStorage.getItem("profile")) || {},
 
   groupSchedule: null,
@@ -43,8 +46,8 @@ const initialState = {
 
 export const useZustandStore = create((set) => ({
   ...initialState,
-  duplicateLesson: async (dateToCopy, amountOfWeeks, schedulleType, id) => {
-    set({ isLoading: true });
+  duplicateSchedule: async (dateToCopy, amountOfWeeks, schedulleType, id) => {
+    set({ isLoadingDuplicateSchedule: true, duplicateScheduleError: ""});
     const jwt = localStorage.getItem("jwt");
     try {
       await axios.post(
@@ -62,9 +65,9 @@ export const useZustandStore = create((set) => ({
         }
       );
     } catch (error) {
-      set({ duplicateLessonError: error.response.data.title });
+      set({ duplicateScheduleError: error.response.data.title });
     } finally {
-      set({ isLoading: false });
+      set({ isLoadingDuplicateSchedule: false });
     }
   },
   editUserRoles: async (email, roles) => {
@@ -127,7 +130,7 @@ export const useZustandStore = create((set) => ({
   },
 
   getTeacherSchedule: async (date, teacherID) => {
-    set({ isLoading: true });
+    set({ isLoadingSchedule: true });
     try {
       const timeIntervals = await axios.get(`search/timeIntervals`);
       const schedule = await axios.get(`schedule/teacher/${teacherID}`, {
@@ -142,12 +145,12 @@ export const useZustandStore = create((set) => ({
     } catch (error) {
       set({ error: error.message, teacherSchedule: null });
     } finally {
-      set({ isLoading: false });
+      set({ isLoadingSchedule: false });
     }
   },
 
   getClassroomSchedule: async (date, classroomID) => {
-    set({ isLoading: true });
+    set({ isLoadingSchedule: true });
     try {
       const timeIntervals = await axios.get(`search/timeIntervals`);
       const schedule = await axios.get(`schedule/classroom/${classroomID}`, {
@@ -162,7 +165,7 @@ export const useZustandStore = create((set) => ({
     } catch (error) {
       set({ error: error.message, classroomSchedule: null });
     } finally {
-      set({ isLoading: false });
+      set({ isLoadingSchedule: false });
     }
   },
 

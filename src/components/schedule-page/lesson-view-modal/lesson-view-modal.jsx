@@ -23,7 +23,7 @@ const LessonViewModal = (props) => {
                 keyboard={false}
                 centered
             >
-                <Modal.Header closeButton className={"justify-content-between modal-header"}>
+                <Modal.Header closeButton className={"justify-content-between modal-header"} closeVariant="white">
                     <h5> {dateTitle} </h5>
                 </Modal.Header>
                 <Modal.Body className={"modal-body"} style={{color:"white"}}>

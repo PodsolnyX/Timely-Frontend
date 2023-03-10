@@ -10,8 +10,6 @@ import AdminPanelItemUserRoles from "./panel-item/panel-item-user-roles";
 
 const AdminPage = (props) => {
 
-    console.log(props.profile)
-
     useEffect(() => {
         props.getTeachers();
         props.getClassrooms();
