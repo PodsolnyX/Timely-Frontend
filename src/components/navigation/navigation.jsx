@@ -1,10 +1,11 @@
 import {Container, Nav, Navbar, Button} from "react-bootstrap";
 import {NavLink, useNavigate} from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useZustandStore } from '../../shared/useZustandStore';
+import {Link} from "react-router-dom";
+import {useZustandStore} from '../../shared/useZustandStore';
 import "./navigation.css";
 import {getWeekFromMS} from "../../helpers/get-week";
 import {Image} from "react-bootstrap";
+
 const NavBar = () => {
     const logout = useZustandStore((store) => store.logout);
     const isAuth = useZustandStore((store) => store.isAuth);
@@ -23,16 +24,24 @@ const NavBar = () => {
         path = `/main`;
 
     const onLogout = () => {
-        logout().then(r => {navigate(0); navigate("/main")});
+        logout().then(r => {
+            navigate(0);
+            navigate("/main")
+        });
     }
 
     return (
-        <Navbar variant="dark" expand="lg" style={{background: "#202225", borderBottom: "1px solid gray", boxShadow: "0 6px 10px rgba(0,0,0,0.2)", minHeight : "70px"}}>
+        <Navbar variant="dark" expand="lg" style={{
+            background: "#202225",
+            borderBottom: "1px solid gray",
+            boxShadow: "0 6px 10px rgba(0,0,0,0.2)",
+            minHeight: "70px"
+        }}>
             <Container>
                 <Link to={"/"} className={"me-5"}>
                     <Navbar.Brand>Timely</Navbar.Brand>
                 </Link>
-                <Navbar.Toggle aria-controls="navbarScroll" />
+                <Navbar.Toggle aria-controls="navbarScroll"/>
                 <Navbar.Collapse id="navbarScroll">
                     <Nav
                         className="me-auto"
@@ -46,52 +55,57 @@ const NavBar = () => {
                                  to={"/teachers"}> Преподаватели </NavLink>
                         <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
                                  to={"/audiences"}> Аудитории </NavLink>
-                        { isAuth && (profile.roles?.includes("Student") || profile.roles?.includes("Teacher"))
+                        {isAuth && (profile.roles?.includes("Student") || profile.roles?.includes("Teacher"))
                             ? <NavLink className={({isActive}) => isActive ? "active-link" : "non-active-link"}
-                                 to={path}> Моё расписание </NavLink>
+                                       to={path}> Моё расписание </NavLink>
                             : null
                         }
                     </Nav>
                     <div>
                         {
                             isAuth ?
-                            <div className="d-flex">
-                                <Link to="/profile/main">
-                                    <Image fluid src={profile.avatarLink} className={"user-nav-avatar"} onError={({ currentTarget }) => {
-            currentTarget.onerror = null;
-            currentTarget.src =
-              "https://i.ibb.co/kDw4Sd3/photo243703137-457255699.jpg";
-          }}/>
-                                </Link>
-                                <div className="dropdown my-auto">
-                                    <button className="btn text-white dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                            data-bs-toggle="dropdown" aria-expanded="false"
-                                    > {profile.fullName} </button>
-                                    <ul className="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
-                                        <li>
-                                            <Link className="dropdown-item" to={"/profile/main"}>Профиль</Link>
+                                <div className="d-flex">
+                                    <Link to="/profile/main">
+                                        <Image fluid src={profile.avatarLink} className={"user-nav-avatar"}
+                                               onError={({currentTarget}) => {
+                                                   currentTarget.onerror = null;
+                                                   currentTarget.src =
+                                                       "https://i.ibb.co/kDw4Sd3/photo243703137-457255699.jpg";
+                                               }}/>
+                                    </Link>
+                                    <div className="dropdown my-auto">
+                                        <button className="btn text-white dropdown-toggle" type="button"
+                                                id="dropdownMenuButton1"
+                                                data-bs-toggle="dropdown" aria-expanded="false"
+                                        > {profile.fullName} </button>
+                                        <ul className="dropdown-menu dropdown-menu-dark"
+                                            aria-labelledby="dropdownMenuButton1">
+                                            <li>
+                                                <Link className="dropdown-item" to={"/profile/main"}>Профиль</Link>
 
-                                        </li>
-                                        <li>
-                                            {profile.roles?.includes("Administrator") ?
-                                                <Link className="dropdown-item" to={"/admin"}> Админ-панель </Link> : null}
-                                        </li>
-                                        <li>
-                                            <hr className="dropdown-divider"/>
-                                        </li>
-                                        <li className={"d-flex justify-content-center"}>
-                                            <Link to={"/"} className={""}>
-                                                <Button variant="outline-danger" size="sm" onClick={onLogout}>Выйти</Button>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
+                                            </li>
+                                            <li>
+                                                {(profile.roles?.includes("Administrator") || profile.roles?.includes("Composer")) ?
+                                                    <Link className="dropdown-item"
+                                                          to={"/admin"}> Админ-панель </Link> : null}
+                                            </li>
+                                            <li>
+                                                <hr className="dropdown-divider"/>
+                                            </li>
+                                            <li className={"d-flex justify-content-center"}>
+                                                <Link to={"/"} className={""}>
+                                                    <Button variant="outline-danger" size="sm"
+                                                            onClick={onLogout}>Выйти</Button>
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                                 :
                                 <Link to={"/login"}>
                                     <Button variant="outline-primary">Войти</Button>
                                 </Link>
-                            
+
                         }
                     </div>
                 </Navbar.Collapse>

@@ -6,7 +6,7 @@ import SchedulePage from "./components/schedule-page/schedule-page";
 import NavBar from "./components/navigation/navigation";
 import LoginPage from "./components/login-page/login-page";
 import RegisterPage from "./components/register-page/register-page";
-import { useZustandStore } from './shared/useZustandStore';
+import {useZustandStore} from './shared/useZustandStore';
 import React from "react";
 import Footer from "./components/footer/footer";
 import GroupsPage from "./components/groups-page/groups-page";
@@ -34,31 +34,32 @@ function App() {
 
     return (
         <div className={"bg-main"}>
-            <NavBar />
+            <NavBar/>
             <div className={"content"}>
                 <Routes>
-                    <Route path="/" element={<MainPage />} />
-                    <Route path="/main" element={<MainPage />} />
-                    <Route path="/schedule/:scheduleTag/:id" element={<SchedulePage />} />
-                    <Route path="/profile/*" element={!isAuth ? <Navigate to="/login"/> : <ProfilePage />}>
-                        <Route path="main" index element={<ProfileEdit />} />
-                        <Route path="password" element={<ProfilePassword />} />
-                        <Route path="confirm" element={<ProfileConfirm />} />
-                        <Route path="*" element={<Navigate to="main" replace />} />
+                    <Route path="/" element={<MainPage/>}/>
+                    <Route path="/main" element={<MainPage/>}/>
+                    <Route path="/schedule/:scheduleTag/:id" element={<SchedulePage/>}/>
+                    <Route path="/profile/*" element={!isAuth ? <Navigate to="/login"/> : <ProfilePage/>}>
+                        <Route path="main" index element={<ProfileEdit/>}/>
+                        <Route path="password" element={<ProfilePassword/>}/>
+                        <Route path="confirm" element={<ProfileConfirm/>}/>
+                        <Route path="*" element={<Navigate to="main" replace/>}/>
                     </Route>
-                    <Route path="/groups" element={<GroupsPage />} />
-                    <Route path="/teachers" element={<TeachersPage />} />
-                    <Route path="/audiences" element={<AudiencesPage />} />
-                    <Route path="/admin" element={  !isAuth ? <Navigate to="/login"/> :
-                                                    !profile.roles?.includes("Administrator") ? <Navigate to="/"/> :
-                                                <AdminPageContainer />} />
-                    <Route path="/login" element={isAuth ? <Navigate to="/"/> : <LoginPage />} />
-                    <Route path="/register" element={isAuth ? <Navigate to="/"/> : <RegisterPage />} />
-                    <Route path="/confirm-email" element={isAuth ? <ConfirmEmailPage /> : <Navigate to="/login" />}/>
-                    <Route path="/*" element={<Navigate to="/main"/>} />
+                    <Route path="/groups" element={<GroupsPage/>}/>
+                    <Route path="/teachers" element={<TeachersPage/>}/>
+                    <Route path="/audiences" element={<AudiencesPage/>}/>
+                    <Route path="/admin" element={!isAuth ? <Navigate to="/login"/> :
+                        (!profile.roles?.includes("Administrator") && !profile.roles?.includes("Composer")) ?
+                            <Navigate to="/"/> :
+                            <AdminPageContainer/>}/>
+                    <Route path="/login" element={isAuth ? <Navigate to="/"/> : <LoginPage/>}/>
+                    <Route path="/register" element={isAuth ? <Navigate to="/"/> : <RegisterPage/>}/>
+                    <Route path="/confirm-email" element={isAuth ? <ConfirmEmailPage/> : <Navigate to="/login"/>}/>
+                    <Route path="/*" element={<Navigate to="/main"/>}/>
                 </Routes>
             </div>
-            <Footer />
+            <Footer/>
         </div>
     );
 }

@@ -10,6 +10,8 @@ import AdminPanelItemUserRoles from "./panel-item/panel-item-user-roles";
 
 const AdminPage = (props) => {
 
+    console.log(props.profile)
+
     useEffect(() => {
         props.getTeachers();
         props.getClassrooms();
@@ -65,7 +67,7 @@ const AdminPage = (props) => {
 
     return (
         <Container className={"mt-5 col-11 col-lg-8"}>
-            <Accordion>
+            <Accordion defaultActiveKey="7">
                 <PanelAccordionItem listItems={teacherItems} eventKey={"0"} err={props.teacherErrors.create}
                                     headerTitle={"Преподаватели"} placeholder={"Иванов Иван Иванович"}
                                     createItem={(name) => props.createTeacher(name).then(r => props.getTeachers())}/>
@@ -82,23 +84,31 @@ const AdminPage = (props) => {
                                     headerTitle={"Группы"} placeholder={"990301"}
                                     createItem={(name) => props.createGroup(name).then(r => props.getGroups())}/>
 
-                <PanelAccordionItem listItems={lessonTypesItems} eventKey={"4"} err={props.lessonTagErrors.create}
-                                    headerTitle={"Типы занятий"} placeholder={"Лекция"}
-                                    createItem={(name) => props.createLessonTag(name).then(r => props.getLessonTags())}/>
+                {
+                    (!props.profile.roles?.includes("Administrator")) ? null :
+                        <>
+                            <PanelAccordionItem listItems={lessonTypesItems} eventKey={"4"}
+                                                err={props.lessonTagErrors.create}
+                                                headerTitle={"Типы занятий"} placeholder={"Лекция"}
+                                                createItem={(name) => props.createLessonTag(name).then(r => props.getLessonTags())}/>
 
-                <PanelAccordionItem listItems={domainItems} eventKey={"5"} err={props.domainErrors.create}
-                                    headerTitle={"Домены"} placeholder={"yandex.ru"}
-                                    createItem={(name) => props.createDomain(name).then(r => props.getDomains())}/>
+                            <PanelAccordionItem listItems={domainItems} eventKey={"5"} err={props.domainErrors.create}
+                                                headerTitle={"Домены"} placeholder={"yandex.ru"}
+                                                createItem={(name) => props.createDomain(name).then(r => props.getDomains())}/>
 
-                <PanelAccordionTimeIntervals listItems={timeIntervalsItems} eventKey={"6"}
-                                             err={props.timeIntervalErrors.create}
-                                             headerTitle={"Время проведения пар"}
-                                             createItem={(startTime, endTime) => props.createTimeInterval(startTime, endTime)
-                                                 .then(r => props.getTimeIntervals())}/>
-                <PanelAccordionUserRoles listItems={userRolesItems} eventKey={"7"} err={props.timeIntervalErrors.create}
-                                         headerTitle={"Роли пользователей"}
-                                         createItem={(startTime, endTime) => props.createTimeInterval(startTime, endTime)
-                                             .then(r => props.getTimeIntervals())}/>
+                            <PanelAccordionTimeIntervals listItems={timeIntervalsItems} eventKey={"6"}
+                                                         err={props.timeIntervalErrors.create}
+                                                         headerTitle={"Время проведения пар"}
+                                                         createItem={(startTime, endTime) => props.createTimeInterval(startTime, endTime)
+                                                             .then(r => props.getTimeIntervals())}/>
+                            <PanelAccordionUserRoles listItems={userRolesItems} eventKey={"7"}
+                                                     err={props.timeIntervalErrors.create}
+                                                     headerTitle={"Роли пользователей"}
+                                                     createItem={(startTime, endTime) => props.createTimeInterval(startTime, endTime)
+                                                         .then(r => props.getTimeIntervals())}/>
+                        </>
+                }
+
             </Accordion>
         </Container>
     )

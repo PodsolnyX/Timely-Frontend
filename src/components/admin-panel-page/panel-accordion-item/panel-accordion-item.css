@@ -18,5 +18,5 @@
 .accordion-cards-container {
     border-radius: 6px;
     overflow-y: auto;
-    max-height: 300px;
+    max-height: 400px;
 }

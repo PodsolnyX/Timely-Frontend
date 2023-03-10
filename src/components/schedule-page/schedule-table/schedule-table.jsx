@@ -31,7 +31,7 @@ const ScheduleTable = (props) => {
         let lessonsTd = [];
 
         for (let k = 0; k < props.lessonsDays.length; k++) {
-            if (profile.roles?.includes("Administrator") &&
+            if ((profile.roles?.includes("Administrator") || (profile.roles?.includes("Composer"))) &&
                 isLaterThanNow(props.data.sortedTimeIntervals[index].endTime, props.week[k])) {
                 lessonsTd.push(
                     <td className={props.data.matrix[index][k] ? null : "td-container"}

@@ -35,51 +35,55 @@ const AdminPanelItemUserRoles = (props) => {
 
     return (
         <Card>
-            <Card.Body className={"card-body-admin"} style={{padding: "10px"}}>
-                <div className="d-flex flex-column">
-                    <div className={"text-white mb-2"}>{props.data.fullName} | {props.data.email}</div>
-                    <div className={"d-flex"}>
-                        <Form onSubmit={onSubmitSaveItem} className={"col"}>
-                            <div className={"col d-flex"}>
-                                <Select
-                                    defaultValue={defaultValue}
-                                    isDisabled={isEdit ? null : "disabled"}
-                                    closeMenuOnSelect={false}
-                                    components={animatedComponents}
-                                    isMulti
-                                    options={options}
-                                    onChange={onChangeInput}
-                                    className={"col"}
-                                />
+            {
+                !defaultValue ? null :
+                    <Card.Body className={"card-body-admin"} style={{padding: "10px"}}>
+                        <div className="d-flex flex-column">
+                            <div className={"text-white mb-2"}>{props.data.fullName} | {props.data.email}</div>
+                            <div className={"d-flex"}>
+                                <Form onSubmit={onSubmitSaveItem} className={"col"}>
+                                    <div className={"col d-flex"}>
+                                        <Select
+                                            defaultValue={defaultValue}
+                                            isDisabled={isEdit ? null : "disabled"}
+                                            closeMenuOnSelect={false}
+                                            components={animatedComponents}
+                                            isMulti
+                                            options={options}
+                                            onChange={onChangeInput}
+                                            className={"col"}
+                                        />
+                                        {isEdit
+                                            ? <Button
+                                                variant={"outline-primary"}
+                                                type={"submit"}
+                                                className={"ms-2 mb-2"}
+                                            >
+                                                Сохранить
+                                            </Button>
+                                            : null
+                                        }
+                                    </div>
+                                </Form>
                                 {isEdit
-                                    ? <Button
-                                        variant={"outline-primary"}
-                                        type={"submit"}
+                                    ? null
+                                    : <Button
+                                        variant={"outline-warning"}
+                                        type={"button"}
                                         className={"ms-2 mb-2"}
+                                        onClick={onEditItem}
                                     >
-                                        Сохранить
+                                        Изменить
                                     </Button>
-                                    : null
                                 }
                             </div>
-                        </Form>
-                        {isEdit
-                            ? null
-                            : <Button
-                                variant={"outline-warning"}
-                                type={"button"}
-                                className={"ms-2 mb-2"}
-                                onClick={onEditItem}
-                            >
-                                Изменить
-                            </Button>
-                        }
-                    </div>
-                </div>
-                <div className="row">
-                    <div className={"text-white col"}>{props.err}</div>
-                </div>
-            </Card.Body>
+                        </div>
+                        <div className="row">
+                            <div className={"text-white col"}>{props.err}</div>
+                        </div>
+                    </Card.Body>
+            }
+
         </Card>
     );
 };

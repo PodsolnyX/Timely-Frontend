@@ -46,6 +46,7 @@ const AdminPageContainer = (props) => {
             users={useZustandStore((state) => state.users)}
             getRoles={useZustandStore((state) => state.getRoles)}
             roles={useZustandStore((state) => state.roles)}
+            profile = {useZustandStore((state) => state.profile)}
 
             teachers={useZustandStore((state) => state.teachers)}
             classrooms={useZustandStore((state) => state.classrooms)}
