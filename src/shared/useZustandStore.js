@@ -15,6 +15,7 @@ const initialState = {
   error: "",
   lessonError: "",
   duplicateScheduleError: "",
+  removeWeekError: "",
 
   profile: JSON.parse(localStorage.getItem("profile")) || {},
 
@@ -46,6 +47,66 @@ const initialState = {
 
 export const useZustandStore = create((set) => ({
   ...initialState,
+  removeWeek: async (dateToCopy, amountOfWeeks, schedulleType, id) => {
+    set({ isLoading: true });
+    const jwt = localStorage.getItem("jwt");
+    try {
+      await axios.delete(
+          `admin/lesson/removeWeek`, {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+            data: {
+              dateToCopy,
+              amountOfWeeks,
+              schedulleType,
+              id
+            }
+          }
+      );
+    } catch (error) {
+      set({ removeWeekError: error.response?.data?.title });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  cascadeEditLesson: async (
+      id,
+      nameId,
+      tagId,
+      groupId,
+      teacherId,
+      timeIntervalId,
+      date,
+      classroomId
+  ) => {
+    const jwt = localStorage.getItem("jwt");
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    };
+    try {
+      set({ lessonError: "", isLoadingLesson: true });
+      await axios.put(
+          `admin/lesson/cascadeEdit/${id}`,
+          {
+            nameId,
+            tagId,
+            groupId,
+            teacherId,
+            timeIntervalId,
+            date,
+            classroomId
+          },
+          headers
+      )
+    } catch (error) {
+      set({ lessonError: error.response?.data?.title });
+    } finally {
+      set({ isLoadingLesson: false });
+    }
+  },
   duplicateSchedule: async (dateToCopy, amountOfWeeks, schedulleType, id) => {
     set({ isLoadingDuplicateSchedule: true, duplicateScheduleError: ""});
     const jwt = localStorage.getItem("jwt");
