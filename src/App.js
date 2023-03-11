@@ -7,7 +7,7 @@ import NavBar from "./components/navigation/navigation";
 import LoginPage from "./components/login-page/login-page";
 import RegisterPage from "./components/register-page/register-page";
 import {useZustandStore} from './shared/useZustandStore';
-import React from "react";
+import React, {useEffect} from "react";
 import Footer from "./components/footer/footer";
 import GroupsPage from "./components/groups-page/groups-page";
 import AudiencesPage from "./components/audiences-page/audiences-page";
@@ -31,7 +31,12 @@ axios.interceptors.response.use(response => response,
 function App() {
     const isAuth = useZustandStore(store => store.isAuth);
     const profile = useZustandStore(store => store.profile);
-
+    const getProfile = useZustandStore(store => store.getProfile);
+    useEffect(() => {
+        if (isAuth) {
+            getProfile();
+        }
+    }, []);
     return (
         <div className={"bg-main"}>
             <NavBar/>
