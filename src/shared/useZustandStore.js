@@ -45,6 +45,25 @@ const initialState = {
 
 export const useZustandStore = create((set) => ({
   ...initialState,
+  cascadeDeleteLesson: async (id) => {
+    const jwt = localStorage.getItem("jwt");
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    };
+    try {
+      set({ lessonError: "", isLoadingLesson: true });
+      await axios.delete(
+          `admin/lesson/cascadeDelete/${id}`,
+          headers
+      )
+    } catch (error) {
+      set({ lessonError: error.response?.data?.title });
+    } finally {
+      set({ isLoadingLesson: false });
+    }
+  },
   removeWeek: async (dateToCopy, amountOfWeeks, schedulleType, id) => {
     set({ isLoadingSchedule: true, scheduleError: "" });
     const jwt = localStorage.getItem("jwt");
