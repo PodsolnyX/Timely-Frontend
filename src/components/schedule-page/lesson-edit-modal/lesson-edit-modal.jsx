@@ -12,6 +12,7 @@ const LessonEditModal = (props) => {
 
     const navigate = useNavigate();
     const animatedComponents = makeAnimated();
+    const [isChain, setIsChain] = useState(false);
 
     const curLessonIndex = props.lessonNames.findIndex(obj => obj.value === props.currentLesson.lessonNameId);
     const curGroupIndex = !props.currentLesson.groupId ? null :
@@ -48,7 +49,8 @@ const LessonEditModal = (props) => {
     }
 
     const onEditLesson = () => {
-        props.editLesson(
+        const editLesson = (props.currentLesson.chainId && isChain) ? props.cascadeEditLesson : props.editLesson;
+        editLesson(
             props.lessonId,
             props.currentLesson.lessonNameId,
             props.currentLesson.lessonTagId,
@@ -92,7 +94,9 @@ const LessonEditModal = (props) => {
         else
             props.setLessonDate(e.target.value + "T00:00:00Z");
     }
-
+    const onChangeChain = (e) => {
+        setIsChain(e.target.checked)
+    }
 
     return (
         <>
@@ -157,6 +161,16 @@ const LessonEditModal = (props) => {
                             />
                         </div>
                     </div>
+                    {props.currentLesson.chainId ?
+                        <div className="form-check form-switch text-white mt-1">
+                            <input className="form-check-input" type="checkbox"
+                                   id="flexSwitchCheckChecked" checked={isChain}
+                                   onChange={onChangeChain}
+                            />
+                            <label className="form-check-label">Применить каскадное изменение</label>
+                        </div>
+                        : null
+                    }
                     <div className={"text-danger mt-3"}>
                         {props.lessonError}
                     </div>

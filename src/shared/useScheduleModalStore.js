@@ -14,6 +14,7 @@ const initialState = {
             lessonTagId: null,
             timeIntervalId: null,
             lessonDate: null,
+            chainId: null
         },
     },
     lessonViewModal: {
@@ -68,7 +69,8 @@ export const useScheduleModalStore = create((set, get) => ({
                 teacherId: selectLesson.teacher.id,
                 lessonTagId: selectLesson.tag.id,
                 timeIntervalId: timeInterval.id,
-                lessonDate: dateLesson
+                lessonDate: dateLesson,
+                chainId: selectLesson.chainId
             };
             set(state => {
                 return {
@@ -100,7 +102,8 @@ export const useScheduleModalStore = create((set, get) => ({
                             teacherId: null,
                             lessonTagId: null,
                             timeIntervalId: timeInterval.id,
-                            lessonDate: dateLesson
+                            lessonDate: dateLesson,
+                            chainId: null
                         },
                     },
                 };

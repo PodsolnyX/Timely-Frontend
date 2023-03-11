@@ -9,13 +9,11 @@ const initialState = {
   isLoadingLesson: false,
   isLoadingSchedule: false,
   isLoadingConfirmEmail: false,
-  isLoadingDuplicateSchedule: false,
 
   confirmEmailError: "",
   error: "",
   lessonError: "",
-  duplicateScheduleError: "",
-  removeWeekError: "",
+  scheduleError: "",
 
   profile: JSON.parse(localStorage.getItem("profile")) || {},
 
@@ -48,7 +46,7 @@ const initialState = {
 export const useZustandStore = create((set) => ({
   ...initialState,
   removeWeek: async (dateToCopy, amountOfWeeks, schedulleType, id) => {
-    set({ isLoading: true });
+    set({ isLoadingSchedule: true, scheduleError: "" });
     const jwt = localStorage.getItem("jwt");
     try {
       await axios.delete(
@@ -65,9 +63,9 @@ export const useZustandStore = create((set) => ({
           }
       );
     } catch (error) {
-      set({ removeWeekError: error.response?.data?.title });
+      set({ scheduleError: error.response?.data?.title });
     } finally {
-      set({ isLoading: false });
+      set({ isLoadingSchedule: false });
     }
   },
   cascadeEditLesson: async (
@@ -108,7 +106,7 @@ export const useZustandStore = create((set) => ({
     }
   },
   duplicateSchedule: async (dateToCopy, amountOfWeeks, schedulleType, id) => {
-    set({ isLoadingDuplicateSchedule: true, duplicateScheduleError: ""});
+    set({ isLoadingSchedule: true, scheduleError: ""});
     const jwt = localStorage.getItem("jwt");
     try {
       await axios.post(
@@ -126,9 +124,9 @@ export const useZustandStore = create((set) => ({
         }
       );
     } catch (error) {
-      set({ duplicateScheduleError: error.response.data.title });
+      set({ scheduleError: error.response.data.title });
     } finally {
-      set({ isLoadingDuplicateSchedule: false });
+      set({ isLoadingSchedule: false });
     }
   },
   editUserRoles: async (email, roles) => {
@@ -191,7 +189,7 @@ export const useZustandStore = create((set) => ({
   },
 
   getTeacherSchedule: async (date, teacherID) => {
-    set({ isLoadingSchedule: true });
+    set({ isLoadingSchedule: true, scheduleError: "" });
     try {
       const timeIntervals = await axios.get(`search/timeIntervals`);
       const schedule = await axios.get(`schedule/teacher/${teacherID}`, {
@@ -204,14 +202,14 @@ export const useZustandStore = create((set) => ({
         error: "",
       });
     } catch (error) {
-      set({ error: error.message, teacherSchedule: null });
+      set({ scheduleError: error.message, teacherSchedule: null });
     } finally {
       set({ isLoadingSchedule: false });
     }
   },
 
   getClassroomSchedule: async (date, classroomID) => {
-    set({ isLoadingSchedule: true });
+    set({ isLoadingSchedule: true, scheduleError: "" });
     try {
       const timeIntervals = await axios.get(`search/timeIntervals`);
       const schedule = await axios.get(`schedule/classroom/${classroomID}`, {
@@ -224,14 +222,14 @@ export const useZustandStore = create((set) => ({
         error: "",
       });
     } catch (error) {
-      set({ error: error.message, classroomSchedule: null });
+      set({ scheduleError: error.message, classroomSchedule: null });
     } finally {
       set({ isLoadingSchedule: false });
     }
   },
 
   getGroupSchedule: async (date, groupID) => {
-    set({ isLoadingSchedule: true });
+    set({ isLoadingSchedule: true, scheduleError: "" });
     try {
       const timeIntervals = await axios.get(`search/timeIntervals`);
       const schedule = await axios.get(`schedule/group/${groupID}`, {
@@ -244,7 +242,7 @@ export const useZustandStore = create((set) => ({
         error: "",
       });
     } catch (error) {
-      set({ error: error.message, groupSchedule: null });
+      set({ scheduleError: error.message, groupSchedule: null });
     } finally {
       set({ isLoadingSchedule: false });
     }

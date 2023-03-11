@@ -1,6 +1,6 @@
 import './schedule-page.css';
 import {Button} from "react-bootstrap";
-import React from "react";
+import React, {useState} from "react";
 import ScheduleTable from "./schedule-table/schedule-table";
 import {useZustandStore} from "../../shared/useZustandStore";
 import {data} from "./testData.js";
@@ -26,9 +26,9 @@ const weekDays = {
 };
 
 const forVanya = {
-    "classroom" : "Classroom",
-    "group" : "Group",
-    "teacher" : "Teacher",
+    "classroom": "Classroom",
+    "group": "Group",
+    "teacher": "Teacher",
 }
 
 const SchedulePage = () => {
@@ -51,15 +51,15 @@ const SchedulePage = () => {
         },
     };
 
-    const isLoadingSchedule = useZustandStore((state) => state.isLoading);
     const duplicateSchedule = useZustandStore((state) => state.duplicateSchedule);
-    const isLoadingDuplicateSchedule = useZustandStore((state) => state.isLoadingDuplicateSchedule);
-    const duplicateScheduleError = useZustandStore((state) => state.duplicateScheduleError);
+    const removeWeek = useZustandStore((state) => state.removeWeek);
+    const scheduleError = useZustandStore((state) => state.scheduleError);
     const profile = useZustandStore((store) => store.profile);
 
     const params = useParams();
     const navigate = useNavigate();
     const [search, setSearch] = useSearchParams();
+    const [isLoading, setIsLoading] = useState(false);
 
     const name = search.get("name");
     const startDay = `
@@ -84,18 +84,27 @@ const SchedulePage = () => {
         navigate(0);
     }
 
-    const onDuplicateWeek = () => {
-        duplicateSchedule(search.get("startDate"), 1, forVanya[params.scheduleTag], params.id)
+    const onDuplicateWeek = (countWeek) => {
+        setIsLoading(true)
+        duplicateSchedule(search.get("startDate"), countWeek, forVanya[params.scheduleTag], params.id)
+            .then(() => setIsLoading(false))
     }
-    const onDuplicateTwoWeek = () => {
-        duplicateSchedule(search.get("startDate"), 2, forVanya[params.scheduleTag], params.id)
-    }
-    const onDuplicateMonth = () => {
-        duplicateSchedule(search.get("startDate"), 4, forVanya[params.scheduleTag], params.id)
+
+    const onRemoveWeek = (countWeek) => {
+        setIsLoading(true)
+        removeWeek(search.get("startDate"), countWeek, forVanya[params.scheduleTag], params.id)
+            .then(() => {
+                if (useZustandStore.getState().scheduleError === "") {
+                    scheduleTags[params.scheduleTag].getSchedule(search.get("startDate"), params.id)
+                }
+                setIsLoading(false)
+            })
     }
 
     useEffect(() => {
-        scheduleTags[params.scheduleTag].getSchedule(search.get("startDate"), params.id);
+        setIsLoading(true)
+        scheduleTags[params.scheduleTag].getSchedule(search.get("startDate"), params.id)
+            .then(() => setIsLoading(false))
     }, [])
 
     return (
@@ -108,25 +117,43 @@ const SchedulePage = () => {
                         <h2> Расписание {scheduleTags[params.scheduleTag].label} {name} </h2>
                         <p style={{color: "gray"}}>{startDay} – {endDay}</p>
                         <div className={"d-flex"}>
-                            <Button variant={"outline-secondary"} onClick={onPastWeekSchedule}>Предыдущая неделя</Button>
+                            <Button variant={"outline-secondary"} onClick={onPastWeekSchedule}>Предыдущая
+                                неделя</Button>
                             <Button variant={"outline-secondary"} className={"ms-3"} onClick={onNextWeekSchedule}>Следующая
                                 неделя</Button>
                         </div>
                     </div>
                     {(profile.roles?.includes("Administrator") || profile.roles?.includes("Composer")) ?
-                    <div>
-                        <h5> Дублировать расписание </h5>
-                        <div className={"d-flex flex-column"}>
-                            <Button variant={"outline-primary"} size={"sm"} className={"mt-1"} onClick={onDuplicateWeek}>На неделю</Button>
-                            <Button variant={"outline-primary"} size={"sm"} className={"mt-1"} onClick={onDuplicateTwoWeek}>На две недели</Button>
-                            <Button variant={"outline-primary"} size={"sm"} className={"mt-1"} onClick={onDuplicateMonth}>На месяц</Button>
+                        <div className={"d-flex"}>
+                            <div>
+                                <h5> Дублировать расписание </h5>
+                                <div className={"d-flex flex-column"}>
+                                    <Button variant={"outline-primary"} size={"sm"} className={"mt-1"}
+                                            onClick={() => onDuplicateWeek(1)}>На неделю</Button>
+                                    <Button variant={"outline-primary"} size={"sm"} className={"mt-1"}
+                                            onClick={() => onDuplicateWeek(2)}>На две недели</Button>
+                                    <Button variant={"outline-primary"} size={"sm"} className={"mt-1"}
+                                            onClick={() => onDuplicateWeek(4)}>На месяц</Button>
+                                </div>
+                            </div>
+                            <div className={"ms-3"}>
+                                <h5> Удалить расписание </h5>
+                                <div className={"d-flex flex-column"}>
+                                    <Button variant={"outline-danger"} size={"sm"} className={"mt-1"}
+                                            onClick={() => onRemoveWeek(0)}>На неделю</Button>
+                                    <Button variant={"outline-danger"} size={"sm"} className={"mt-1"}
+                                            onClick={() => onRemoveWeek(1)}>На две недели</Button>
+                                    <Button variant={"outline-danger"} size={"sm"} className={"mt-1"}
+                                            onClick={() => onRemoveWeek(3)}>На месяц</Button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+
                         : null
                     }
                 </div>
-                <div className={"text-danger"}>{duplicateScheduleError}</div>
-                {(isLoadingSchedule || isLoadingDuplicateSchedule) ? <div>LOADING...</div> :
+                <div className={"text-danger"}>{scheduleError}</div>
+                {isLoading ? <div>LOADING...</div> :
                     <ScheduleTable lessonsDays={data.lessonsDays} week={getWeek(search.get("startDate"))}
                                    data={scheduleTags[params.scheduleTag].schedule}
                     />
