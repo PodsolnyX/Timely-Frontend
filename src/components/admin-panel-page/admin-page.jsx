@@ -53,15 +53,16 @@ const AdminPage = (props) => {
                         deleteItem={(id) => props.deleteDomain(id).then(r => props.getDomains())}/>);
 
     let timeIntervalsItems = props.timeIntervals.map((item, i) =>
-        <AdminPanelItemTimeIntervals key={item.id} data={item} err={props.timeIntervals[item.value]}
+        <AdminPanelItemTimeIntervals key={item.id} data={item} err={props.timeIntervalErrors[item.id]}
                                      saveItem={(id, startTime, endTime) => props.editTimeInterval(id, startTime, endTime)
                                          .then(r => props.getTimeIntervals())}
                                      deleteItem={(id) => props.deleteTimeInterval(id).then(r => props.getTimeIntervals())}/>);
 
     let userRolesItems = props.users.map((item, i) =>
-        <AdminPanelItemUserRoles key={item.email} data={item} err={props.timeIntervals[item.value]} roles={props.roles}
+        <AdminPanelItemUserRoles key={item.email} data={item} err={props.adminErrors[item.email]} roles={props.roles}
                                  saveItem={(email, roles) => props.editUserRoles(email, roles)
                                      .then(r => props.getUsers())}/>);
+    console.log(props.adminErrors)
 
     return (
         <Container className={"mt-5 col-11 col-lg-8"}>

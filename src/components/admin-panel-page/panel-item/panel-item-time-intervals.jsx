@@ -4,6 +4,7 @@ import "./panel-item.css";
 
 const AdminPanelItemTimeIntervals = (props) => {
   const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [inputTextStart, setInputTextStart] = useState(props.data.startTime);
   const [inputTextEnd, setInputTextEnd] = useState(props.data.endTime);
 
@@ -14,10 +15,14 @@ const AdminPanelItemTimeIntervals = (props) => {
   let onSubmitSaveItem = async (e) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       await props.saveItem(props.data.id, inputTextStart, inputTextEnd);
       setIsEdit(false);
     } catch (err) {
       setIsEdit(true);
+    }
+    finally {
+      setIsLoading(false)
     }
   };
 
@@ -93,7 +98,10 @@ const AdminPanelItemTimeIntervals = (props) => {
           </div>
         </div>
         <div className="row">
-          <div className={"text-white col"}>{props.err}</div>
+          {
+            isLoading ? <div className={"text-white"}>LOADING...</div> : null
+          }
+          <div className={"text-danger col"}>{props.err}</div>
         </div>
       </Card.Body>
     </Card>

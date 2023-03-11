@@ -10,6 +10,7 @@ const AdminPanelItemUserRoles = (props) => {
     const defaultValue = props.data.roles.map(item => ({label: item, value: item}))
 
     const [isEdit, setIsEdit] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [inputRoles, setInputRoles] = useState(defaultValue);
     const animatedComponents = makeAnimated();
 
@@ -25,11 +26,14 @@ const AdminPanelItemUserRoles = (props) => {
         e.preventDefault();
         setIsEdit(false);
         try {
+            setIsLoading(true)
             const roles = inputRoles.map(r => r.value)
             await props.saveItem(props.data.email, roles);
             setIsEdit(false);
         } catch (err) {
             setIsEdit(true);
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -79,7 +83,10 @@ const AdminPanelItemUserRoles = (props) => {
                             </div>
                         </div>
                         <div className="row">
-                            <div className={"text-white col"}>{props.err}</div>
+                            {
+                                isLoading ? <div className={"text-white"}>LOADING...</div> : null
+                            }
+                            <div className={"text-danger col"}>{props.err}</div>
                         </div>
                     </Card.Body>
             }

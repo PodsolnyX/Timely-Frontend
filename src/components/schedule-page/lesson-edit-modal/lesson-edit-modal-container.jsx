@@ -50,6 +50,7 @@ const LessonEditModalContainer = (props) => {
             editLesson={useZustandStore((state) => state.editLesson)}
             cascadeEditLesson={useZustandStore((state) => state.cascadeEditLesson)}
             deleteLesson={useZustandStore((state) => state.deleteLesson)}
+            cascadeDeleteLesson={useZustandStore((state) => state.cascadeDeleteLesson)}
             resetLessonError={useZustandStore((state) => state.resetLessonError)}
 
         />

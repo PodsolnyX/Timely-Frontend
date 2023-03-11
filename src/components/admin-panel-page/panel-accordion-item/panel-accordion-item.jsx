@@ -27,7 +27,7 @@ const PanelAccordionItem = (props) => {
           </div>
         </Form>
         <div className="col-12">
-          <div className={"text-white ms-3"}>{props.err}</div>
+          <div className={"text-danger ms-3"}>{props.err}</div>
         </div>
         <div className="col-12">
           <div className={"accordion-cards-container mt-3"}>

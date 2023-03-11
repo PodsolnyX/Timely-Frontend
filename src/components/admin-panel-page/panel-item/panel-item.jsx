@@ -4,6 +4,7 @@ import "./panel-item.css";
 
 const AdminPanelItem = (props) => {
   const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [inputText, setInputText] = useState(props.data.label);
 
   const onEditItem = () => {
@@ -13,10 +14,14 @@ const AdminPanelItem = (props) => {
   let onSubmitSaveItem = async (e) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       await props.saveItem(props.data.value, e.target.elements.input.value);
       setIsEdit(false);
     } catch (err) {
       setIsEdit(true);
+    }
+    finally {
+      setIsLoading(false)
     }
   };
 
@@ -79,7 +84,10 @@ const AdminPanelItem = (props) => {
           </div>
         </div>
         <div className="row">
-          <div className={"text-white col"}>{props.err}</div>
+          {
+            isLoading ? <div className={"text-white"}>LOADING...</div> : null
+          }
+          <div className={"text-danger col"}>{props.err}</div>
         </div>
       </Card.Body>
     </Card>

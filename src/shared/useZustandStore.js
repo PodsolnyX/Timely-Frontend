@@ -40,7 +40,8 @@ const initialState = {
   groupErrors: {},
   lessonTagErrors: {},
   lessonNameErrors: {},
-  timeIntervalErrors: {}
+  timeIntervalErrors: {},
+  userRolesErrors: {}
 };
 
 export const useZustandStore = create((set) => ({
@@ -149,7 +150,7 @@ export const useZustandStore = create((set) => ({
     }
   },
   editUserRoles: async (email, roles) => {
-    set({ isLoading: true });
+    set((state) => {return {...state, isLoading: true, adminErrors: {...state.adminErrors, [email]: ""} }});
     const jwt = localStorage.getItem("jwt");
     try {
       await axios.put(
@@ -165,7 +166,7 @@ export const useZustandStore = create((set) => ({
         }
       );
     } catch (error) {
-      set({ adminErrors: error.response.data.title });
+      set((state) => {return {...state, adminErrors: {...state.adminErrors, [email]: error.response.data.title} }});
     } finally {
       set({ isLoading: false });
     }

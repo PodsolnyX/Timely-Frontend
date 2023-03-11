@@ -63,6 +63,8 @@ const AdminPageContainer = (props) => {
             lessonTagErrors={useZustandStore((state) => state.lessonTagErrors)}
             domainErrors={useZustandStore((state) => state.domainErrors)}
             timeIntervalErrors={useZustandStore((state) => state.timeIntervalErrors)}
+            userRolesErrors={useZustandStore((state) => state.userRolesErrors)}
+            adminErrors={useZustandStore((state) => state.adminErrors)}
 
         />
     )

@@ -68,7 +68,8 @@ const LessonEditModal = (props) => {
     }
 
     const onDeleteLesson = () => {
-        props.deleteLesson(props.lessonId).then(r => {
+        const deleteLesson = (props.currentLesson.chainId && isChain) ? props.cascadeDeleteLesson : props.deleteLesson;
+        deleteLesson(props.lessonId).then(r => {
             if (useZustandStore.getState().lessonError === ""){
                 props.lessonEditModalClose();
                 navigate(0);
@@ -167,7 +168,7 @@ const LessonEditModal = (props) => {
                                    id="flexSwitchCheckChecked" checked={isChain}
                                    onChange={onChangeChain}
                             />
-                            <label className="form-check-label">Применить каскадное изменение</label>
+                            <label className="form-check-label">Применить каскадное изменение/удаление</label>
                         </div>
                         : null
                     }
