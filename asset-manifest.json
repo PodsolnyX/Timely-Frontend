@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/Timely-Frontend/static/css/main.fda412e9.css",
-    "main.js": "/Timely-Frontend/static/js/main.60cb2efc.js",
+    "main.js": "/Timely-Frontend/static/js/main.eb6bd470.js",
     "static/js/787.4418fc6d.chunk.js": "/Timely-Frontend/static/js/787.4418fc6d.chunk.js",
     "static/media/audience.svg": "/Timely-Frontend/static/media/audience.f225d3b45716975cf3bbf8c52a316809.svg",
     "static/media/group.svg": "/Timely-Frontend/static/media/group.d9d24e0c93af855b01d1706ddc6ccd04.svg",
     "static/media/teacher.svg": "/Timely-Frontend/static/media/teacher.c2ca344bc81ee4dcf708ea5e8033df22.svg",
     "index.html": "/Timely-Frontend/index.html",
     "main.fda412e9.css.map": "/Timely-Frontend/static/css/main.fda412e9.css.map",
-    "main.60cb2efc.js.map": "/Timely-Frontend/static/js/main.60cb2efc.js.map",
+    "main.eb6bd470.js.map": "/Timely-Frontend/static/js/main.eb6bd470.js.map",
     "787.4418fc6d.chunk.js.map": "/Timely-Frontend/static/js/787.4418fc6d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.fda412e9.css",
-    "static/js/main.60cb2efc.js"
+    "static/js/main.eb6bd470.js"
   ]
 }
